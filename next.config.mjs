@@ -1,4 +1,3 @@
-import type { NextConfig } from 'next';
 import withPWA from 'next-pwa';
 
 const pwaConfig = withPWA({
@@ -21,8 +20,10 @@ const pwaConfig = withPWA({
   ],
 });
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   // Next.js 설정
 };
 
 export default pwaConfig(nextConfig);
+
