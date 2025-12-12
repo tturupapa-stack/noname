@@ -36,6 +36,23 @@ export default function FavoriteIcon({
     }
   }, [stock.symbol, mounted]);
 
+  // 즐겨찾기 변경 이벤트 리스너
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const handleFavoritesUpdate = () => {
+      setFavorite(isFavorite(stock.symbol));
+    };
+    
+    window.addEventListener('favorites-updated', handleFavoritesUpdate);
+    window.addEventListener('storage', handleFavoritesUpdate);
+    
+    return () => {
+      window.removeEventListener('favorites-updated', handleFavoritesUpdate);
+      window.removeEventListener('storage', handleFavoritesUpdate);
+    };
+  }, [stock.symbol, mounted]);
+
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
@@ -55,8 +72,13 @@ export default function FavoriteIcon({
       }
     }
 
-    if (success && onToggle) {
-      onToggle(!favorite);
+    if (success) {
+      // storage 이벤트를 발생시켜 다른 컴포넌트에 알림
+      window.dispatchEvent(new Event('favorites-updated'));
+      
+      if (onToggle) {
+        onToggle(!favorite);
+      }
     }
   };
 

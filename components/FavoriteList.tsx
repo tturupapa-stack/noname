@@ -27,6 +27,21 @@ export default function FavoriteList({ stocks }: FavoriteListProps) {
 
   useEffect(() => {
     loadFavorites();
+    
+    // 즐겨찾기 변경 이벤트 리스너
+    const handleFavoritesUpdate = () => {
+      loadFavorites();
+    };
+    
+    window.addEventListener('favorites-updated', handleFavoritesUpdate);
+    
+    // storage 이벤트도 감지 (다른 탭에서 변경된 경우)
+    window.addEventListener('storage', handleFavoritesUpdate);
+    
+    return () => {
+      window.removeEventListener('favorites-updated', handleFavoritesUpdate);
+      window.removeEventListener('storage', handleFavoritesUpdate);
+    };
   }, []);
 
   const loadFavorites = () => {

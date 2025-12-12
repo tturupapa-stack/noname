@@ -3,8 +3,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { Stock } from '@/types';
 import {
-  getFavoriteStocks,
-  toggleFavoriteStock,
+  isFavorite,
+  addFavorite,
+  removeFavorite,
+} from '@/utils/favoriteStorage';
+import {
   getRecentSearches,
   addRecentSearch,
 } from '@/utils/alertStorage';
@@ -29,9 +32,13 @@ export default function StockSearch({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setFavorites(getFavoriteStocks());
+    // 즐겨찾기 목록을 심볼 배열로 변환
+    const favoriteSymbols = stocks
+      .filter(stock => isFavorite(stock.symbol))
+      .map(stock => stock.symbol);
+    setFavorites(favoriteSymbols);
     setRecentSearches(getRecentSearches());
-  }, []);
+  }, [stocks]);
 
   useEffect(() => {
     if (searchQuery.trim()) {
@@ -76,8 +83,19 @@ export default function StockSearch({
 
   const handleFavoriteToggle = (symbol: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    toggleFavoriteStock(symbol);
-    setFavorites(getFavoriteStocks());
+    const stock = stocks.find(s => s.symbol === symbol);
+    if (!stock) return;
+    
+    if (isFavorite(symbol)) {
+      removeFavorite(symbol);
+      setFavorites(prev => prev.filter(s => s !== symbol));
+    } else {
+      addFavorite(symbol, stock.shortName);
+      setFavorites(prev => [...prev, symbol]);
+    }
+    
+    // storage 이벤트를 발생시켜 다른 컴포넌트에 알림
+    window.dispatchEvent(new Event('favorites-updated'));
   };
 
   const favoriteStocks = stocks.filter((s) => favorites.includes(s.symbol));
@@ -123,10 +141,18 @@ export default function StockSearch({
                 즐겨찾기
               </div>
               {favoriteStocks.map((stock) => (
-                <button
+                <div
                   key={stock.symbol}
                   onClick={() => handleSelect(stock)}
-                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-left"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleSelect(stock);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-left cursor-pointer"
                 >
                   <div>
                     <div className="font-semibold text-gray-900 dark:text-white">
@@ -137,13 +163,16 @@ export default function StockSearch({
                     </div>
                   </div>
                   <button
-                    onClick={(e) => handleFavoriteToggle(stock.symbol, e)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFavoriteToggle(stock.symbol, e);
+                    }}
                     className="text-yellow-500 hover:text-yellow-600"
                     aria-label="즐겨찾기 해제"
                   >
                     ★
                   </button>
-                </button>
+                </div>
               ))}
             </div>
           )}
@@ -155,10 +184,18 @@ export default function StockSearch({
                 최근 검색
               </div>
               {recentStocks.map((stock) => (
-                <button
+                <div
                   key={stock.symbol}
                   onClick={() => handleSelect(stock)}
-                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-left"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleSelect(stock);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-left cursor-pointer"
                 >
                   <div>
                     <div className="font-semibold text-gray-900 dark:text-white">
@@ -168,7 +205,7 @@ export default function StockSearch({
                       {stock.shortName}
                     </div>
                   </div>
-                </button>
+                </div>
               ))}
             </div>
           )}
@@ -177,10 +214,18 @@ export default function StockSearch({
           {searchQuery && filteredStocks.length > 0 && (
             <div className="p-2">
               {filteredStocks.map((stock) => (
-                <button
+                <div
                   key={stock.symbol}
                   onClick={() => handleSelect(stock)}
-                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-left"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleSelect(stock);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-left cursor-pointer"
                 >
                   <div>
                     <div className="font-semibold text-gray-900 dark:text-white">
@@ -191,7 +236,10 @@ export default function StockSearch({
                     </div>
                   </div>
                   <button
-                    onClick={(e) => handleFavoriteToggle(stock.symbol, e)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFavoriteToggle(stock.symbol, e);
+                    }}
                     className={`${
                       favorites.includes(stock.symbol)
                         ? 'text-yellow-500'
@@ -201,7 +249,7 @@ export default function StockSearch({
                   >
                     ★
                   </button>
-                </button>
+                </div>
               ))}
             </div>
           )}
