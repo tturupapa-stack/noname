@@ -58,12 +58,19 @@ function Top3ComparisonCard({
     >
       <Link href={`/stock/${stock.symbol}`}>
         <div
-          className="relative rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6 backdrop-blur-sm transition-all hover:bg-gray-50 dark:hover:bg-gray-900/70 cursor-pointer h-full flex flex-col"
+          className="relative rounded-2xl border-2 border-gray-300 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900/80 dark:to-gray-800/80 p-6 backdrop-blur-sm card-hover card-glow shadow-lg hover:shadow-xl cursor-pointer h-full flex flex-col overflow-hidden"
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
         >
+          {/* 그라데이션 오버레이 - 애니메이션 */}
+          <div className={`absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-15 animate-float ${
+            isPositive ? 'bg-green-400' : 'bg-red-400'
+          }`} style={{ animationDelay: `${index * 0.3}s` }}></div>
+          <div className={`absolute bottom-0 left-0 w-20 h-20 rounded-full blur-xl opacity-10 animate-float ${
+            isPositive ? 'bg-green-300' : 'bg-red-300'
+          }`} style={{ animationDelay: `${index * 0.3 + 1.5}s` }}></div>
         {/* 순위 뱃지 */}
-        <div className="absolute top-4 right-4">
+        <div className="absolute top-4 right-4 z-10">
           <div
             className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm ${getRankBadgeColor(
               rank
@@ -74,7 +81,7 @@ function Top3ComparisonCard({
         </div>
 
         {/* 종목 정보 */}
-        <div className="flex-1">
+        <div className="flex-1 relative z-10">
           <div className="mb-4">
             <div className="flex items-center gap-2 mb-1">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">{stock.symbol}</h3>

@@ -97,12 +97,27 @@ export default function AnimatedCard({
     <motion.div
       ref={elementRef as RefObject<HTMLDivElement>}
       {...animationProps}
-      whileHover={hover && !prefersReducedMotion ? { scale: 1.02 } : {}}
-      whileTap={onClick && !prefersReducedMotion ? { scale: 0.98 } : {}}
+      whileHover={hover && !prefersReducedMotion ? { 
+        scale: 1.03,
+        y: -8,
+        rotateY: 2,
+        transition: { 
+          duration: 0.3, 
+          ease: [0.34, 1.56, 0.64, 1],
+          type: "spring",
+          stiffness: 300,
+          damping: 20
+        }
+      } : {}}
+      whileTap={onClick && !prefersReducedMotion ? { 
+        scale: 0.97,
+        transition: { duration: 0.1 }
+      } : {}}
       onClick={onClick}
       className={className}
       style={{
         willChange: 'transform, opacity',
+        transformStyle: 'preserve-3d',
       }}
     >
       {children}

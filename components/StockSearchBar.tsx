@@ -165,10 +165,10 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
             onKeyDown={handleKeyDown}
             placeholder="종목명 또는 종목코드 입력"
             className={`
-              w-full px-4 py-2 pl-10 pr-10 rounded-lg border transition-all
-              ${isOpen ? 'border-blue-500 dark:border-blue-400 ring-2 ring-blue-500/20' : 'border-gray-300 dark:border-gray-700'}
-              bg-white dark:bg-gray-900 text-gray-900 dark:text-white
-              focus:outline-none
+              w-full px-4 py-3 pl-12 pr-12 rounded-xl border-2 transition-all shadow-sm
+              ${isOpen ? 'border-blue-500 dark:border-blue-400 ring-4 ring-blue-500/20 shadow-lg' : 'border-gray-300 dark:border-gray-700'}
+              bg-gradient-to-r from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-white
+              focus:outline-none hover:shadow-md
               ${isMobile && isOpen ? 'fixed top-0 left-0 right-0 z-[60] rounded-none border-x-0 border-t-0' : ''}
             `}
           />
@@ -194,8 +194,8 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
         {(showHistory || showResults || showNoResults || isLoading) && (
           <div
             className={`
-              absolute z-[55] w-full mt-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-xl
-              max-h-96 overflow-y-auto
+              absolute z-[55] w-full mt-2 bg-white dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-700 rounded-2xl shadow-2xl
+              max-h-96 overflow-y-auto backdrop-blur-sm
               ${isMobile && isOpen ? 'fixed top-14 left-0 right-0 rounded-none border-x-0 border-b-0 max-h-[calc(100vh-3.5rem)] z-[60]' : ''}
               animate-in slide-in-from-top-2 duration-200
             `}

@@ -69,14 +69,47 @@ export default function Home() {
   const allStocks = useMemo(() => mockTrendingStocks, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white transition-colors duration-200">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-white via-gray-50 to-blue-50/30 dark:from-black dark:via-gray-900 dark:to-blue-900/20 text-gray-900 dark:text-white transition-colors duration-300">
+      {/* 배경 애니메이션 파티클 */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="particle w-32 h-32 top-10 left-10 opacity-20" style={{ animationDelay: '0s' }}></div>
+        <div className="particle w-24 h-24 top-1/4 right-20 opacity-15" style={{ animationDelay: '2s' }}></div>
+        <div className="particle w-40 h-40 bottom-20 left-1/4 opacity-10" style={{ animationDelay: '4s' }}></div>
+        <div className="particle w-28 h-28 bottom-1/4 right-1/3 opacity-20" style={{ animationDelay: '6s' }}></div>
+        <div className="particle w-36 h-36 top-1/2 left-1/2 opacity-15" style={{ animationDelay: '8s' }}></div>
+      </div>
+      
+      <div className="container mx-auto px-4 py-8 max-w-7xl relative z-10">
         {/* Header */}
-        <div className="flex flex-col gap-4 mb-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">당신이 잠든 사이</h1>
-              <p className="text-gray-600 dark:text-gray-400">오늘의 화제 종목 대시보드</p>
+        <div className="flex flex-col gap-6 mb-12">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              {/* 로고 */}
+              <div className="relative">
+                <div className="w-16 h-16 rounded-2xl gradient-dark flex items-center justify-center shadow-glow overflow-hidden logo-heartbeat">
+                  <img 
+                    src="/logo-main.png" 
+                    alt="로고" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // 로고 로드 실패 시 대체 아이콘
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      if (target.parentElement) {
+                        target.parentElement.innerHTML = '<span class="text-2xl animate-float">🌙</span>';
+                      }
+                    }}
+                  />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full animate-pulse glow-pulse"></div>
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 animate-pulse"></div>
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold mb-2 gradient-text bg-clip-text text-transparent text-glow">
+                  당신이 잠든 사이
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400 text-lg animate-fade-in-up">오늘의 화제 종목 대시보드</p>
+              </div>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
               <AlertHistory />
@@ -97,19 +130,21 @@ export default function Home() {
         </div>
 
         {/* 알림 목록 */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">알림 설정</h2>
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold gradient-text bg-clip-text text-transparent">알림 설정</h2>
           </div>
           <AlertList onEdit={handleEditAlert} stocks={allStocks} />
         </div>
 
         {/* 화제 종목 TOP 3 비교 */}
-        <Top3Comparison stocks={mockTrendingStocks} />
+        <div className="mb-12">
+          <Top3Comparison stocks={mockTrendingStocks} />
+        </div>
 
         {/* 오늘의 화제 종목 카드 */}
-        <div className="mb-8 relative z-0">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">오늘의 화제 종목</h2>
+        <div className="mb-12 relative z-0">
+          <h2 className="text-2xl font-bold mb-6 gradient-text bg-clip-text text-transparent">오늘의 화제 종목</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <StockCard
               stock={mockTopStock}
@@ -124,14 +159,14 @@ export default function Home() {
         </div>
 
         {/* 브리핑 달력 */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">브리핑 달력</h2>
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-6 gradient-text bg-clip-text text-transparent">브리핑 달력</h2>
           <BriefingCalendar briefings={mockBriefings} />
         </div>
 
         {/* 최근 브리핑 히스토리 */}
         <div>
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">최근 브리핑 히스토리</h2>
+          <h2 className="text-2xl font-bold mb-6 gradient-text bg-clip-text text-transparent">최근 브리핑 히스토리</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {mockBriefings.map((briefing, index) => (
                   <BriefingCard key={briefing.briefingId} briefing={briefing} index={index} />

@@ -27,11 +27,18 @@ function StockCard({
     <AnimatedCard
       direction="fade"
       delay={0}
-      className={`rounded-lg border bg-gray-50 dark:bg-gray-900/50 p-6 backdrop-blur-sm transition-all hover:bg-gray-100 dark:hover:bg-gray-900/70 ${
+      className={`rounded-2xl border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900/80 dark:to-gray-800/80 p-6 backdrop-blur-sm card-hover card-glow shadow-lg hover:shadow-xl ${
         isLarge ? 'col-span-full md:col-span-2' : ''
-      } ${borderColor}`}
+      } ${borderColor} relative overflow-hidden`}
     >
-      <div className="flex items-start justify-between">
+      {/* 그라데이션 오버레이 - 애니메이션 */}
+      <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-20 animate-float ${
+        isPositive ? 'bg-green-400' : 'bg-red-400'
+      }`} style={{ animationDelay: '0s' }}></div>
+      <div className={`absolute bottom-0 left-0 w-24 h-24 rounded-full blur-2xl opacity-15 animate-float ${
+        isPositive ? 'bg-green-300' : 'bg-red-300'
+      }`} style={{ animationDelay: '1.5s' }}></div>
+      <div className="flex items-start justify-between relative z-10">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
             <h3 className={`font-bold text-gray-900 dark:text-white ${isLarge ? 'text-2xl' : 'text-xl'}`}>

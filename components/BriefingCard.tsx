@@ -52,15 +52,18 @@ function BriefingCard({ briefing, index = 0 }: BriefingCardProps) {
     <AnimatedCard
       direction="up"
       delay={index * 100}
-      className="relative rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900/50 backdrop-blur-sm transition-all hover:bg-gray-50 dark:hover:bg-gray-900/70 hover:border-gray-400 dark:hover:border-gray-600"
+      className="relative rounded-2xl border-2 border-gray-300 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900/80 dark:to-gray-800/80 backdrop-blur-sm card-hover card-glow shadow-lg hover:shadow-xl overflow-hidden"
     >
+      {/* 그라데이션 오버레이 - 애니메이션 */}
+      <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-10 bg-gradient-to-br from-purple-400 to-blue-400 animate-float" style={{ animationDelay: `${index * 0.2}s` }}></div>
+      <div className="absolute bottom-0 left-0 w-20 h-20 rounded-full blur-xl opacity-10 bg-gradient-to-br from-pink-400 to-purple-400 animate-float" style={{ animationDelay: `${index * 0.2 + 1}s` }}></div>
       {/* 공유 버튼 */}
       <div className="absolute top-3 right-3 z-10" onClick={(e) => e.stopPropagation()}>
         <ShareButton briefing={briefing} variant="icon" size="sm" />
       </div>
 
       <Link href={`/briefing/${briefing.briefingId}`}>
-        <div className="p-4 cursor-pointer">
+        <div className="p-4 cursor-pointer relative z-10">
           <div className="flex items-start justify-between mb-3">
             <div className="flex-1 pr-8">
               <div className="flex items-center gap-2 mb-2">

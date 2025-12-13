@@ -225,9 +225,9 @@ export default function FavoriteList({ stocks }: FavoriteListProps) {
             <div
               key={favorite.id}
               className={`
-                flex items-center gap-4 p-4 rounded-lg border transition-all
-                ${isSelected ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900/50'}
-                hover:bg-gray-50 dark:hover:bg-gray-800
+                flex items-center gap-4 p-4 rounded-xl border-2 transition-all card-hover shadow-sm
+                ${isSelected ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 shadow-lg' : 'border-gray-300 dark:border-gray-700 bg-gradient-to-r from-white to-gray-50 dark:from-gray-900/80 dark:to-gray-800/80'}
+                hover:shadow-md
               `}
             >
               {/* 체크박스 */}

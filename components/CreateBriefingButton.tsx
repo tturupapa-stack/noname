@@ -18,7 +18,7 @@ export default function CreateBriefingButton() {
     <button
       onClick={handleCreateBriefing}
       disabled={isLoading}
-      className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition-all hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="flex items-center gap-2 rounded-xl btn-gradient px-6 py-3 font-semibold text-white shadow-lg glow-pulse disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none disabled:hover:shadow-lg disabled:glow-pulse relative overflow-hidden"
     >
       {isLoading ? (
         <>
