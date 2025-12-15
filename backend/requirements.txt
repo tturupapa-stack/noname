@@ -1,0 +1,4 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+yahooquery>=2.3.7
+pydantic>=2.0.0
