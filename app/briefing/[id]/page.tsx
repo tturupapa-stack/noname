@@ -1,36 +1,61 @@
 'use client';
 
-import { use, useState } from 'react';
-import { mockBriefings } from '@/data/mockData';
+import { use, useState, useEffect } from 'react';
 import { Briefing } from '@/types';
 import Link from 'next/link';
 import BriefingPreviewModal from '@/components/BriefingPreviewModal';
 import ShareButton from '@/components/ShareButton';
+import { fetchBriefingByDate } from '@/services/api';
+import { adaptBriefing } from '@/services/apiAdapters';
 
 interface BriefingDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
+// briefing ID에서 날짜 추출 (brief_YYYYMMDD_SYMBOL_001 -> YYYY-MM-DD)
+function extractDateFromBriefingId(id: string): string | null {
+  const match = id.match(/^brief_(\d{4})(\d{2})(\d{2})_/);
+  if (match) {
+    return `${match[1]}-${match[2]}-${match[3]}`;
+  }
+  // 날짜 형식이면 그대로 반환
+  if (/^\d{4}-\d{2}-\d{2}$/.test(id)) {
+    return id;
+  }
+  return null;
+}
+
 export default function BriefingDetailPage({ params }: BriefingDetailPageProps) {
   const { id } = use(params);
-  const briefing = mockBriefings.find((b) => b.briefingId === id);
+  const [briefing, setBriefing] = useState<Briefing | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
-  if (!briefing) {
-      return (
-      <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white flex items-center justify-center transition-colors duration-200">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">브리핑을 찾을 수 없습니다</h1>
-          <Link
-            href="/"
-            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline"
-          >
-            대시보드로 돌아가기
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    async function loadBriefing() {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const date = extractDateFromBriefingId(id);
+        if (!date) {
+          throw new Error('잘못된 브리핑 ID 형식입니다');
+        }
+
+        const response = await fetchBriefingByDate(date);
+        const adaptedBriefing = adaptBriefing(response.briefing);
+        setBriefing(adaptedBriefing);
+      } catch (err) {
+        console.error('브리핑 로드 실패:', err);
+        setError(err instanceof Error ? err.message : '브리핑을 불러올 수 없습니다');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadBriefing();
+  }, [id]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -53,8 +78,34 @@ export default function BriefingDetailPage({ params }: BriefingDetailPageProps) 
 
   const handleSendFromModal = (channels: string[]) => {
     console.log('발송 채널:', channels);
-    // 실제 발송 로직은 여기에 구현
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white flex items-center justify-center transition-colors duration-200">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">브리핑을 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !briefing) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white flex items-center justify-center transition-colors duration-200">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">{error || '브리핑을 찾을 수 없습니다'}</h1>
+          <Link
+            href="/"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline"
+          >
+            대시보드로 돌아가기
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white transition-colors duration-200">
@@ -241,4 +292,3 @@ export default function BriefingDetailPage({ params }: BriefingDetailPageProps) 
     </div>
   );
 }
-

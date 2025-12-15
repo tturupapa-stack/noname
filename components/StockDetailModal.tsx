@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { Stock } from '@/types';
+import { useEffect, useRef, useState } from 'react';
+import { Stock, PriceData } from '@/types';
 import Link from 'next/link';
 import FavoriteIcon from './FavoriteIcon';
 import StockChart from './StockChart';
-import { mockTopStockChartData } from '@/data/mockData';
+import { fetchStockChart } from '@/services/api';
+import { adaptChartData } from '@/services/apiAdapters';
 
 interface StockDetailModalProps {
   stock: Stock;
@@ -19,6 +20,8 @@ export default function StockDetailModal({
   onClose,
 }: StockDetailModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const [chartData, setChartData] = useState<PriceData[]>([]);
+  const [isChartLoading, setIsChartLoading] = useState(false);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -37,6 +40,27 @@ export default function StockDetailModal({
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose]);
+
+  // 모달이 열릴 때 차트 데이터 로드
+  useEffect(() => {
+    async function loadChartData() {
+      if (!isOpen || !stock) return;
+
+      setIsChartLoading(true);
+      try {
+        const chartRes = await fetchStockChart(stock.symbol, '5d');
+        const adaptedChartData = adaptChartData(chartRes.data);
+        setChartData(adaptedChartData);
+      } catch (err) {
+        console.error('차트 데이터 로드 실패:', err);
+        setChartData([]);
+      } finally {
+        setIsChartLoading(false);
+      }
+    }
+
+    loadChartData();
+  }, [isOpen, stock]);
 
   if (!isOpen) return null;
 
@@ -142,7 +166,7 @@ export default function StockDetailModal({
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">시가총액</span>
                     <span className="text-gray-900 dark:text-white">
-                      {stock.symbol.length === 6 
+                      {stock.symbol.length === 6
                         ? `₩${(stock.marketCap / 1000000000000).toFixed(1)}T`
                         : `$${(stock.marketCap / 1000000000).toFixed(1)}B`}
                     </span>
@@ -170,7 +194,18 @@ export default function StockDetailModal({
             {/* 주가 차트 */}
             <div className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">최근 5일간 주가 추이</h3>
-              <StockChart data={mockTopStockChartData} isPositive={isPositive} />
+              {isChartLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                  <span className="ml-3 text-gray-500 dark:text-gray-400">차트 로딩 중...</span>
+                </div>
+              ) : chartData.length > 0 ? (
+                <StockChart data={chartData} isPositive={isPositive} />
+              ) : (
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  차트 데이터가 없습니다
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -194,4 +229,3 @@ export default function StockDetailModal({
     </div>
   );
 }
-

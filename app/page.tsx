@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import StockCard from '@/components/StockCard';
 import SelectionCriteriaCard from '@/components/SelectionCriteriaCard';
 import BriefingCard from '@/components/BriefingCard';
@@ -22,21 +22,80 @@ const BriefingCalendar = dynamic(() => import('@/components/BriefingCalendar'), 
 import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 import PWAUpdatePrompt from '@/components/PWAUpdatePrompt';
 import { useToast } from '@/components/Toast';
-import { AlertSettings } from '@/types';
+import { AlertSettings, Stock, SelectionCriteria, Briefing, PriceData } from '@/types';
 import { saveAlert } from '@/utils/alertStorage';
 import {
-  mockTopStock,
-  mockSelectionCriteria,
-  mockBriefings,
-  mockTopStockChartData,
-  mockTrendingStocks,
   mockAllStocks,
 } from '@/data/mockData';
+import { fetchTrendingStock, fetchTopNStocks, fetchBriefings, fetchStockChart } from '@/services/api';
+import { adaptStock, adaptRankedStock, adaptSelectionCriteria, adaptBriefings, adaptChartData } from '@/services/apiAdapters';
 
 export default function Home() {
   const [editingAlert, setEditingAlert] = useState<AlertSettings | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { showToast, ToastContainer } = useToast();
+
+  // API 데이터 상태
+  const [topStock, setTopStock] = useState<Stock | null>(null);
+  const [selectionCriteria, setSelectionCriteria] = useState<SelectionCriteria | null>(null);
+  const [trendingStocks, setTrendingStocks] = useState<Stock[]>([]);
+  const [briefings, setBriefings] = useState<Briefing[]>([]);
+  const [chartData, setChartData] = useState<PriceData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // API 데이터 로드
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // 병렬로 API 호출
+        const [trendingRes, topNRes, briefingsRes] = await Promise.all([
+          fetchTrendingStock('most_actives'),
+          fetchTopNStocks('most_actives', 3),
+          fetchBriefings(1, 10),
+        ]);
+
+        // 화제 종목 (TOP 1)
+        const adaptedTopStock = adaptStock(trendingRes.stock, trendingRes.score, 1);
+        setTopStock(adaptedTopStock);
+
+        // 선정 기준
+        const adaptedCriteria = adaptSelectionCriteria(trendingRes.score, trendingRes.why_hot);
+        setSelectionCriteria(adaptedCriteria);
+
+        // TOP 3 종목
+        const adaptedTrendingStocks = topNRes.stocks.map(adaptRankedStock);
+        setTrendingStocks(adaptedTrendingStocks);
+
+        // 브리핑 히스토리
+        const adaptedBriefings = adaptBriefings(briefingsRes.briefings);
+        setBriefings(adaptedBriefings);
+
+        // 화제 종목 차트 데이터 로드
+        if (adaptedTopStock) {
+          try {
+            const chartRes = await fetchStockChart(adaptedTopStock.symbol, '5d');
+            const adaptedChartData = adaptChartData(chartRes.data);
+            setChartData(adaptedChartData);
+          } catch (chartErr) {
+            console.error('차트 데이터 로드 실패:', chartErr);
+            // 차트 실패해도 다른 데이터는 표시
+          }
+        }
+
+      } catch (err) {
+        console.error('API 호출 실패:', err);
+        setError(err instanceof Error ? err.message : 'API 호출 실패');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadData();
+  }, []);
 
   const handleEditAlert = useCallback((alert: AlertSettings) => {
     setEditingAlert(alert);
@@ -65,8 +124,13 @@ export default function Home() {
     setIsModalOpen(true);
   }, []);
 
-  // 모든 종목 목록 (실제로는 API에서 가져올 데이터) - useMemo로 메모이제이션
-  const allStocks = useMemo(() => mockTrendingStocks, []);
+  // 모든 종목 목록 - API 데이터 + 검색용 목업 데이터
+  const allStocks = useMemo(() => {
+    if (trendingStocks.length > 0) {
+      return [...trendingStocks, ...mockAllStocks.filter(s => !trendingStocks.find(t => t.symbol === s.symbol))];
+    }
+    return mockAllStocks;
+  }, [trendingStocks]);
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-white via-gray-50 to-blue-50/30 dark:from-black dark:via-gray-900 dark:to-blue-900/20 text-gray-900 dark:text-white transition-colors duration-300">
@@ -120,7 +184,7 @@ export default function Home() {
           </div>
           {/* 종목 검색바 */}
           <div className="flex justify-center">
-            <StockSearchBar stocks={mockAllStocks} />
+            <StockSearchBar stocks={allStocks} />
           </div>
         </div>
 
@@ -139,39 +203,59 @@ export default function Home() {
 
         {/* 화제 종목 TOP 3 비교 */}
         <div className="mb-12">
-          <Top3Comparison stocks={mockTrendingStocks} />
+          {isLoading ? (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">TOP 3 종목 로딩 중...</div>
+          ) : error ? (
+            <div className="text-center py-8 text-red-500">데이터 로드 실패: {error}</div>
+          ) : (
+            <Top3Comparison stocks={trendingStocks} />
+          )}
         </div>
 
         {/* 오늘의 화제 종목 카드 */}
         <div className="mb-12 relative z-0">
           <h2 className="text-2xl font-bold mb-6 gradient-text bg-clip-text text-transparent">오늘의 화제 종목</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <StockCard
-              stock={mockTopStock}
-              isLarge={true}
-              chartData={mockTopStockChartData}
-            />
-            <SelectionCriteriaCard
-              criteria={mockSelectionCriteria}
-              stockSymbol={mockTopStock.symbol}
-            />
-          </div>
+          {isLoading ? (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">화제 종목 로딩 중...</div>
+          ) : error ? (
+            <div className="text-center py-8 text-red-500">데이터 로드 실패: {error}</div>
+          ) : topStock && selectionCriteria ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <StockCard
+                stock={topStock}
+                isLarge={true}
+                chartData={chartData}
+              />
+              <SelectionCriteriaCard
+                criteria={selectionCriteria}
+                stockSymbol={topStock.symbol}
+              />
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">화제 종목 데이터가 없습니다</div>
+          )}
         </div>
 
         {/* 브리핑 달력 */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-6 gradient-text bg-clip-text text-transparent">브리핑 달력</h2>
-          <BriefingCalendar briefings={mockBriefings} />
+          <BriefingCalendar briefings={briefings} />
         </div>
 
         {/* 최근 브리핑 히스토리 */}
         <div>
           <h2 className="text-2xl font-bold mb-6 gradient-text bg-clip-text text-transparent">최근 브리핑 히스토리</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {mockBriefings.map((briefing, index) => (
-                  <BriefingCard key={briefing.briefingId} briefing={briefing} index={index} />
-                ))}
-          </div>
+          {isLoading ? (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">브리핑 히스토리 로딩 중...</div>
+          ) : briefings.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {briefings.map((briefing, index) => (
+                <BriefingCard key={briefing.briefingId} briefing={briefing} index={index} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">브리핑 히스토리가 없습니다</div>
+          )}
         </div>
       </div>
 

@@ -1,10 +1,11 @@
 'use client';
 
-import { use } from 'react';
-import { mockTrendingStocks, mockTopStockChartData } from '@/data/mockData';
-import { Stock } from '@/types';
+import { use, useState, useEffect } from 'react';
+import { Stock, PriceData } from '@/types';
 import Link from 'next/link';
 import StockChart from '@/components/StockChart';
+import { fetchStockDetail, fetchStockChart } from '@/services/api';
+import { adaptStockDetail, adaptChartData } from '@/services/apiAdapters';
 
 interface StockDetailPageProps {
   params: Promise<{ symbol: string }>;
@@ -12,13 +13,55 @@ interface StockDetailPageProps {
 
 export default function StockDetailPage({ params }: StockDetailPageProps) {
   const { symbol } = use(params);
-  const stock = mockTrendingStocks.find((s) => s.symbol === symbol);
+  const [stock, setStock] = useState<Stock | null>(null);
+  const [chartData, setChartData] = useState<PriceData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!stock) {
+  useEffect(() => {
+    async function loadStockData() {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // 종목 상세 정보와 차트 데이터 병렬 로드
+        const [stockRes, chartRes] = await Promise.all([
+          fetchStockDetail(symbol),
+          fetchStockChart(symbol, '5d'),
+        ]);
+
+        const adaptedStock = adaptStockDetail(stockRes.stock);
+        setStock(adaptedStock);
+
+        const adaptedChartData = adaptChartData(chartRes.data);
+        setChartData(adaptedChartData);
+      } catch (err) {
+        console.error('종목 데이터 로드 실패:', err);
+        setError(err instanceof Error ? err.message : '데이터 로드 실패');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadStockData();
+  }, [symbol]);
+
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white flex items-center justify-center transition-colors duration-200">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">종목을 찾을 수 없습니다</h1>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">종목 정보를 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !stock) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white flex items-center justify-center transition-colors duration-200">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">{error || '종목을 찾을 수 없습니다'}</h1>
           <Link
             href="/"
             className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline"
@@ -32,8 +75,21 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
 
   const isPositive = stock.change >= 0;
   const changeColor = isPositive ? 'text-green-500' : 'text-red-500';
-  const bgColor = isPositive ? 'bg-green-500/10' : 'bg-red-500/10';
   const borderColor = isPositive ? 'border-green-500/20' : 'border-red-500/20';
+
+  const formatPrice = (price: number) => {
+    return stock.symbol.length === 6 ? `₩${price.toLocaleString()}` : `$${price.toFixed(2)}`;
+  };
+
+  const formatMarketCap = (marketCap: number) => {
+    if (stock.symbol.length === 6) {
+      return `₩${(marketCap / 1000000000000).toFixed(1)}T`;
+    }
+    if (marketCap >= 1000000000000) {
+      return `$${(marketCap / 1000000000000).toFixed(2)}T`;
+    }
+    return `$${(marketCap / 1000000000).toFixed(1)}B`;
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white transition-colors duration-200">
@@ -49,7 +105,7 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
           <div className="mt-4">
             <div className="flex items-center gap-3 mb-2">
               <h1 className="text-4xl font-bold">{stock.symbol}</h1>
-              {stock.rank && (
+              {stock.rank > 0 && (
                 <span className="px-3 py-1 bg-blue-600 dark:bg-blue-500 text-white rounded-full text-sm font-semibold">
                   {stock.rank}위
                 </span>
@@ -67,7 +123,7 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
             <div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">현재가</div>
               <div className={`text-3xl font-bold ${changeColor}`}>
-                ${stock.currentPrice.toFixed(2)}
+                {formatPrice(stock.currentPrice)}
               </div>
             </div>
             <div>
@@ -78,7 +134,7 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
               </div>
               <div className={`text-sm ${changeColor} mt-1`}>
                 {isPositive ? '+' : ''}
-                {stock.change.toFixed(2)}
+                {stock.symbol.length === 6 ? stock.change.toLocaleString() : stock.change.toFixed(2)}
               </div>
             </div>
             <div>
@@ -88,9 +144,9 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
               </div>
             </div>
             <div>
-              <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">복합 점수</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">시가총액</div>
               <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {stock.compositeScore.toFixed(1)}
+                {formatMarketCap(stock.marketCap)}
               </div>
             </div>
           </div>
@@ -102,17 +158,17 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
             <h3 className="text-lg font-semibold mb-4">기본 정보</h3>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">섹터</span>
-                <span className="text-gray-900 dark:text-white">{stock.sector}</span>
+                <span className="text-gray-600 dark:text-gray-400">심볼</span>
+                <span className="text-gray-900 dark:text-white">{stock.symbol}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">산업</span>
-                <span className="text-gray-900 dark:text-white">{stock.industry}</span>
+                <span className="text-gray-600 dark:text-gray-400">종목명</span>
+                <span className="text-gray-900 dark:text-white">{stock.shortName}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-400">시가총액</span>
                 <span className="text-gray-900 dark:text-white">
-                  ${(stock.marketCap / 1000000000).toFixed(1)}B
+                  {formatMarketCap(stock.marketCap)}
                 </span>
               </div>
             </div>
@@ -128,14 +184,16 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">선정일시</span>
-                <span className="text-gray-900 dark:text-white">
-                  {new Date(stock.selectedAt).toLocaleDateString('ko-KR')}
+                <span className="text-gray-600 dark:text-gray-400">등락</span>
+                <span className={changeColor}>
+                  {isPositive ? '+' : ''}{stock.changePercent.toFixed(2)}%
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">순위</span>
-                <span className="text-gray-900 dark:text-white">{stock.rank}위</span>
+                <span className="text-gray-600 dark:text-gray-400">변동액</span>
+                <span className={changeColor}>
+                  {isPositive ? '+' : ''}{formatPrice(Math.abs(stock.change))}
+                </span>
               </div>
             </div>
           </div>
@@ -144,10 +202,15 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
         {/* 주가 차트 */}
         <div className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6 backdrop-blur-sm">
           <h3 className="text-lg font-semibold mb-4">최근 5일간 주가 추이</h3>
-          <StockChart data={mockTopStockChartData} isPositive={isPositive} />
+          {chartData.length > 0 ? (
+            <StockChart data={chartData} isPositive={isPositive} />
+          ) : (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              차트 데이터가 없습니다
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
-
