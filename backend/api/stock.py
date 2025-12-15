@@ -14,7 +14,9 @@ from services.news_service import get_news_service, NewsServiceError
 from services.briefing_service import briefing_storage
 from services.cache_service import (
     cache, CACHE_KEY_TRENDING, CACHE_KEY_TOP_N, CACHE_KEY_NEWS,
-    CACHE_TTL_TRENDING, CACHE_TTL_TOP_N, CACHE_TTL_NEWS
+    CACHE_KEY_STOCK_DETAIL, CACHE_KEY_CHART,
+    CACHE_TTL_TRENDING, CACHE_TTL_TOP_N, CACHE_TTL_NEWS,
+    CACHE_TTL_STOCK_DETAIL, CACHE_TTL_CHART
 )
 
 # .env 파일 로드
@@ -45,7 +47,7 @@ async def get_stock_chart(
     ticker = ticker.upper()
 
     # 캐시 확인
-    cache_key = f"chart_{ticker}_{period}"
+    cache_key = CACHE_KEY_CHART.format(ticker=ticker, period=period)
     cached = cache.get(cache_key)
     if cached:
         return cached
@@ -89,8 +91,8 @@ async def get_stock_chart(
             data=data_points
         )
 
-        # 캐시 저장 (5분)
-        cache.set(cache_key, response, 300)
+        # 캐시 저장
+        cache.set(cache_key, response, CACHE_TTL_CHART)
 
         return response
 
@@ -341,7 +343,7 @@ def _format_market_cap(market_cap: float | None) -> str:
 @router.get("/{ticker}", response_model=StockDetailResponse)
 async def get_stock_detail(ticker: str):
     """
-    종목 상세 정보 조회
+    종목 상세 정보 조회 (캐시 적용: 5분)
 
     지정된 종목의 기본 정보와 최근 뉴스를 반환.
 
@@ -349,6 +351,12 @@ async def get_stock_detail(ticker: str):
     - ticker: 종목 심볼 (예: NVDA, AAPL, TSLA)
     """
     ticker = ticker.upper()
+
+    # 캐시 확인
+    cache_key = CACHE_KEY_STOCK_DETAIL.format(ticker=ticker)
+    cached = cache.get(cache_key)
+    if cached:
+        return cached
 
     try:
         from yahooquery import Ticker
@@ -382,23 +390,33 @@ async def get_stock_detail(ticker: str):
             currency=price_data.get("currency", "USD")
         )
 
-        # 2. 뉴스 조회
-        news_items = []
-        try:
-            news_service = get_news_service()
-            news_result = news_service.search_stock_news(
-                ticker=ticker,
-                num_results=5,
-                hours=24
-            )
-            news_items = news_result.news
-        except (NewsServiceError, Exception):
-            pass
+        # 2. 뉴스 조회 (캐시 적용)
+        news_cache_key = CACHE_KEY_NEWS.format(ticker=ticker)
+        news_items = cache.get(news_cache_key)
 
-        return StockDetailResponse(
+        if news_items is None:
+            news_items = []
+            try:
+                news_service = get_news_service()
+                news_result = news_service.search_stock_news(
+                    ticker=ticker,
+                    num_results=5,
+                    hours=24
+                )
+                news_items = news_result.news
+                cache.set(news_cache_key, news_items, CACHE_TTL_NEWS)
+            except (NewsServiceError, Exception):
+                pass
+
+        response = StockDetailResponse(
             stock=stock,
             news=news_items
         )
+
+        # 캐시 저장
+        cache.set(cache_key, response, CACHE_TTL_STOCK_DETAIL)
+
+        return response
 
     except HTTPException:
         raise

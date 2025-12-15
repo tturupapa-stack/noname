@@ -20,12 +20,35 @@ async def preload_cache():
         async with httpx.AsyncClient() as client:
             print("📦 캐시 프리로딩 시작...")
 
-            # TOP 3 종목 미리 로드
-            await client.get(
+            # 1. TOP 3 종목 미리 로드
+            response = await client.get(
                 "http://localhost:8000/api/stocks/trending/top?type=most_actives&count=3",
                 timeout=120.0
             )
             print("✅ TOP 3 캐시 로드 완료")
+
+            # 2. TOP 3 종목의 상세 정보 + 차트 미리 로드
+            if response.status_code == 200:
+                data = response.json()
+                symbols = [stock["stock"]["symbol"] for stock in data.get("stocks", [])]
+
+                for symbol in symbols:
+                    try:
+                        # 종목 상세 프리로드
+                        await client.get(
+                            f"http://localhost:8000/api/stocks/{symbol}",
+                            timeout=30.0
+                        )
+                        # 차트 데이터 프리로드
+                        await client.get(
+                            f"http://localhost:8000/api/stocks/{symbol}/chart?period=5d",
+                            timeout=30.0
+                        )
+                        print(f"✅ {symbol} 상세/차트 캐시 로드 완료")
+                    except Exception:
+                        pass
+
+            print("🎉 캐시 프리로딩 완료!")
 
     except Exception as e:
         print(f"⚠️ 캐시 프리로딩 실패 (서비스는 정상 작동): {e}")

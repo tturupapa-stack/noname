@@ -66,8 +66,12 @@ cache = CacheService()
 CACHE_KEY_TRENDING = "trending_stock"
 CACHE_KEY_TOP_N = "top_n_stocks_{type}_{count}"
 CACHE_KEY_NEWS = "news_{ticker}"
+CACHE_KEY_STOCK_DETAIL = "stock_detail_{ticker}"
+CACHE_KEY_CHART = "chart_{ticker}_{period}"
 
 # TTL 설정 (초)
 CACHE_TTL_TRENDING = 300      # 5분
 CACHE_TTL_TOP_N = 300         # 5분
 CACHE_TTL_NEWS = 900          # 15분
+CACHE_TTL_STOCK_DETAIL = 300  # 5분
+CACHE_TTL_CHART = 300         # 5분
