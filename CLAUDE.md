@@ -4,6 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
+### Frontend (Next.js)
 ```bash
 npm run dev          # 개발 서버 실행 (http://localhost:3000)
 npm run build        # 프로덕션 빌드
@@ -11,23 +12,58 @@ npm run lint         # ESLint 검사
 npm run generate-icons  # PWA 아이콘 생성 (public/icon.svg 기반)
 ```
 
+### Backend (FastAPI)
+```bash
+cd backend
+pip install -r requirements.txt  # 의존성 설치
+uvicorn main:app --reload        # 개발 서버 실행 (http://localhost:8000)
+```
+
 ## Architecture
 
-Next.js 16 App Router 기반의 PWA 대시보드 애플리케이션 (React 19, TypeScript, Tailwind CSS 4).
+**풀스택 구조**: Next.js 16 App Router 프론트엔드 + FastAPI 백엔드
 
-### 주요 구조
+### Frontend (Next.js 16, React 19, TypeScript, Tailwind CSS 4)
 
 - **app/**: Next.js App Router 페이지
   - `page.tsx`: 메인 대시보드
-  - `briefing/[id]/`: 브리핑 상세
+  - `briefing/[id]/`, `briefings/`: 브리핑 관련 페이지
   - `stock/[symbol]/`: 종목 상세
+  - `alerts/`, `favorites/`: 알림, 즐겨찾기 페이지
   - `offline/`: 오프라인 페이지
-- **components/**: React 컴포넌트 (30개)
+- **components/**: React 컴포넌트
 - **contexts/**: ThemeContext (light/dark/system 지원)
 - **hooks/**: useCountUp, useScrollAnimation, useDebounce
 - **utils/**: 로컬스토리지 관리 유틸리티 (알림, 즐겨찾기, 검색 기록, 캘린더 등)
 - **types/**: TypeScript 타입 정의
 - **data/mockData.ts**: 목업 데이터
+
+### Backend (FastAPI, Python)
+
+- **backend/main.py**: FastAPI 앱 엔트리포인트, CORS 설정, 라우터 등록
+- **backend/api/**: API 엔드포인트 라우터
+  - `stock.py`: 종목 데이터 API (`/api/stocks/...`)
+  - `briefing.py`: 브리핑 조회 API
+  - `briefing_generate.py`: 브리핑 생성 API
+- **backend/services/**: 비즈니스 로직
+  - `screener_service.py`: Yahoo Finance 화제 종목 수집
+  - `news_service.py`: Exa API 뉴스 검색
+  - `briefing_service.py`: 브리핑 CRUD
+  - `briefing_generator.py`: 브리핑 생성 로직
+  - `cache_service.py`: 캐싱 (TTL 기반 인메모리)
+- **backend/models/**: Pydantic 모델
+- **backend/data/**: JSON 데이터 파일 (briefings.json 등)
+
+### 환경 변수
+
+`backend/.env` 파일 필요 (`.env.example` 참고):
+```
+EXA_API_KEY=your_exa_api_key_here
+```
+
+### API 연동
+
+프론트엔드는 `http://localhost:8000/api/...`로 백엔드 API 호출. 백엔드는 Yahoo Finance(yahooquery)와 Exa API를 통해 실시간 데이터 수집.
 
 ### 테마 시스템
 

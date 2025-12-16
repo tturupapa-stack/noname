@@ -2,17 +2,17 @@
   {
     "id": "2025-12-16",
     "date": "2025-12-16",
-    "created_at": "2025-12-16 00:46:41.461725",
+    "created_at": "2025-12-16 09:48:43.434424",
     "stock": {
       "symbol": "IMNM",
       "name": "Immunome, Inc.",
-      "price": 24.5,
-      "change": 4.9300003,
-      "change_percent": 25.153063,
-      "volume": 6490766,
+      "price": 22.64,
+      "change": 3.0699997,
+      "change_percent": 15.687275,
+      "volume": 12922018,
       "avg_volume": 1447941,
-      "volume_ratio": 4.48,
-      "market_cap": 2246901760.0,
+      "volume_ratio": 8.92,
+      "market_cap": 2076320640.0,
       "pe_ratio": null,
       "fifty_two_week_high": 25.3,
       "fifty_two_week_low": 5.15,
@@ -28,11 +28,11 @@
     "why_hot": [
       {
         "icon": "✅",
-        "message": "거래량 급증 (평소 대비 4.48배)"
+        "message": "거래량 급증 (평소 대비 8.92배)"
       },
       {
         "icon": "✅",
-        "message": "당일 25.2% 상승"
+        "message": "당일 15.7% 상승"
       },
       {
         "icon": "✅",
@@ -45,34 +45,34 @@
     ],
     "news": [
       {
-        "title": "Immunome to Announce Topline Results from Pha...",
-        "url": "https://marketchameleon.com/PressReleases/i/2220930/IMNM/immunome-to-announce-topline-results-from-phase",
-        "published_date": "2025-12-14 23:39:57.273000+00:00",
-        "source": "marketchameleon.com"
+        "title": "Stocks making the biggest moves midday: Z, KLAC, IRBT, ...",
+        "url": "https://www.cnbc.com/2025/12/15/stocks-making-the-biggest-moves-midday-z-klac-irbt-imnm.html",
+        "published_date": "2025-12-15 17:48:42.841000+00:00",
+        "source": "cnbc.com"
       },
       {
-        "title": "Immunome: IMNM Stock Price Quote & News",
-        "url": "https://robinhood.com/stocks/IMNM",
-        "published_date": "2025-12-14 15:39:57.273000+00:00",
-        "source": "robinhood.com"
+        "title": "Why Is IMNM Stock Rising Today?",
+        "url": "https://stocktwits.com/news-articles/markets/equity/why-is-imnm-stock-rising-today/cLe4drWREoh",
+        "published_date": "2025-12-15 14:48:42.841000+00:00",
+        "source": "stocktwits.com"
       },
       {
-        "title": "CryoPort (CYRX) Competitors and Alternatives 2025",
-        "url": "https://www.marketbeat.com/stocks/NASDAQ/CYRX/competitors-and-alternatives/",
-        "published_date": "2025-12-14 20:39:57.273000+00:00",
-        "source": "marketbeat.com"
+        "title": "Why Immunome Stock Surged Today",
+        "url": "https://www.fool.com/investing/2025/12/15/why-immunome-stock-surged-today/",
+        "published_date": "2025-12-15 22:48:42.841000+00:00",
+        "source": "fool.com"
       },
       {
-        "title": "",
-        "url": "https://www.sec.gov/Archives/edgar/data/1728328/000101376223007274/def14a1023_inmedpharma.htm",
+        "title": "Yahoo Finance",
+        "url": "https://finance.yahoo.com/calendar/earnings?from=2025-12-16&to=2025-12-22&day=2025-12-16",
+        "published_date": "2025-12-16 00:00:00+00:00",
+        "source": "finance.yahoo.com"
+      },
+      {
+        "title": "US: Empire State Manufacturing Index - CME Group",
+        "url": "https://www.cmegroup.com/education/events/econoday/2025/12/feed627340.html",
         "published_date": "2025-12-15 00:00:00+00:00",
-        "source": "sec.gov"
-      },
-      {
-        "title": "Clarification deadline for TT Electronics Plc",
-        "url": "https://www.investegate.co.uk/announcement/rns/tt-electronics--ttg/clarification-deadline-for-tt-electronics-plc/9288087",
-        "published_date": "2025-12-15 00:00:00+00:00",
-        "source": "investegate.co.uk"
+        "source": "cmegroup.com"
       }
     ]
   },
