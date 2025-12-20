@@ -19,17 +19,6 @@ import { mockAllStocks } from '@/data/mockData';
 import { fetchTrendingStock, fetchTopNStocks, fetchBriefings, fetchStockChart } from '@/services/api';
 import { adaptStock, adaptRankedStock, adaptSelectionCriteria, adaptBriefings, adaptChartData } from '@/services/apiAdapters';
 
-// 별 생성 함수
-function generateStars(count: number) {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 60}%`,
-    animationDelay: `${Math.random() * 4}s`,
-    size: Math.random() * 2 + 1,
-  }));
-}
-
 export default function Home() {
   // API 데이터 상태
   const [topStock, setTopStock] = useState<Stock | null>(null);
@@ -40,13 +29,6 @@ export default function Home() {
   const [favoriteSymbols, setFavoriteSymbols] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // 별 데이터 (클라이언트에서만 생성하여 hydration 에러 방지)
-  const [stars, setStars] = useState<Array<{id: number; left: string; top: string; animationDelay: string; size: number}>>([]);
-
-  useEffect(() => {
-    setStars(generateStars(50));
-  }, []);
 
   // API 데이터 로드
   useEffect(() => {
@@ -118,37 +100,17 @@ export default function Home() {
   }, [favoriteSymbols, allStocks]);
 
   return (
-    <div className="min-h-screen relative bg-dawn-gradient">
-      {/* 별 배경 (다크모드에서만 표시) */}
-      <div className="stars-container">
-        {stars.map((star) => (
-          <div
-            key={star.id}
-            className="star"
-            style={{
-              left: star.left,
-              top: star.top,
-              width: `${star.size}px`,
-              height: `${star.size}px`,
-              animationDelay: star.animationDelay,
-            }}
-          />
-        ))}
-        {/* 유성 */}
-        <div className="shooting-star" style={{ top: '15%', left: '70%', animationDelay: '2s' }} />
-        <div className="shooting-star" style={{ top: '25%', left: '20%', animationDelay: '8s' }} />
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl relative z-10">
-        {/* Header */}
-        <header className="mb-12 animate-fade-in-up">
+    <div className="min-h-screen bg-[var(--background)]">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        {/* Header - Musinsa Style */}
+        <header className="mb-12 sm:mb-16 animate-fade-in-up">
           <div className="flex flex-col gap-8">
             {/* 상단 네비게이션 */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-5">
-                {/* 로고 */}
-                <div className="relative group">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ff7e5f] to-[#feb47b] flex items-center justify-center shadow-lg animate-glow overflow-hidden">
+              <div className="flex items-center gap-4">
+                {/* 로고 - Sharp & Minimal */}
+                <div className="relative">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 bg-[var(--foreground)] dark:bg-[var(--color-white)] flex items-center justify-center overflow-hidden">
                     <img
                       src="/logo-main.png"
                       alt="로고"
@@ -157,22 +119,20 @@ export default function Home() {
                         const target = e.target as HTMLImageElement;
                         target.style.display = 'none';
                         if (target.parentElement) {
-                          target.parentElement.innerHTML = '<span class="text-2xl">🌅</span>';
+                          target.parentElement.innerHTML = '<svg class="w-5 h-5 text-[var(--background)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>';
                         }
                       }}
                     />
                   </div>
-                  {/* 활성 표시 */}
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white dark:border-[#0a0a12]" />
                 </div>
 
-                {/* 타이틀 */}
+                {/* 타이틀 - Bold Typography */}
                 <div>
-                  <h1 className="text-display text-2xl sm:text-3xl text-dawn">
+                  <h1 className="text-xl sm:text-2xl font-bold text-[var(--foreground)] tracking-tight">
                     당신이 잠든 사이
                   </h1>
-                  <p className="text-sm text-[#1a1a2e]/60 dark:text-[#faf8f5]/50 mt-0.5">
-                    새벽이 밝아올 때, 시장의 이야기를 전합니다
+                  <p className="text-xs text-[var(--foreground-muted)] mt-0.5 uppercase tracking-widest">
+                    MARKET BRIEFING
                   </p>
                 </div>
               </div>
@@ -181,7 +141,9 @@ export default function Home() {
               <div className="flex items-center gap-3">
                 <Navigation />
                 <ThemeToggle />
-                <CreateBriefingButton />
+                <div className="hidden sm:block">
+                  <CreateBriefingButton />
+                </div>
               </div>
             </div>
 
@@ -192,57 +154,59 @@ export default function Home() {
           </div>
         </header>
 
-        {/* TOP 3 화제 종목 */}
-        <section className="mb-16 animate-fade-in-up stagger-1" style={{ opacity: 0 }}>
-          <div className="section-header">
-            <h2 className="section-title">오늘의 화제 종목</h2>
+        {/* TOP 3 화제 종목 - Editorial Section */}
+        <section className="mb-16 sm:mb-20 animate-fade-in-up stagger-1" style={{ opacity: 0 }}>
+          <div className="mb-8">
+            <span className="section-caption">TRENDING NOW</span>
+            <h2 className="text-h2">오늘의 화제 종목</h2>
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="skeleton h-52 rounded-2xl" />
+                <div key={i} className="skeleton h-52" />
               ))}
             </div>
           ) : error ? (
-            <div className="card-glass p-8 text-center">
-              <p className="text-red-500">데이터 로드 실패: {error}</p>
+            <div className="border border-[var(--border)] p-8 text-center">
+              <p className="text-[var(--danger)] font-medium">데이터 로드 실패</p>
+              <p className="text-sm text-[var(--foreground-muted)] mt-1">{error}</p>
             </div>
           ) : (
             <Top3Comparison stocks={trendingStocks} />
           )}
         </section>
 
-        {/* 복합점수 산정 기준 */}
-        <section className="mb-16 animate-fade-in-up stagger-2" style={{ opacity: 0 }}>
-          <div className="card-glass p-6">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-[#ff7e5f]/20 to-[#feb47b]/20 flex items-center justify-center">
-                <svg className="w-5 h-5 text-[#ff7e5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        {/* 복합점수 산정 기준 - Minimal Info Box */}
+        <section className="mb-16 sm:mb-20 animate-fade-in-up stagger-2" style={{ opacity: 0 }}>
+          <div className="border border-[var(--border)] p-6 sm:p-8">
+            <div className="flex items-start gap-5">
+              <div className="flex-shrink-0 w-12 h-12 bg-[var(--foreground)] dark:bg-[var(--color-white)] flex items-center justify-center">
+                <svg className="w-6 h-6 text-[var(--background)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-lg mb-3">복합점수 산정 기준</h3>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-lg text-[var(--foreground)] mb-4">복합점수 산정 기준</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#ff7e5f]" />
-                    <span className="opacity-70">거래량 (10점)</span>
+                  <div className="flex items-center gap-3">
+                    <span className="w-6 h-6 flex items-center justify-center bg-[var(--foreground)] text-[var(--background)] text-xs font-bold">10</span>
+                    <span className="text-[var(--foreground-secondary)]">거래량</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                    <span className="opacity-70">가격변동 (10점)</span>
+                  <div className="flex items-center gap-3">
+                    <span className="w-6 h-6 flex items-center justify-center bg-[var(--foreground)] text-[var(--background)] text-xs font-bold">10</span>
+                    <span className="text-[var(--foreground-secondary)]">가격변동</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#4ecdc4]" />
-                    <span className="opacity-70">모멘텀 (10점)</span>
+                  <div className="flex items-center gap-3">
+                    <span className="w-6 h-6 flex items-center justify-center bg-[var(--foreground)] text-[var(--background)] text-xs font-bold">10</span>
+                    <span className="text-[var(--foreground-secondary)]">모멘텀</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#feb47b]" />
-                    <span className="opacity-70">시가총액 (10점)</span>
+                  <div className="flex items-center gap-3">
+                    <span className="w-6 h-6 flex items-center justify-center bg-[var(--foreground)] text-[var(--background)] text-xs font-bold">10</span>
+                    <span className="text-[var(--foreground-secondary)]">시가총액</span>
                   </div>
                 </div>
-                <p className="text-xs opacity-50 mt-3">
+                <p className="text-xs text-[var(--foreground-muted)] mt-4 leading-relaxed">
                   거래량 급증, 당일 가격 변동률, 5일/10일 수익률 추세, 적정 시가총액 구간을 종합 평가하여 최대 40점 만점으로 산정
                 </p>
               </div>
@@ -251,62 +215,61 @@ export default function Home() {
         </section>
 
         {/* 오늘의 화제 종목 상세 */}
-        <section className="mb-16 animate-fade-in-up stagger-3" style={{ opacity: 0 }}>
-          <div className="section-header">
-            <h2 className="section-title">상세 분석</h2>
+        <section className="mb-16 sm:mb-20 animate-fade-in-up stagger-3" style={{ opacity: 0 }}>
+          <div className="mb-8">
+            <span className="section-caption">ANALYSIS</span>
+            <h2 className="text-h2">상세 분석</h2>
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="skeleton h-80 rounded-2xl" />
-              <div className="skeleton h-80 rounded-2xl" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="skeleton h-80" />
+              <div className="skeleton h-80" />
             </div>
           ) : topStock && selectionCriteria ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <StockCard stock={topStock} isLarge={true} chartData={chartData} />
               <SelectionCriteriaCard criteria={selectionCriteria} stockSymbol={topStock.symbol} />
             </div>
           ) : (
-            <div className="card-glass p-8 text-center">
-              <p className="opacity-60">화제 종목 데이터가 없습니다</p>
+            <div className="border border-[var(--border)] p-8 text-center">
+              <p className="text-[var(--foreground-muted)]">화제 종목 데이터가 없습니다</p>
             </div>
           )}
         </section>
 
-        {/* 관심 종목 */}
-        <section className="mb-16 animate-fade-in-up stagger-4" style={{ opacity: 0 }}>
-          <div className="flex items-center justify-between mb-6">
-            <div className="section-header mb-0">
-              <h2 className="section-title">관심 종목</h2>
+        {/* 관심 종목 - Horizontal Scroll Pan Style */}
+        <section className="mb-16 sm:mb-20 animate-fade-in-up stagger-4" style={{ opacity: 0 }}>
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <span className="section-caption">WATCHLIST</span>
+              <h2 className="text-h2">관심 종목</h2>
             </div>
             <Link
               href="/favorites"
-              className="group flex items-center gap-1 text-sm font-medium text-[#ff7e5f] hover:text-[#feb47b] transition-colors"
+              className="text-sm font-medium text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors hover:underline underline-offset-4"
             >
-              전체보기
-              <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+              전체보기 →
             </Link>
           </div>
 
           {favoriteStocksPreview.length > 0 ? (
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+            <div className="scroll-section scrollbar-hide">
               {favoriteStocksPreview.map((stock) => {
                 const isPositive = stock.change >= 0;
                 return (
                   <div
                     key={stock.symbol}
-                    className="flex-shrink-0 card-dawn p-4 min-w-[180px] hover-lift transition-smooth"
+                    className="w-[180px] sm:w-[200px] border border-[var(--border)] p-4 hover:border-[var(--foreground)] transition-colors"
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-bold text-lg">{stock.symbol}</span>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-bold text-lg text-[var(--foreground)]">{stock.symbol}</span>
                       <FavoriteIcon stock={stock} size="sm" />
                     </div>
-                    <p className={`text-xl font-semibold ${isPositive ? 'price-up' : 'price-down'}`}>
+                    <p className={`text-xl font-bold ${isPositive ? 'price-up' : 'price-down'}`}>
                       ${stock.currentPrice.toFixed(2)}
                     </p>
-                    <p className={`text-sm ${isPositive ? 'price-up' : 'price-down'}`}>
+                    <p className={`text-sm mt-1 ${isPositive ? 'price-up' : 'price-down'}`}>
                       {isPositive ? '+' : ''}{stock.changePercent.toFixed(2)}%
                     </p>
                   </div>
@@ -314,15 +277,10 @@ export default function Home() {
               })}
             </div>
           ) : (
-            <div className="card-glass p-8 text-center">
-              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#ff7e5f]/10 flex items-center justify-center">
-                <svg className="w-6 h-6 text-[#ff7e5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                </svg>
-              </div>
-              <p className="opacity-60 text-sm">
+            <div className="border border-[var(--border)] p-8 text-center">
+              <p className="text-[var(--foreground-muted)] text-sm leading-relaxed">
                 관심 종목이 없습니다<br />
-                종목 검색에서 ⭐를 눌러 추가하세요
+                종목 검색에서 별 아이콘을 눌러 추가하세요
               </p>
             </div>
           )}
@@ -330,36 +288,34 @@ export default function Home() {
 
         {/* 최근 브리핑 */}
         <section className="mb-8 animate-fade-in-up stagger-5" style={{ opacity: 0 }}>
-          <div className="flex items-center justify-between mb-6">
-            <div className="section-header mb-0">
-              <h2 className="section-title">최근 브리핑</h2>
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <span className="section-caption">HISTORY</span>
+              <h2 className="text-h2">최근 브리핑</h2>
             </div>
             <Link
               href="/briefings"
-              className="group flex items-center gap-1 text-sm font-medium text-[#ff7e5f] hover:text-[#feb47b] transition-colors"
+              className="text-sm font-medium text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors hover:underline underline-offset-4"
             >
-              전체보기
-              <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+              전체보기 →
             </Link>
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="skeleton h-40 rounded-2xl" />
+                <div key={i} className="skeleton h-40" />
               ))}
             </div>
           ) : briefings.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {briefings.slice(0, 3).map((briefing, index) => (
                 <BriefingCard key={briefing.briefingId} briefing={briefing} index={index} />
               ))}
             </div>
           ) : (
-            <div className="card-glass p-8 text-center">
-              <p className="opacity-60 text-sm">브리핑 히스토리가 없습니다</p>
+            <div className="border border-[var(--border)] p-8 text-center">
+              <p className="text-[var(--foreground-muted)] text-sm">브리핑 히스토리가 없습니다</p>
             </div>
           )}
         </section>

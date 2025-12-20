@@ -21,22 +21,22 @@ function StockCard({
 
   return (
     <div
-      className={`card-glass p-6 transition-smooth hover-lift ${
+      className={`card-glass p-5 sm:p-6 transition-smooth hover-lift ${
         isLarge ? 'col-span-full lg:col-span-1' : ''
       }`}
     >
       {/* 헤더 */}
       <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-1">
-            <h3 className="font-bold text-xl sm:text-2xl">{stock.symbol}</h3>
-            <span className="text-sm opacity-60">{stock.shortName}</span>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 sm:gap-3 mb-1">
+            <h3 className="font-bold text-lg sm:text-xl text-[var(--foreground)]">{stock.symbol}</h3>
+            <span className="text-sm text-[var(--foreground-muted)] truncate">{stock.shortName}</span>
             <FavoriteIcon stock={stock} size={isLarge ? 'md' : 'sm'} />
           </div>
 
           {/* 가격 정보 */}
-          <div className="flex items-baseline gap-3">
-            <span className={`text-2xl sm:text-3xl font-bold ${isPositive ? 'price-up' : 'price-down'}`}>
+          <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap">
+            <span className={`text-xl sm:text-2xl font-bold ${isPositive ? 'price-up' : 'price-down'}`}>
               <AnimatedNumber
                 value={stock.currentPrice}
                 prefix="$"
@@ -44,8 +44,8 @@ function StockCard({
                 duration={1.5}
               />
             </span>
-            <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg ${isPositive ? 'price-up-bg' : 'price-down-bg'}`}>
-              <span className={`text-sm font-semibold ${isPositive ? 'price-up' : 'price-down'}`}>
+            <div className={`flex items-center gap-1 px-2 py-0.5 rounded-lg text-sm font-medium ${isPositive ? 'price-up-bg' : 'price-down-bg'}`}>
+              <span>
                 {isPositive ? '+' : ''}
                 <AnimatedNumber
                   value={stock.change}
@@ -53,7 +53,7 @@ function StockCard({
                   duration={1.5}
                 />
               </span>
-              <span className={`text-sm font-semibold ${isPositive ? 'price-up' : 'price-down'}`}>
+              <span>
                 (
                 <AnimatedNumber
                   value={stock.changePercent}
@@ -70,8 +70,8 @@ function StockCard({
 
         {/* 복합 점수 배지 */}
         {isLarge && (
-          <div className="text-right">
-            <div className="text-xs opacity-50 mb-1">복합 점수</div>
+          <div className="text-right flex-shrink-0 ml-4">
+            <div className="text-xs text-[var(--foreground-muted)] mb-1">복합 점수</div>
             <div className="score-badge">
               <AnimatedNumber
                 value={stock.compositeScore}
@@ -86,10 +86,10 @@ function StockCard({
       {/* 상세 정보 (isLarge일 때만) */}
       {isLarge && (
         <>
-          <div className="grid grid-cols-2 gap-4 text-sm mb-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 text-sm mb-5 sm:mb-6">
             <div className="flex justify-between">
-              <span className="opacity-50">거래량</span>
-              <span className="font-medium">
+              <span className="text-[var(--foreground-muted)]">거래량</span>
+              <span className="font-medium text-[var(--foreground)]">
                 <AnimatedNumber
                   value={stock.volume / 1000000}
                   suffix="M"
@@ -99,8 +99,8 @@ function StockCard({
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="opacity-50">시가총액</span>
-              <span className="font-medium">
+              <span className="text-[var(--foreground-muted)]">시가총액</span>
+              <span className="font-medium text-[var(--foreground)]">
                 $<AnimatedNumber
                   value={stock.marketCap / 1000000000}
                   suffix="B"
@@ -110,19 +110,19 @@ function StockCard({
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="opacity-50">섹터</span>
-              <span className="font-medium truncate ml-2">{stock.sector}</span>
+              <span className="text-[var(--foreground-muted)]">섹터</span>
+              <span className="font-medium text-[var(--foreground)] truncate ml-2">{stock.sector}</span>
             </div>
             <div className="flex justify-between">
-              <span className="opacity-50">산업</span>
-              <span className="font-medium truncate ml-2">{stock.industry}</span>
+              <span className="text-[var(--foreground-muted)]">산업</span>
+              <span className="font-medium text-[var(--foreground)] truncate ml-2">{stock.industry}</span>
             </div>
           </div>
 
           {/* 차트 */}
           {chartData && chartData.length > 0 && (
-            <div className="pt-6 border-t border-[var(--card-border)]">
-              <h4 className="text-sm font-semibold opacity-70 mb-4">
+            <div className="pt-5 sm:pt-6 border-t border-[var(--border)]">
+              <h4 className="text-sm font-medium text-[var(--foreground-secondary)] mb-4">
                 최근 5일간 주가 추이
               </h4>
               <StockChart data={chartData} isPositive={isPositive} />

@@ -52,7 +52,6 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
     }
     setIsLoading(true);
     const results = searchStocks(stocks, debouncedQuery, 8);
-    // 로딩 시뮬레이션 (실제 API 호출 시 제거)
     setTimeout(() => setIsLoading(false), 100);
     return results;
   }, [debouncedQuery, stocks]);
@@ -99,7 +98,7 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
   // 키보드 네비게이션
   const handleKeyDown = (e: React.KeyboardEvent) => {
     const items = query ? searchResults : searchHistory.map((h) => stocks.find((s) => s.symbol === h.query || s.shortName === h.query)).filter(Boolean) as Stock[];
-    
+
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       setSelectedIndex((prev) => (prev < items.length - 1 ? prev + 1 : prev));
@@ -119,12 +118,12 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
       setSelectedStock(stock);
       setIsModalOpen(true);
     }
-    
+
     if (query) {
       addSearchHistory(query);
       setSearchHistory(getSearchHistory());
     }
-    
+
     setIsOpen(false);
     setQuery('');
     setSelectedIndex(-1);
@@ -165,15 +164,21 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
             onKeyDown={handleKeyDown}
             placeholder="종목명 또는 종목코드 입력"
             className={`
-              w-full px-4 py-3 pl-12 pr-12 rounded-xl border-2 transition-all shadow-sm
-              ${isOpen ? 'border-blue-500 dark:border-blue-400 ring-4 ring-blue-500/20 shadow-lg' : 'border-gray-300 dark:border-gray-700'}
-              bg-gradient-to-r from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-white
-              focus:outline-none hover:shadow-md
+              w-full px-4 py-3 pl-11 pr-10 rounded-xl border transition-all text-sm
+              ${isOpen
+                ? 'border-[var(--primary-500)] ring-2 ring-[var(--primary-500)]/20'
+                : 'border-[var(--border)] hover:border-[var(--foreground-muted)]'
+              }
+              bg-[var(--card-bg)] text-[var(--foreground)]
+              placeholder:text-[var(--foreground-muted)]
+              focus:outline-none
               ${isMobile && isOpen ? 'fixed top-0 left-0 right-0 z-[60] rounded-none border-x-0 border-t-0' : ''}
             `}
           />
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
-            🔍
+          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
           </div>
           {query && (
             <button
@@ -182,10 +187,12 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
                 setSelectedIndex(-1);
                 inputRef.current?.focus();
               }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
               aria-label="지우기"
             >
-              ✕
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           )}
         </div>
@@ -194,16 +201,16 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
         {(showHistory || showResults || showNoResults || isLoading) && (
           <div
             className={`
-              absolute z-[55] w-full mt-2 bg-white dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-700 rounded-2xl shadow-2xl
-              max-h-96 overflow-y-auto backdrop-blur-sm
+              absolute z-[55] w-full mt-2 bg-[var(--card-bg)] border border-[var(--border)] rounded-xl shadow-lg
+              max-h-96 overflow-y-auto
               ${isMobile && isOpen ? 'fixed top-14 left-0 right-0 rounded-none border-x-0 border-b-0 max-h-[calc(100vh-3.5rem)] z-[60]' : ''}
-              animate-in slide-in-from-top-2 duration-200
+              animate-fade-in
             `}
           >
             {/* 로딩 */}
             {isLoading && (
-              <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-                <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+              <div className="p-4 text-center text-[var(--foreground-muted)]">
+                <div className="inline-block animate-spin rounded-full h-5 w-5 border-2 border-[var(--border)] border-t-[var(--primary-500)]"></div>
                 <p className="mt-2 text-sm">검색 중...</p>
               </div>
             )}
@@ -211,15 +218,15 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
             {/* 검색 히스토리 */}
             {showHistory && (
               <div className="p-2">
-                <div className="flex items-center justify-between px-2 py-1 mb-2">
-                  <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">최근 검색</span>
+                <div className="flex items-center justify-between px-3 py-2">
+                  <span className="text-xs font-medium text-[var(--foreground-muted)]">최근 검색</span>
                   {searchHistory.length > 0 && (
                     <button
                       onClick={() => {
                         clearSearchHistory();
                         setSearchHistory([]);
                       }}
-                      className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                      className="text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
                     >
                       전체 삭제
                     </button>
@@ -228,7 +235,7 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
                 {searchHistory.map((item) => {
                   const stock = stocks.find((s) => s.symbol === item.query || s.shortName === item.query);
                   if (!stock) return null;
-                  
+
                   return (
                     <div
                       key={item.query}
@@ -241,18 +248,20 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
                           handleHistoryClick(item.query);
                         }
                       }}
-                      className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-left transition-colors cursor-pointer"
+                      className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-[var(--background-secondary)] rounded-lg text-left transition-colors cursor-pointer"
                     >
-                      <div className="flex-1">
-                        <div className="font-semibold text-gray-900 dark:text-white">{stock.symbol}</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">{stock.shortName}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-sm text-[var(--foreground)]">{stock.symbol}</div>
+                        <div className="text-xs text-[var(--foreground-muted)] truncate">{stock.shortName}</div>
                       </div>
                       <button
                         onClick={(e) => handleRemoveHistory(item.query, e)}
-                        className="ml-2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        className="ml-2 p-1 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
                         aria-label="삭제"
                       >
-                        ✕
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                       </button>
                     </div>
                   );
@@ -266,8 +275,7 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
                 {searchResults.map((stock, index) => {
                   const isSelected = index === selectedIndex;
                   const isPositive = stock.change >= 0;
-                  const changeColor = isPositive ? 'text-green-500' : 'text-red-500';
-                  
+
                   return (
                     <div
                       key={stock.symbol}
@@ -281,30 +289,30 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
                         }
                       }}
                       className={`
-                        w-full flex items-center justify-between px-3 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors cursor-pointer
-                        ${isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''}
+                        w-full flex items-center justify-between px-3 py-3 hover:bg-[var(--background-secondary)] rounded-lg transition-colors cursor-pointer
+                        ${isSelected ? 'bg-[var(--background-secondary)]' : ''}
                       `}
                     >
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 mb-0.5">
                           <span
-                            className="font-bold text-gray-900 dark:text-white"
+                            className="font-bold text-sm text-[var(--foreground)]"
                             dangerouslySetInnerHTML={{
                               __html: highlightText(stock.symbol, query),
                             }}
                           />
                           <span
-                            className="text-sm text-gray-600 dark:text-gray-400 truncate"
+                            className="text-xs text-[var(--foreground-muted)] truncate"
                             dangerouslySetInnerHTML={{
                               __html: highlightText(stock.shortName, query),
                             }}
                           />
                         </div>
-                        <div className="flex items-center gap-3 text-sm">
-                          <span className="text-gray-900 dark:text-white">
-                            {stock.symbol.length === 6 ? `₩${stock.currentPrice.toLocaleString()}` : `$${stock.currentPrice.toFixed(2)}`}
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-[var(--foreground)]">
+                            {stock.symbol.length === 6 ? `${stock.currentPrice.toLocaleString()}` : `$${stock.currentPrice.toFixed(2)}`}
                           </span>
-                          <span className={changeColor}>
+                          <span className={isPositive ? 'price-up' : 'price-down'}>
                             {isPositive ? '+' : ''}
                             {stock.changePercent.toFixed(2)}%
                           </span>
@@ -321,9 +329,9 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
 
             {/* 검색 결과 없음 */}
             {showNoResults && (
-              <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-                <p>검색 결과가 없습니다</p>
-                <p className="text-sm mt-1">다른 키워드로 검색해보세요</p>
+              <div className="p-8 text-center">
+                <p className="text-[var(--foreground-muted)]">검색 결과가 없습니다</p>
+                <p className="text-sm text-[var(--foreground-muted)] mt-1">다른 키워드로 검색해보세요</p>
               </div>
             )}
           </div>
@@ -332,7 +340,7 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
         {/* 모바일 오버레이 */}
         {isMobile && isOpen && (
           <div
-            className="fixed inset-0 bg-black/50 z-[55]"
+            className="fixed inset-0 bg-black/40 z-[55]"
             onClick={() => setIsOpen(false)}
           />
         )}
@@ -352,4 +360,3 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
     </>
   );
 }
-

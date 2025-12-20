@@ -18,12 +18,12 @@ export default function CreateBriefingButton() {
     <button
       onClick={handleCreateBriefing}
       disabled={isLoading}
-      className="flex items-center gap-2 rounded-xl btn-gradient px-6 py-3 font-semibold text-white shadow-lg glow-pulse disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none disabled:hover:shadow-lg disabled:glow-pulse relative overflow-hidden"
+      className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-[var(--primary-500)] text-white text-sm font-semibold hover:bg-[var(--primary-600)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {isLoading ? (
         <>
           <svg
-            className="animate-spin h-5 w-5"
+            className="animate-spin h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -42,12 +42,12 @@ export default function CreateBriefingButton() {
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          생성 중...
+          <span className="hidden sm:inline">생성 중...</span>
         </>
       ) : (
         <>
           <svg
-            className="w-5 h-5"
+            className="w-4 h-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -59,10 +59,9 @@ export default function CreateBriefingButton() {
               d="M12 4v16m8-8H4"
             />
           </svg>
-          수동 브리핑 생성
+          <span className="hidden sm:inline">브리핑 생성</span>
         </>
       )}
     </button>
   );
 }
-

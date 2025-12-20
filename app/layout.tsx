@@ -1,24 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Gowun_Dodum, IBM_Plex_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import ThemeTransition from "@/components/ThemeTransition";
-
-// Gowun Dodum - 둥글고 친근한 한국어 폰트 (헤드라인용)
-const gowunDodum = Gowun_Dodum({
-  variable: "--font-gowun-dodum",
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-});
-
-// IBM Plex Sans KR - 깔끔하고 부드러운 본문용
-const ibmPlexSansKR = IBM_Plex_Sans_KR({
-  variable: "--font-ibm-plex-kr",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "당신이 잠든 사이",
@@ -44,8 +27,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf8f5" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a12" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f0f0f" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -64,6 +47,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="잠든사이" />
+        {/* Pretendard - 토스, 카카오뱅크 등에서 사용하는 현대적인 한국어 폰트 */}
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -81,10 +71,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body
-        className={`${gowunDodum.variable} ${ibmPlexSansKR.variable} antialiased`}
-        style={{ fontFamily: "var(--font-ibm-plex-kr), system-ui, sans-serif" }}
-      >
+      <body className="antialiased font-pretendard">
         <ThemeProvider>
           <ThemeTransition />
           {children}

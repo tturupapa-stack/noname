@@ -22,13 +22,13 @@ function BriefingCard({ briefing, index = 0 }: BriefingCardProps) {
   const getStatusStyles = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400';
+        return 'badge-success';
       case 'processing':
-        return 'bg-amber-500/10 text-amber-600 dark:text-amber-400';
+        return 'bg-[var(--warning-light)] text-amber-600 dark:bg-[rgba(245,158,11,0.15)] dark:text-amber-400';
       case 'failed':
-        return 'bg-red-500/10 text-red-600 dark:text-red-400';
+        return 'badge-danger';
       default:
-        return 'bg-gray-500/10 text-gray-600 dark:text-gray-400';
+        return 'bg-[var(--background-secondary)] text-[var(--foreground-muted)]';
     }
   };
 
@@ -48,7 +48,7 @@ function BriefingCard({ briefing, index = 0 }: BriefingCardProps) {
   return (
     <div
       className="card-dawn transition-smooth hover-lift animate-fade-in-up"
-      style={{ animationDelay: `${index * 0.1}s`, opacity: 0 }}
+      style={{ animationDelay: `${index * 0.05}s`, opacity: 0 }}
     >
       {/* 공유 버튼 */}
       <div
@@ -59,36 +59,34 @@ function BriefingCard({ briefing, index = 0 }: BriefingCardProps) {
       </div>
 
       <Link href={`/briefing/${briefing.briefingId}`}>
-        <div className="p-5 cursor-pointer">
+        <div className="p-4 sm:p-5 cursor-pointer">
           {/* 상단: 심볼 + 날짜 + 상태 */}
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <span className="text-lg font-bold">{briefing.symbol}</span>
-              <span className="text-xs opacity-50">{formatDate(briefing.date)}</span>
+              <span className="text-base sm:text-lg font-bold text-[var(--foreground)]">{briefing.symbol}</span>
+              <span className="text-xs text-[var(--foreground-muted)]">{formatDate(briefing.date)}</span>
             </div>
-            <span
-              className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusStyles(briefing.status)}`}
-            >
+            <span className={`badge ${getStatusStyles(briefing.status)}`}>
               {getStatusLabel(briefing.status)}
             </span>
           </div>
 
           {/* 제목 */}
-          <h4 className="font-semibold mb-2 line-clamp-2 leading-snug">
+          <h4 className="font-semibold text-sm sm:text-base text-[var(--foreground)] mb-2 line-clamp-2 leading-snug">
             {briefing.textSummary.title}
           </h4>
 
           {/* 요약 */}
-          <p className="text-sm opacity-60 line-clamp-2 leading-relaxed">
+          <p className="text-sm text-[var(--foreground-muted)] line-clamp-2 leading-relaxed">
             {briefing.textSummary.summary}
           </p>
 
           {/* 하단: 핵심 포인트 개수 */}
-          <div className="flex items-center gap-1.5 mt-4 text-xs">
-            <svg className="w-3.5 h-3.5 text-[#ff7e5f]" fill="currentColor" viewBox="0 0 20 20">
+          <div className="flex items-center gap-1.5 mt-3 sm:mt-4 text-xs text-[var(--foreground-muted)]">
+            <svg className="w-3.5 h-3.5 text-[var(--primary-500)]" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
-            <span className="opacity-50">
+            <span>
               {briefing.textSummary.keyPoints.length}개 핵심 포인트
             </span>
           </div>

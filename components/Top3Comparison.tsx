@@ -9,7 +9,7 @@ export default function Top3Comparison({ stocks }: Top3ComparisonProps) {
   const top3Stocks = stocks.slice(0, 3);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
       {top3Stocks.map((stock, index) => (
         <Top3ComparisonCard
           key={stock.symbol}

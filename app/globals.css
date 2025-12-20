@@ -1,78 +1,126 @@
 @import "tailwindcss";
 
 /* ============================================
-   "새벽이 밝아올 때" (Dawn Breaking) Design System
-   당신이 잠든 사이 - 밤에서 아침으로의 전환
+   Musinsa-Inspired Design System
+   Bold Minimalism + Editorial Layout
    ============================================ */
 
 :root {
-  /* Night Sky Colors */
-  --night-deep: #0a0a12;
-  --night-indigo: #12121f;
-  --night-purple: #1a1a2e;
+  /* Primary Colors - Monochrome Base */
+  --color-black: #0A0A0A;
+  --color-white: #FAFAFA;
 
-  /* Dawn Colors */
-  --dawn-coral: #ff7e5f;
-  --dawn-peach: #feb47b;
-  --dawn-rose: #f8a5c2;
-  --dawn-gold: #ffd93d;
+  /* Grayscale */
+  --gray-50: #F5F5F5;
+  --gray-100: #EBEBEB;
+  --gray-200: #D4D4D4;
+  --gray-300: #ABABAB;
+  --gray-400: #8A8A8A;
+  --gray-500: #6B6B6B;
+  --gray-600: #525252;
+  --gray-700: #404040;
+  --gray-800: #2D2D2D;
+  --gray-900: #1A1A1A;
 
-  /* Day Colors */
-  --day-cream: #faf8f5;
-  --day-warm: #f5f0e8;
-  --day-sand: #e8e0d5;
+  /* Accent Color - Coral (단일 액센트) */
+  --accent: #FF6B5B;
+  --accent-hover: #FF5544;
+  --accent-light: rgba(255, 107, 91, 0.1);
 
-  /* Accent Colors */
-  --accent-teal: #4ecdc4;
-  --accent-mint: #a8e6cf;
+  /* Legacy Primary (호환성) */
+  --primary-50: #fff5f3;
+  --primary-100: #ffe8e3;
+  --primary-200: #ffd4cb;
+  --primary-300: #ffb4a5;
+  --primary-400: #ff8c73;
+  --primary-500: #FF6B5B;
+  --primary-600: #FF5544;
+  --primary-700: #cc3d22;
+  --primary-800: #a8351f;
+  --primary-900: #8a3020;
+
+  /* Semantic Colors */
+  --success: #22c55e;
+  --success-light: #dcfce7;
+  --danger: #ef4444;
+  --danger-light: #fee2e2;
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
 
   /* Light Mode */
-  --background: #faf8f5;
-  --foreground: #1a1a2e;
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --card-border: rgba(26, 26, 46, 0.08);
+  --background: #FAFAFA;
+  --background-secondary: #FFFFFF;
+  --background-tertiary: #F5F5F5;
+  --foreground: #0A0A0A;
+  --foreground-secondary: #525252;
+  --foreground-muted: #8A8A8A;
+  --border: #EBEBEB;
+  --border-light: #F5F5F5;
+  --card-bg: #FFFFFF;
+  --card-bg-hover: #F5F5F5;
 
-  /* Gradients */
-  --gradient-dawn: linear-gradient(135deg, #ff7e5f 0%, #feb47b 50%, #ffd93d 100%);
-  --gradient-night: linear-gradient(135deg, #0a0a12 0%, #1a1a2e 50%, #2d2d44 100%);
-  --gradient-sky: linear-gradient(180deg, #1a1a2e 0%, #2d2d44 30%, #4a3f55 60%, #ff7e5f 100%);
-  --gradient-card: linear-gradient(135deg, rgba(255,126,95,0.05) 0%, rgba(254,180,123,0.08) 100%);
+  /* Shadows - Subtle */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.1);
 
-  /* Shadows */
-  --shadow-soft: 0 4px 20px rgba(26, 26, 46, 0.08);
-  --shadow-glow: 0 0 40px rgba(255, 126, 95, 0.15);
-  --shadow-card: 0 8px 32px rgba(26, 26, 46, 0.1);
+  /* Border Radius - Sharp edges (Musinsa style) */
+  --radius-none: 0;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-2xl: 12px;
+  --radius-full: 9999px;
 
-  /* Typography Scale */
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
-  --text-5xl: 3rem;
-  --text-6xl: 3.75rem;
+  /* Spacing - 8px grid */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  --transition-slower: 500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .dark {
-  --background: #0a0a12;
-  --foreground: #faf8f5;
-  --card-bg: rgba(26, 26, 46, 0.6);
-  --card-border: rgba(255, 126, 95, 0.15);
+  --background: #0A0A0A;
+  --background-secondary: #141414;
+  --background-tertiary: #1F1F1F;
+  --foreground: #FAFAFA;
+  --foreground-secondary: #A3A3A3;
+  --foreground-muted: #6B6B6B;
+  --border: #2D2D2D;
+  --border-light: #1A1A1A;
+  --card-bg: #141414;
+  --card-bg-hover: #1F1F1F;
 
-  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
-  --shadow-glow: 0 0 60px rgba(255, 126, 95, 0.2);
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.5);
+
+  --accent-light: rgba(255, 107, 91, 0.15);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-ibm-plex-kr);
-  --font-serif: var(--font-gowun-dodum);
-  --font-mono: var(--font-geist-mono);
+  --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 
 @variant dark (.dark &);
@@ -83,331 +131,604 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-ibm-plex-kr), system-ui, sans-serif;
-  transition: background-color 0.5s ease, color 0.5s ease;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  font-feature-settings: "ss01" on, "ss02" on;
+  transition: background-color 0.2s ease, color 0.2s ease;
   min-height: 100vh;
-  overflow-x: hidden;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
 }
 
-/* Grain Texture Overlay */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.03;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-.dark body::before {
-  opacity: 0.05;
+.font-pretendard {
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
 }
 
 /* Selection */
 ::selection {
-  background: var(--dawn-coral);
-  color: white;
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.dark ::selection {
+  background: var(--color-white);
+  color: var(--color-black);
 }
 
 /* ============================================
-   Typography
+   Typography - Bold & Confident
    ============================================ */
 
-.font-serif {
-  font-family: var(--font-gowun-dodum), 'Gowun Dodum', system-ui, sans-serif;
+.text-display {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 
-.text-display {
-  font-family: var(--font-gowun-dodum), 'Gowun Dodum', system-ui, sans-serif;
-  font-weight: 400;
-  letter-spacing: -0.02em;
+.text-h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
   line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.text-h2 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.text-h3 {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
 }
 
 .text-headline {
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1.3;
 }
 
-/* Gradient Text - Dawn */
-.text-dawn {
-  background: var(--gradient-dawn);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.text-body-lg {
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.text-body {
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+}
+
+.text-body-sm {
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.text-caption {
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--foreground-muted);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Text Colors */
+.text-primary {
+  color: var(--accent);
+}
+
+.text-secondary {
+  color: var(--foreground-secondary);
+}
+
+.text-muted {
+  color: var(--foreground-muted);
 }
 
 /* ============================================
-   Background Effects
+   Layout - Editorial Grid
    ============================================ */
 
-/* Night Sky Background */
-.bg-night-sky {
-  background: linear-gradient(180deg,
-    var(--night-deep) 0%,
-    var(--night-indigo) 40%,
-    var(--night-purple) 70%,
-    #3d2852 90%,
-    var(--dawn-coral) 100%
-  );
-  background-attachment: fixed;
+.page-container {
+  min-height: 100vh;
+  background: var(--background);
 }
 
-/* Dawn Gradient Background */
-.bg-dawn-gradient {
-  background: linear-gradient(180deg,
-    var(--day-cream) 0%,
-    var(--day-warm) 50%,
-    rgba(255, 126, 95, 0.1) 100%
-  );
+.content-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
 }
 
-.dark .bg-dawn-gradient {
-  background: linear-gradient(180deg,
-    var(--night-deep) 0%,
-    var(--night-indigo) 30%,
-    var(--night-purple) 60%,
-    rgba(255, 126, 95, 0.15) 100%
-  );
-}
-
-/* ============================================
-   Star Particles
-   ============================================ */
-
-.stars-container {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: white;
-  border-radius: 50%;
-  opacity: 0;
-  animation: twinkle 4s ease-in-out infinite;
-}
-
-.dark .star {
-  opacity: 0.6;
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.2; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.2); }
-}
-
-/* Shooting Star */
-.shooting-star {
-  position: absolute;
-  width: 100px;
-  height: 1px;
-  background: linear-gradient(90deg, white, transparent);
-  opacity: 0;
-  animation: shoot 6s ease-out infinite;
-}
-
-@keyframes shoot {
-  0% {
-    opacity: 0;
-    transform: translateX(0) translateY(0) rotate(-45deg);
+@media (min-width: 640px) {
+  .content-container {
+    padding: 0 var(--space-6);
   }
-  5% { opacity: 1; }
-  15% {
-    opacity: 0;
-    transform: translateX(300px) translateY(300px) rotate(-45deg);
+}
+
+@media (min-width: 1024px) {
+  .content-container {
+    padding: 0 var(--space-8);
   }
-  100% { opacity: 0; }
 }
 
 /* ============================================
-   Cards & Containers
+   Cards - Sharp & Minimal
    ============================================ */
 
-.card-glass {
+.card {
   background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--card-border);
-  border-radius: 24px;
-  box-shadow: var(--shadow-card);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
 }
 
-.card-glass:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-glow), var(--shadow-card);
-  border-color: rgba(255, 126, 95, 0.3);
+.card:hover {
+  border-color: var(--foreground-muted);
 }
 
-/* Card with Dawn Glow */
-.card-dawn {
-  position: relative;
-  background: var(--card-bg);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--card-border);
-  border-radius: 20px;
-  overflow: hidden;
+.card-interactive {
+  cursor: pointer;
 }
 
-.card-dawn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--gradient-dawn);
-  opacity: 0;
-  transition: opacity 0.3s;
+.card-interactive:hover {
+  background: var(--card-bg-hover);
 }
 
-.card-dawn:hover::before {
-  opacity: 1;
+.card-flat {
+  background: var(--background-secondary);
+  border: none;
+  border-radius: var(--radius-md);
 }
 
-/* Editorial Card */
+/* Musinsa Style Card */
 .card-editorial {
   background: var(--card-bg);
-  border: none;
-  border-radius: 0;
-  position: relative;
-  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-base);
 }
 
-.card-editorial::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 2rem;
-  right: 2rem;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--card-border), transparent);
+.card-editorial:hover {
+  border-color: var(--foreground);
 }
 
 /* ============================================
-   Buttons
+   Buttons - Bold & Direct
    ============================================ */
 
-.btn-dawn {
-  background: var(--gradient-dawn);
-  color: white;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
+  font-size: 0.875rem;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  cursor: pointer;
   border: none;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 126, 95, 0.3);
+  outline: none;
 }
 
-.btn-dawn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  transition: left 0.6s;
+.btn:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 2px;
 }
 
-.btn-dawn:hover::before {
-  left: 100%;
+.btn:active {
+  transform: scale(0.98);
 }
 
-.btn-dawn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 126, 95, 0.4);
+/* Primary - Solid Black */
+.btn-primary {
+  background: var(--foreground);
+  color: var(--background);
 }
 
+.btn-primary:hover {
+  background: var(--gray-700);
+}
+
+.dark .btn-primary {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+.dark .btn-primary:hover {
+  background: var(--gray-200);
+}
+
+/* Secondary - Outline */
+.btn-secondary {
+  background: transparent;
+  color: var(--foreground);
+  border: 2px solid var(--foreground);
+}
+
+.btn-secondary:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* Ghost - Text Only */
 .btn-ghost {
   background: transparent;
   color: var(--foreground);
-  font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  border: 1px solid var(--card-border);
-  transition: all 0.3s ease;
+  padding: var(--space-2) 0;
 }
 
 .btn-ghost:hover {
-  background: var(--card-bg);
-  border-color: var(--dawn-coral);
-  color: var(--dawn-coral);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Accent Button */
+.btn-accent {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-accent:hover {
+  background: var(--accent-hover);
+}
+
+.btn-sm {
+  font-size: 0.8125rem;
+  padding: var(--space-2) var(--space-4);
+}
+
+.btn-lg {
+  font-size: 1rem;
+  padding: var(--space-4) var(--space-8);
+}
+
+.btn-icon {
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
 }
 
 /* ============================================
-   Price Change Colors
+   Price Colors
    ============================================ */
 
 .price-up {
-  color: #10b981;
+  color: var(--success);
 }
 
 .price-down {
-  color: #ef4444;
+  color: var(--danger);
 }
 
 .price-up-bg {
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: var(--success-light);
+  color: var(--success);
 }
 
 .price-down-bg {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+.dark .price-up-bg {
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.dark .price-down-bg {
+  background: rgba(239, 68, 68, 0.15);
 }
 
 /* ============================================
-   Animations
+   Navigation - Minimal Tab Style
    ============================================ */
 
-/* Dawn Light Spread */
-@keyframes dawn-spread {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+.nav-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background: var(--background-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
 }
 
-.animate-dawn {
-  animation: dawn-spread 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--foreground-muted);
+  transition: all var(--transition-fast);
 }
 
-/* Gentle Float */
-@keyframes gentle-float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-8px) rotate(1deg); }
-  75% { transform: translateY(4px) rotate(-1deg); }
+.nav-item:hover {
+  color: var(--foreground);
 }
 
-.animate-float {
-  animation: gentle-float 6s ease-in-out infinite;
+.nav-item.active {
+  color: var(--foreground);
+  background: var(--card-bg);
+  font-weight: 600;
 }
 
-/* Fade In Up */
+/* Tab Navigation (Musinsa Style) */
+.nav-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-tab {
+  padding: var(--space-3) var(--space-4);
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--foreground-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all var(--transition-fast);
+}
+
+.nav-tab:hover {
+  color: var(--foreground);
+}
+
+.nav-tab.active {
+  color: var(--foreground);
+  border-bottom-color: var(--foreground);
+  font-weight: 600;
+}
+
+/* ============================================
+   Badges - Sharp & Bold
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.6875rem;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Black Badge (Primary) */
+.badge-primary {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.dark .badge-primary {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+/* Outline Badge */
+.badge-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--foreground-secondary);
+}
+
+/* Accent Badge */
+.badge-accent {
+  background: var(--accent);
+  color: white;
+}
+
+.badge-success {
+  background: var(--success-light);
+  color: #16a34a;
+}
+
+.dark .badge-success {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--success);
+}
+
+.badge-danger {
+  background: var(--danger-light);
+  color: #dc2626;
+}
+
+.dark .badge-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
+
+/* Score Badge */
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  height: 48px;
+  background: var(--foreground);
+  color: var(--background);
+  font-weight: 800;
+  font-size: 1.25rem;
+  border-radius: var(--radius-sm);
+}
+
+.dark .score-badge {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+/* Rank Badge */
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  border-radius: var(--radius-sm);
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.rank-1 {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.rank-2 {
+  background: var(--gray-600);
+  color: white;
+}
+
+.rank-3 {
+  background: var(--gray-400);
+  color: white;
+}
+
+/* ============================================
+   Section Headers - Editorial Style
+   ============================================ */
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.section-header::before {
+  display: none; /* Remove the bar */
+}
+
+.section-caption {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--foreground-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+
+.section-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+
+.section-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground-secondary);
+  transition: color var(--transition-fast);
+}
+
+.section-link:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ============================================
+   Form Elements - Minimal
+   ============================================ */
+
+.input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--background);
+  border: none;
+  border-bottom: 2px solid var(--border);
+  border-radius: 0;
+  font-size: 0.9375rem;
+  color: var(--foreground);
+  transition: all var(--transition-fast);
+}
+
+.input:focus {
+  outline: none;
+  border-bottom-color: var(--foreground);
+}
+
+.input::placeholder {
+  color: var(--foreground-muted);
+}
+
+/* Search Input */
+.input-search {
+  background: var(--background-tertiary);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  padding-left: var(--space-10);
+}
+
+.input-search:focus {
+  background: var(--background-secondary);
+  box-shadow: 0 0 0 2px var(--foreground);
+}
+
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+/* ============================================
+   Loading & Skeleton
+   ============================================ */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--background-secondary) 0%,
+    var(--border) 50%,
+    var(--background-secondary) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ============================================
+   Animations - Subtle & Refined
+   ============================================ */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -415,183 +736,100 @@ body::before {
   }
 }
 
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
 .animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out forwards;
+  animation: fade-in-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s ease-out forwards;
 }
 
 /* Stagger Animation Delays */
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
-.stagger-5 { animation-delay: 0.5s; }
-
-/* Glow Pulse */
-@keyframes glow-pulse {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(255, 126, 95, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(255, 126, 95, 0.4);
-  }
-}
-
-.animate-glow {
-  animation: glow-pulse 3s ease-in-out infinite;
-}
-
-/* Number Counter Animation */
-@keyframes count-up {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-count {
-  animation: count-up 0.5s ease-out forwards;
-}
-
-/* Shimmer Effect */
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-.shimmer {
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-}
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
 
 /* ============================================
-   Navigation
+   Hover Effects - Musinsa Style
    ============================================ */
 
-.nav-pill {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1rem;
-  border-radius: 100px;
-  font-weight: 500;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
-  color: var(--foreground);
-  opacity: 0.6;
+/* Image zoom on hover */
+.hover-zoom {
+  overflow: hidden;
 }
 
-.nav-pill:hover {
-  opacity: 1;
-  background: var(--card-bg);
+.hover-zoom img,
+.hover-zoom > * {
+  transition: transform var(--transition-slower);
 }
 
-.nav-pill.active {
-  opacity: 1;
-  background: var(--gradient-dawn);
-  color: white;
-  box-shadow: 0 4px 15px rgba(255, 126, 95, 0.3);
+.hover-zoom:hover img,
+.hover-zoom:hover > * {
+  transform: scale(1.05);
 }
 
-/* ============================================
-   Score Badge
-   ============================================ */
-
-.score-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 48px;
-  height: 48px;
-  background: var(--gradient-dawn);
-  color: white;
-  font-weight: 700;
-  font-size: 1.25rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(255, 126, 95, 0.3);
+/* Underline slide */
+.hover-underline {
+  position: relative;
 }
 
-/* ============================================
-   Rank Badge
-   ============================================ */
-
-.rank-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  font-weight: 700;
-  font-size: 0.875rem;
-  border-radius: 8px;
-}
-
-.rank-1 {
-  background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
-  color: #1a1a2e;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-}
-
-.rank-2 {
-  background: linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%);
-  color: #1a1a2e;
-}
-
-.rank-3 {
-  background: linear-gradient(135deg, #cd7f32 0%, #b87333 100%);
-  color: white;
-}
-
-/* ============================================
-   Section Headers
-   ============================================ */
-
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.section-header::before {
+.hover-underline::after {
   content: '';
-  width: 4px;
-  height: 24px;
-  background: var(--gradient-dawn);
-  border-radius: 2px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width var(--transition-base);
 }
 
-.section-title {
-  font-family: var(--font-gowun-dodum), 'Gowun Dodum', system-ui, sans-serif;
-  font-weight: 400;
-  font-size: 1.5rem;
-  letter-spacing: -0.01em;
+.hover-underline:hover::after {
+  width: 100%;
+}
+
+/* Lift effect */
+.hover-lift {
+  transition: transform var(--transition-base);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Border highlight */
+.hover-border {
+  transition: border-color var(--transition-fast);
+}
+
+.hover-border:hover {
+  border-color: var(--foreground);
 }
 
 /* ============================================
-   Loading States
-   ============================================ */
-
-.skeleton {
-  background: linear-gradient(90deg,
-    var(--card-bg) 0%,
-    rgba(255, 126, 95, 0.1) 50%,
-    var(--card-bg) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 8px;
-}
-
-/* ============================================
-   Scrollbar
+   Scrollbar - Minimal
    ============================================ */
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -599,48 +837,188 @@ body::before {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 126, 95, 0.3);
-  border-radius: 4px;
+  background: var(--gray-300);
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 126, 95, 0.5);
+  background: var(--gray-400);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--gray-700);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-600);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 /* ============================================
    Utility Classes
    ============================================ */
 
+.transition-base {
+  transition: all var(--transition-base);
+}
+
 .transition-smooth {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--transition-slow);
 }
 
-.hover-lift:hover {
-  transform: translateY(-4px);
+.transition-fast {
+  transition: all var(--transition-fast);
 }
 
-.hover-glow:hover {
-  box-shadow: var(--shadow-glow);
+.hover-scale:hover {
+  transform: scale(1.02);
 }
 
-/* Glass Effect */
-.glass {
-  background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+/* Focus Ring */
+*:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 2px;
 }
 
 /* Divider */
 .divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--card-border), transparent);
-  margin: 2rem 0;
+  background: var(--border);
+  margin: var(--space-8) 0;
 }
 
-/* Focus Ring */
-*:focus-visible {
-  outline: 2px solid var(--dawn-coral);
-  outline-offset: 2px;
+/* ============================================
+   Legacy Support (for existing components)
+   ============================================ */
+
+/* Glass card - now minimal */
+.card-glass {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.card-glass:hover {
+  border-color: var(--foreground-muted);
+}
+
+/* Dawn card - now minimal */
+.card-dawn {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.card-dawn:hover {
+  border-color: var(--foreground);
+}
+
+.card-dawn::before {
+  display: none; /* Remove the accent line */
+}
+
+/* Nav pill - simplified */
+.nav-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--foreground-secondary);
+  transition: all var(--transition-fast);
+}
+
+.nav-pill:hover {
+  color: var(--foreground);
+}
+
+.nav-pill.active {
+  color: var(--background);
+  background: var(--foreground);
+}
+
+/* Glass effect - now minimal */
+.glass {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+}
+
+/* Dawn gradient background - now solid */
+.bg-dawn-gradient {
+  background: var(--background);
+}
+
+/* Text dawn */
+.text-dawn {
+  color: var(--accent);
+}
+
+/* Button dawn - now primary style */
+.btn-dawn {
+  background: var(--foreground);
+  color: var(--background);
+  font-weight: 600;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-sm);
+  border: none;
+  transition: all var(--transition-fast);
+}
+
+.btn-dawn:hover {
+  opacity: 0.9;
+}
+
+.dark .btn-dawn {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+/* Glow animation - now subtle */
+.animate-glow {
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   Horizontal Scroll Section (Pan Style)
+   ============================================ */
+
+.scroll-section {
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+  padding: var(--space-1) 0;
+  margin: 0 calc(-1 * var(--space-4));
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-section > * {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 640px) {
+  .scroll-section {
+    margin: 0 calc(-1 * var(--space-6));
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
 }
 
 /* ============================================
@@ -652,9 +1030,8 @@ body::before {
     font-size: 1.25rem;
   }
 
-  .card-glass,
-  .card-dawn {
-    border-radius: 16px;
+  .text-display {
+    font-size: clamp(2rem, 10vw, 3rem);
   }
 }
 
