@@ -83,56 +83,58 @@ export default function ConditionForm({
   return (
     <div className="space-y-4">
       {conditions.map((condition, index) => (
-        <div key={condition.id} className="flex items-start gap-3">
+        <div key={condition.id} className="p-4 border-2 border-[var(--border)] bg-[var(--background-secondary)]">
           {/* 논리 연산자 */}
           {index > 0 && (
-            <select
-              value={condition.logicalOperator || 'AND'}
-              onChange={(e) =>
-                updateLogicalOperator(
-                  condition.id,
-                  e.target.value as LogicalOperator
-                )
-              }
-              className="px-3 py-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors font-bold"
-            >
-              <option value="AND">AND</option>
-              <option value="OR">OR</option>
-            </select>
+            <div className="mb-3">
+              <select
+                value={condition.logicalOperator || 'AND'}
+                onChange={(e) =>
+                  updateLogicalOperator(
+                    condition.id,
+                    e.target.value as LogicalOperator
+                  )
+                }
+                className="px-3 py-2 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors font-bold"
+              >
+                <option value="AND">AND</option>
+                <option value="OR">OR</option>
+              </select>
+            </div>
           )}
 
-          {/* 조건 설정 */}
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <select
-              value={condition.type}
-              onChange={(e) =>
-                updateCondition(condition.id, {
-                  type: e.target.value as ConditionType,
-                })
-              }
-              className="px-3 py-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
-            >
-              <option value="price">가격</option>
-              <option value="changePercent">변동률(%)</option>
-              <option value="volume">거래량</option>
-            </select>
+          {/* 조건 설정 - 삭제 버튼과 같은 행에 배치 */}
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch">
+            <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <select
+                value={condition.type}
+                onChange={(e) =>
+                  updateCondition(condition.id, {
+                    type: e.target.value as ConditionType,
+                  })
+                }
+                className="h-12 px-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
+              >
+                <option value="price">가격</option>
+                <option value="changePercent">변동률(%)</option>
+                <option value="volume">거래량</option>
+              </select>
 
-            <select
-              value={condition.operator}
-              onChange={(e) =>
-                updateCondition(condition.id, {
-                  operator: e.target.value as ComparisonOperator,
-                })
-              }
-              className="px-3 py-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
-            >
-              <option value=">=">이상</option>
-              <option value="<=">이하</option>
-              <option value=">">초과</option>
-              <option value="<">미만</option>
-            </select>
+              <select
+                value={condition.operator}
+                onChange={(e) =>
+                  updateCondition(condition.id, {
+                    operator: e.target.value as ComparisonOperator,
+                  })
+                }
+                className="h-12 px-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
+              >
+                <option value=">=">이상</option>
+                <option value="<=">이하</option>
+                <option value=">">초과</option>
+                <option value="<">미만</option>
+              </select>
 
-            <div className="flex gap-2">
               <input
                 type="number"
                 value={condition.value}
@@ -143,16 +145,18 @@ export default function ConditionForm({
                 step={condition.type === 'changePercent' ? 0.01 : 1}
                 min={0}
                 placeholder="값 입력"
-                className="flex-1 px-3 py-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
+                className="h-12 px-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
               />
-              <button
-                onClick={() => removeCondition(condition.id)}
-                className="px-3 py-2 text-[var(--danger)] hover:bg-[var(--danger-light)] transition-colors font-bold text-sm"
-                aria-label="조건 삭제"
-              >
-                삭제
-              </button>
             </div>
+
+            {/* 삭제 버튼 - 입력 필드와 동일한 높이 */}
+            <button
+              onClick={() => removeCondition(condition.id)}
+              className="h-12 px-4 text-[var(--danger)] border-2 border-[var(--danger)] hover:bg-[var(--danger)] hover:text-white transition-colors font-bold text-sm whitespace-nowrap flex items-center justify-center"
+              aria-label="조건 삭제"
+            >
+              삭제
+            </button>
           </div>
         </div>
       ))}

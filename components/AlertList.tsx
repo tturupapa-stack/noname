@@ -77,56 +77,57 @@ export default function AlertList({ onEdit, stocks }: AlertListProps) {
             key={alert.id}
             className="card p-4 hover-border"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-black text-[var(--foreground)]">
-                    {alert.symbol}
-                  </span>
-                  <span className="text-sm text-[var(--foreground-muted)]">
-                    {alert.symbolName}
-                  </span>
-                  <span
-                    className={`badge ${
-                      alert.enabled
-                        ? 'badge-success'
-                        : 'badge-outline'
-                    }`}
-                  >
-                    {alert.enabled ? '활성' : '비활성'}
-                  </span>
-                </div>
-                <div className="text-sm text-[var(--foreground-secondary)]">
-                  {getConditionText(alert)}
-                </div>
-                <div className="text-xs text-[var(--foreground-muted)] mt-1">
-                  체크 주기: {alert.timeUnit === '1min' ? '1분' : alert.timeUnit === '5min' ? '5분' : alert.timeUnit === '1hour' ? '1시간' : '1일'}
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handleToggle(alert.id)}
-                  className={`btn btn-xs ${
-                    alert.enabled
-                      ? 'btn-secondary'
-                      : 'btn-primary'
-                  }`}
-                >
-                  {alert.enabled ? '비활성화' : '활성화'}
-                </button>
-                <button
-                  onClick={() => onEdit(alert)}
-                  className="btn btn-xs btn-secondary"
-                >
-                  수정
-                </button>
-                <button
-                  onClick={() => handleDelete(alert.id)}
-                  className="btn btn-xs text-[var(--danger)] border-[var(--danger)] hover:bg-[var(--danger)] hover:text-white"
-                >
-                  삭제
-                </button>
-              </div>
+            {/* 상단: 종목 정보 및 상태 */}
+            <div className="flex items-center flex-wrap gap-2 mb-2">
+              <span className="font-black text-[var(--foreground)]">
+                {alert.symbol}
+              </span>
+              <span className="text-sm text-[var(--foreground-muted)]">
+                {alert.symbolName}
+              </span>
+              <span
+                className={`badge ${
+                  alert.enabled
+                    ? 'badge-success'
+                    : 'badge-outline'
+                }`}
+              >
+                {alert.enabled ? '활성' : '비활성'}
+              </span>
+            </div>
+
+            {/* 중단: 조건 정보 */}
+            <div className="text-sm text-[var(--foreground-secondary)] mb-1">
+              {getConditionText(alert)}
+            </div>
+            <div className="text-xs text-[var(--foreground-muted)] mb-3">
+              체크 주기: {alert.timeUnit === '1min' ? '1분' : alert.timeUnit === '5min' ? '5분' : alert.timeUnit === '1hour' ? '1시간' : '1일'}
+            </div>
+
+            {/* 하단: 버튼 그룹 */}
+            <div className="flex items-center flex-wrap gap-2 pt-3 border-t border-[var(--border)]">
+              <button
+                onClick={() => handleToggle(alert.id)}
+                className={`btn btn-xs ${
+                  alert.enabled
+                    ? 'btn-secondary'
+                    : 'btn-primary'
+                }`}
+              >
+                {alert.enabled ? '비활성화' : '활성화'}
+              </button>
+              <button
+                onClick={() => onEdit(alert)}
+                className="btn btn-xs btn-secondary"
+              >
+                수정
+              </button>
+              <button
+                onClick={() => handleDelete(alert.id)}
+                className="btn btn-xs text-[var(--danger)] border-2 border-[var(--danger)] hover:bg-[var(--danger)] hover:text-white"
+              >
+                삭제
+              </button>
             </div>
           </div>
         );
