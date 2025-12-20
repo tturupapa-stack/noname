@@ -9,7 +9,9 @@ from api.briefing import router as briefing_router
 from api.briefing_generate import router as briefing_generate_router
 from api.cache import router as cache_router
 from services.cache_service import cache_manager
-from config import cache_settings
+from services.rate_limit_service import rate_limit_service
+from middleware.rate_limit import RateLimitMiddleware
+from config import cache_settings, rate_limit_settings
 
 # .env 파일 로드
 load_dotenv()
@@ -70,10 +72,25 @@ async def lifespan(app: FastAPI):
         max_memory_mb=cache_settings.cache_l1_max_memory_mb
     )
 
+    # Rate Limit 서비스 초기화
+    if rate_limit_settings.rate_limit_enabled:
+        print(f"🛡️ Rate Limit 서비스 초기화...")
+        await rate_limit_service.initialize(
+            use_redis=rate_limit_settings.rate_limit_use_redis,
+            redis_url=cache_settings.cache_redis_url
+        )
+        print(f"✅ Rate Limit 활성화 (backend={rate_limit_service.backend}, "
+              f"{rate_limit_settings.rate_limit_requests}req/{rate_limit_settings.rate_limit_window_seconds}s)")
+
     # 백그라운드에서 캐시 프리로딩
     asyncio.create_task(preload_cache())
 
     yield
+
+    # 종료 시: Rate Limit 서비스 정리
+    if rate_limit_settings.rate_limit_enabled:
+        print("🛑 Rate Limit 서비스 종료...")
+        await rate_limit_service.shutdown()
 
     # 종료 시: 캐시 매니저 정리
     print("🛑 캐시 매니저 종료...")
@@ -100,6 +117,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Rate Limit 미들웨어 (CORS 다음에 적용)
+if rate_limit_settings.rate_limit_enabled:
+    app.add_middleware(RateLimitMiddleware)
 
 
 @app.get("/")

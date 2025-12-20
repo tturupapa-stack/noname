@@ -1,10 +1,38 @@
 """
-캐시 및 애플리케이션 설정
+캐시, Rate Limit 및 애플리케이션 설정
 환경 변수 기반 설정 관리
 """
 
 from pydantic_settings import BaseSettings
-from typing import Optional
+from typing import Optional, List
+
+
+class RateLimitSettings(BaseSettings):
+    """Rate Limit 설정"""
+
+    # 기본 활성화 여부
+    rate_limit_enabled: bool = True
+
+    # 기본 제한 설정
+    rate_limit_requests: int = 60  # 윈도우당 허용 요청 수
+    rate_limit_window_seconds: int = 60  # 시간 윈도우 (초)
+
+    # 식별자 설정
+    rate_limit_by: str = "ip"  # ip, api_key, user_id
+
+    # 제외 경로 (정규식 패턴)
+    rate_limit_exclude_paths: str = "/health,/,/api/rate-limit"
+
+    # Redis 사용 여부 (False면 메모리 사용)
+    rate_limit_use_redis: bool = True
+
+    # 응답 헤더 포함 여부
+    rate_limit_include_headers: bool = True
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        extra = "ignore"
 
 
 class CacheSettings(BaseSettings):
@@ -51,3 +79,4 @@ class AppSettings(BaseSettings):
 # 싱글톤 인스턴스
 cache_settings = CacheSettings()
 app_settings = AppSettings()
+rate_limit_settings = RateLimitSettings()
