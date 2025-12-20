@@ -57,12 +57,13 @@ export default function StockChart({ data, isPositive }: StockChartProps) {
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1f2937',
-              border: '1px solid #374151',
-              borderRadius: '8px',
-              color: '#f3f4f6',
+              backgroundColor: 'var(--background)',
+              border: '2px solid var(--foreground)',
+              borderRadius: '0',
+              color: 'var(--foreground)',
+              padding: '12px 16px',
             }}
-            labelStyle={{ color: '#9ca3af' }}
+            labelStyle={{ color: 'var(--foreground-muted)', fontWeight: 700 }}
             formatter={(value: number, name: string) => {
               if (name === 'price' || name === 'close') {
                 return [`$${value.toFixed(2)}`, '종가'];

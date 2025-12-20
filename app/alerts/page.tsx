@@ -51,7 +51,7 @@ export default function AlertsPage() {
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 sm:gap-4 group">
               <div className="relative">
-                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[var(--primary-500)] flex items-center justify-center overflow-hidden">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 bg-[var(--foreground)] flex items-center justify-center overflow-hidden">
                   <img
                     src="/logo-main.png"
                     alt="로고"
@@ -60,7 +60,7 @@ export default function AlertsPage() {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';
                       if (target.parentElement) {
-                        target.parentElement.innerHTML = '<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>';
+                        target.parentElement.innerHTML = '<svg class="w-5 h-5 text-[var(--background)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>';
                       }
                     }}
                   />
@@ -111,26 +111,26 @@ export default function AlertsPage() {
 
         {/* 알림 설정 안내 */}
         <section className="animate-fade-in-up" style={{ animationDelay: '0.15s', opacity: 0 }}>
-          <div className="card-glass p-5 sm:p-6">
+          <div className="card p-5 sm:p-6">
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-[var(--primary-100)] dark:bg-[rgba(255,107,77,0.15)] flex items-center justify-center">
-                <svg className="w-5 h-5 text-[var(--primary-500)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex-shrink-0 w-10 h-10 bg-[var(--foreground)] flex items-center justify-center">
+                <svg className="w-5 h-5 text-[var(--background)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-base sm:text-lg text-[var(--foreground)] mb-3">알림 설정 안내</h3>
+                <h3 className="font-bold text-base sm:text-lg text-[var(--foreground)] mb-3">알림 설정 안내</h3>
                 <ul className="space-y-2 text-sm text-[var(--foreground-secondary)]">
                   <li className="flex items-start gap-2">
-                    <span className="text-[var(--primary-500)] mt-0.5">-</span>
+                    <span className="text-[var(--foreground)] mt-0.5">-</span>
                     <span>종목별로 가격, 변동률, 거래량 조건을 설정할 수 있습니다</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-[var(--primary-500)] mt-0.5">-</span>
+                    <span className="text-[var(--foreground)] mt-0.5">-</span>
                     <span>최대 3개의 복합 조건을 AND/OR로 연결할 수 있습니다</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-[var(--primary-500)] mt-0.5">-</span>
+                    <span className="text-[var(--foreground)] mt-0.5">-</span>
                     <span>브라우저 푸시, 소리, 진동 알림을 선택할 수 있습니다</span>
                   </li>
                 </ul>

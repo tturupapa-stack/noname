@@ -148,18 +148,18 @@ export default function AlertSettingsModal({
     >
       <div
         ref={modalRef}
-        className="relative w-full max-w-2xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-700 shadow-2xl overflow-hidden flex flex-col modal-content"
+        className="relative w-full max-w-2xl max-h-[90vh] bg-[var(--background)] border-2 border-[var(--foreground)] shadow-2xl overflow-hidden flex flex-col modal-content"
         style={{ zIndex: 'var(--z-modal)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* 헤더 */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-300 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div className="flex items-center justify-between p-6 border-b-2 border-[var(--foreground)]">
+          <h2 className="text-2xl font-black tracking-tight text-[var(--foreground)]">
             {editingAlert ? '알림 수정' : '알림 추가'}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-colors"
             aria-label="닫기"
           >
             <svg
@@ -182,7 +182,7 @@ export default function AlertSettingsModal({
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* 종목 선택 */}
           <div>
-            <label className="block text-sm font-semibold mb-2 text-gray-900 dark:text-white">
+            <label className="block text-label mb-2 text-[var(--foreground)]">
               종목 선택 *
             </label>
             <StockSearch
@@ -191,7 +191,7 @@ export default function AlertSettingsModal({
               selectedStock={selectedStock}
             />
             {errors.stock && (
-              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              <p className="mt-1 text-sm text-[var(--danger)]">
                 {errors.stock}
               </p>
             )}
@@ -199,12 +199,12 @@ export default function AlertSettingsModal({
 
           {/* 조건 설정 */}
           <div>
-            <label className="block text-sm font-semibold mb-2 text-gray-900 dark:text-white">
+            <label className="block text-label mb-2 text-[var(--foreground)]">
               조건 설정 *
             </label>
             <ConditionForm conditions={conditions} onChange={setConditions} />
             {errors.conditions && (
-              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              <p className="mt-1 text-sm text-[var(--danger)]">
                 {errors.conditions}
               </p>
             )}
@@ -212,13 +212,13 @@ export default function AlertSettingsModal({
 
           {/* 기간 설정 */}
           <div>
-            <label className="block text-sm font-semibold mb-2 text-gray-900 dark:text-white">
+            <label className="block text-label mb-2 text-[var(--foreground)]">
               체크 주기
             </label>
             <select
               value={timeUnit}
               onChange={(e) => setTimeUnit(e.target.value as TimeUnit)}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
             >
               <option value="1min">1분</option>
               <option value="5min">5분</option>
@@ -229,11 +229,11 @@ export default function AlertSettingsModal({
 
           {/* 알림 방식 */}
           <div>
-            <label className="block text-sm font-semibold mb-3 text-gray-900 dark:text-white">
+            <label className="block text-label mb-3 text-[var(--foreground)]">
               알림 방식
             </label>
             <div className="space-y-3">
-              <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <label className="flex items-center gap-3 p-4 border border-[var(--border)] bg-[var(--background-secondary)] cursor-pointer hover:border-[var(--foreground)] transition-colors">
                 <input
                   type="checkbox"
                   checked={browserPush}
@@ -244,13 +244,13 @@ export default function AlertSettingsModal({
                       setBrowserPush(false);
                     }
                   }}
-                  className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-blue-600 focus:ring-blue-500"
+                  className="w-5 h-5 border-2 border-[var(--border)] bg-[var(--background)] accent-[var(--foreground)] focus:ring-0"
                 />
                 <div className="flex-1">
-                  <div className="font-medium text-gray-900 dark:text-white">
+                  <div className="font-bold text-[var(--foreground)]">
                     브라우저 푸시 알림
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                  <div className="text-sm text-[var(--foreground-muted)]">
                     {typeof window !== 'undefined' &&
                     'Notification' in window &&
                     Notification.permission === 'granted'
@@ -260,26 +260,26 @@ export default function AlertSettingsModal({
                 </div>
               </label>
 
-              <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <label className="flex items-center gap-3 p-4 border border-[var(--border)] bg-[var(--background-secondary)] cursor-pointer hover:border-[var(--foreground)] transition-colors">
                 <input
                   type="checkbox"
                   checked={sound}
                   onChange={(e) => setSound(e.target.checked)}
-                  className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-blue-600 focus:ring-blue-500"
+                  className="w-5 h-5 border-2 border-[var(--border)] bg-[var(--background)] accent-[var(--foreground)] focus:ring-0"
                 />
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="font-bold text-[var(--foreground)]">
                   사운드
                 </span>
               </label>
 
-              <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <label className="flex items-center gap-3 p-4 border border-[var(--border)] bg-[var(--background-secondary)] cursor-pointer hover:border-[var(--foreground)] transition-colors">
                 <input
                   type="checkbox"
                   checked={vibration}
                   onChange={(e) => setVibration(e.target.checked)}
-                  className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-blue-600 focus:ring-blue-500"
+                  className="w-5 h-5 border-2 border-[var(--border)] bg-[var(--background)] accent-[var(--foreground)] focus:ring-0"
                 />
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="font-bold text-[var(--foreground)]">
                   진동 (모바일)
                 </span>
               </label>
@@ -288,16 +288,16 @@ export default function AlertSettingsModal({
         </div>
 
         {/* 푸터 */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-300 dark:border-gray-700">
+        <div className="flex items-center justify-end gap-3 p-6 border-t-2 border-[var(--foreground)]">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="btn btn-secondary"
           >
             취소
           </button>
           <button
             onClick={handleSave}
-            className="px-6 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
+            className="btn btn-primary"
           >
             저장
           </button>

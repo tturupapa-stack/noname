@@ -94,7 +94,7 @@ export default function ConditionForm({
                   e.target.value as LogicalOperator
                 )
               }
-              className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors font-bold"
             >
               <option value="AND">AND</option>
               <option value="OR">OR</option>
@@ -110,7 +110,7 @@ export default function ConditionForm({
                   type: e.target.value as ConditionType,
                 })
               }
-              className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
             >
               <option value="price">가격</option>
               <option value="changePercent">변동률(%)</option>
@@ -124,7 +124,7 @@ export default function ConditionForm({
                   operator: e.target.value as ComparisonOperator,
                 })
               }
-              className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
             >
               <option value=">=">이상</option>
               <option value="<=">이하</option>
@@ -143,11 +143,11 @@ export default function ConditionForm({
                 step={condition.type === 'changePercent' ? 0.01 : 1}
                 min={0}
                 placeholder="값 입력"
-                className="flex-1 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
               />
               <button
                 onClick={() => removeCondition(condition.id)}
-                className="px-3 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                className="px-3 py-2 text-[var(--danger)] hover:bg-[var(--danger-light)] transition-colors font-bold text-sm"
                 aria-label="조건 삭제"
               >
                 삭제
@@ -160,7 +160,7 @@ export default function ConditionForm({
       {conditions.length < maxConditions && (
         <button
           onClick={addCondition}
-          className="w-full px-4 py-2 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg text-gray-600 dark:text-gray-400 hover:border-blue-500 hover:text-blue-500 dark:hover:border-blue-400 dark:hover:text-blue-400 transition-colors"
+          className="w-full px-4 py-3 border-2 border-dashed border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--foreground)] hover:text-[var(--foreground)] transition-colors font-bold"
         >
           + 조건 추가
         </button>

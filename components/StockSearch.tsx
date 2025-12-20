@@ -114,16 +114,16 @@ export default function StockSearch({
           }}
           onFocus={() => setIsOpen(true)}
           placeholder="종목 코드 또는 이름 검색..."
-          className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-3 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
         />
         {selectedStock && (
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">
+            <span className="text-sm text-[var(--foreground-muted)]">
               {selectedStock.symbol}
             </span>
             <button
               onClick={() => onSelect(null)}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="text-[var(--foreground-muted)] hover:text-[var(--foreground)]"
               aria-label="선택 해제"
             >
               ✕
@@ -133,11 +133,11 @@ export default function StockSearch({
       </div>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-xl max-h-96 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-1 bg-[var(--background)] border-2 border-[var(--foreground)] shadow-xl max-h-96 overflow-y-auto">
           {/* 즐겨찾기 */}
           {favoriteStocks.length > 0 && !searchQuery && (
-            <div className="p-2 border-b border-gray-200 dark:border-gray-700">
-              <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 px-2">
+            <div className="p-2 border-b border-[var(--border)]">
+              <div className="text-label text-[var(--foreground-muted)] mb-2 px-2">
                 즐겨찾기
               </div>
               {favoriteStocks.map((stock) => (
@@ -152,13 +152,13 @@ export default function StockSearch({
                   }}
                   role="button"
                   tabIndex={0}
-                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-left cursor-pointer"
+                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-[var(--background-secondary)] text-left cursor-pointer transition-colors"
                 >
                   <div>
-                    <div className="font-semibold text-gray-900 dark:text-white">
+                    <div className="font-bold text-[var(--foreground)]">
                       {stock.symbol}
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-[var(--foreground-muted)]">
                       {stock.shortName}
                     </div>
                   </div>
@@ -167,7 +167,7 @@ export default function StockSearch({
                       e.stopPropagation();
                       handleFavoriteToggle(stock.symbol, e);
                     }}
-                    className="text-yellow-500 hover:text-yellow-600"
+                    className="text-[var(--foreground)] hover:opacity-60"
                     aria-label="즐겨찾기 해제"
                   >
                     ★
@@ -179,8 +179,8 @@ export default function StockSearch({
 
           {/* 최근 검색 */}
           {recentStocks.length > 0 && !searchQuery && (
-            <div className="p-2 border-b border-gray-200 dark:border-gray-700">
-              <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 px-2">
+            <div className="p-2 border-b border-[var(--border)]">
+              <div className="text-label text-[var(--foreground-muted)] mb-2 px-2">
                 최근 검색
               </div>
               {recentStocks.map((stock) => (
@@ -195,13 +195,13 @@ export default function StockSearch({
                   }}
                   role="button"
                   tabIndex={0}
-                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-left cursor-pointer"
+                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-[var(--background-secondary)] text-left cursor-pointer transition-colors"
                 >
                   <div>
-                    <div className="font-semibold text-gray-900 dark:text-white">
+                    <div className="font-bold text-[var(--foreground)]">
                       {stock.symbol}
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-[var(--foreground-muted)]">
                       {stock.shortName}
                     </div>
                   </div>
@@ -225,13 +225,13 @@ export default function StockSearch({
                   }}
                   role="button"
                   tabIndex={0}
-                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-left cursor-pointer"
+                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-[var(--background-secondary)] text-left cursor-pointer transition-colors"
                 >
                   <div>
-                    <div className="font-semibold text-gray-900 dark:text-white">
+                    <div className="font-bold text-[var(--foreground)]">
                       {stock.symbol}
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-[var(--foreground-muted)]">
                       {stock.shortName}
                     </div>
                   </div>
@@ -242,9 +242,9 @@ export default function StockSearch({
                     }}
                     className={`${
                       favorites.includes(stock.symbol)
-                        ? 'text-yellow-500'
-                        : 'text-gray-300 dark:text-gray-600'
-                    } hover:text-yellow-500`}
+                        ? 'text-[var(--foreground)]'
+                        : 'text-[var(--foreground-muted)]'
+                    } hover:text-[var(--foreground)]`}
                     aria-label="즐겨찾기"
                   >
                     ★
@@ -255,7 +255,7 @@ export default function StockSearch({
           )}
 
           {searchQuery && filteredStocks.length === 0 && (
-            <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+            <div className="p-4 text-center text-[var(--foreground-muted)]">
               검색 결과가 없습니다
             </div>
           )}

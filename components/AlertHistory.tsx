@@ -20,7 +20,7 @@ export default function AlertHistory() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+        className="btn btn-ghost flex items-center gap-2"
       >
         <svg
           className="w-5 h-5"
@@ -45,17 +45,17 @@ export default function AlertHistory() {
           onClick={() => setIsOpen(false)}
         >
           <div
-            className="relative w-full max-w-2xl max-h-[80vh] bg-white dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-700 shadow-2xl overflow-hidden flex flex-col modal-content"
+            className="relative w-full max-w-2xl max-h-[80vh] bg-[var(--background)] border-2 border-[var(--foreground)] shadow-2xl overflow-hidden flex flex-col modal-content"
             style={{ zIndex: 'var(--z-modal)' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between p-6 border-b border-gray-300 dark:border-gray-700">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="flex items-center justify-between p-6 border-b-2 border-[var(--foreground)]">
+              <h2 className="text-2xl font-black tracking-tight text-[var(--foreground)]">
                 알림 히스토리
               </h2>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="p-2 hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-colors"
               >
                 ✕
               </button>
@@ -65,17 +65,17 @@ export default function AlertHistory() {
                 {history.map((item) => (
                   <div
                     key={item.id}
-                    className="p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
+                    className="card p-4"
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <span className="font-bold text-gray-900 dark:text-white">
+                      <span className="font-black text-[var(--foreground)]">
                         {item.symbol}
                       </span>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                      <span className="text-sm text-[var(--foreground-muted)]">
                         {new Date(item.triggeredAt).toLocaleString('ko-KR')}
                       </span>
                     </div>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-[var(--foreground-secondary)]">
                       {item.message}
                     </p>
                   </div>

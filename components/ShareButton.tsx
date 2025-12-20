@@ -39,11 +39,11 @@ export default function ShareButton({
           className={`
             ${sizeClasses[size]}
             flex items-center justify-center
-            rounded-lg
-            bg-gray-100 dark:bg-gray-800
-            hover:bg-gray-200 dark:hover:bg-gray-700
-            text-gray-600 dark:text-gray-400
-            hover:text-gray-900 dark:hover:text-white
+            bg-[var(--background-secondary)]
+            border border-[var(--border)]
+            hover:bg-[var(--foreground)]
+            text-[var(--foreground-muted)]
+            hover:text-[var(--background)]
             transition-all duration-200
             group
             ${className}
@@ -80,15 +80,8 @@ export default function ShareButton({
       <button
         onClick={() => setIsModalOpen(true)}
         className={`
+          btn btn-primary
           flex items-center gap-2
-          px-4 py-2
-          rounded-lg
-          bg-blue-600 dark:bg-blue-500
-          hover:bg-blue-700 dark:hover:bg-blue-600
-          text-white
-          font-medium
-          transition-all duration-200
-          shadow-lg hover:shadow-xl
           ${className}
         `}
         aria-label="이 브리핑 공유하기"

@@ -151,11 +151,11 @@ export default function FavoriteList({ stocks }: FavoriteListProps) {
   if (favorites.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-6xl mb-4">⭐</div>
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+        <div className="text-6xl mb-4">*</div>
+        <h3 className="text-xl font-black text-[var(--foreground)] mb-2">
           관심 종목이 없습니다
         </h3>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-[var(--foreground-muted)]">
           종목에 별 아이콘을 클릭하여 관심 종목을 추가해보세요
         </p>
       </div>
@@ -165,11 +165,11 @@ export default function FavoriteList({ stocks }: FavoriteListProps) {
   return (
     <div className="w-full">
       <ToastContainer />
-      
+
       {/* 헤더 */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h2 className="text-2xl font-black text-[var(--foreground)]">
             관심 종목 ({favorites.length})
           </h2>
         </div>
@@ -178,7 +178,7 @@ export default function FavoriteList({ stocks }: FavoriteListProps) {
           <select
             value={sortBy}
             onChange={(e) => handleSortChange(e.target.value as FavoriteSortBy)}
-            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+            className="px-3 py-2 border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] focus:border-[var(--foreground)] transition-colors"
           >
             <option value="order">등록순</option>
             <option value="name">종목명순</option>
@@ -191,21 +191,21 @@ export default function FavoriteList({ stocks }: FavoriteListProps) {
             <>
               <button
                 onClick={handleSelectAll}
-                className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="btn btn-secondary"
               >
                 {selected.size === favorites.length ? '선택 해제' : '전체 선택'}
               </button>
               {selected.size > 0 && (
                 <button
                   onClick={handleRemoveSelected}
-                  className="px-3 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                  className="btn text-white bg-[var(--danger)] hover:opacity-80"
                 >
                   선택 삭제 ({selected.size})
                 </button>
               )}
               <button
                 onClick={handleClearAll}
-                className="px-3 py-2 rounded-lg border border-red-600 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                className="btn border-2 border-[var(--danger)] text-[var(--danger)] hover:bg-[var(--danger)] hover:text-white"
               >
                 전체 삭제
               </button>
@@ -219,15 +219,15 @@ export default function FavoriteList({ stocks }: FavoriteListProps) {
         {favoriteStocksWithData.map(({ favorite, stock }) => {
           const isSelected = selected.has(favorite.id);
           const isPositive = stock ? stock.change >= 0 : false;
-          const changeColor = isPositive ? 'text-green-500' : 'text-red-500';
+          const changeColor = isPositive ? 'text-[var(--success)]' : 'text-[var(--danger)]';
 
           return (
             <div
               key={favorite.id}
               className={`
-                flex items-center gap-4 p-4 rounded-xl border-2 transition-all card-hover shadow-sm
-                ${isSelected ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 shadow-lg' : 'border-gray-300 dark:border-gray-700 bg-gradient-to-r from-white to-gray-50 dark:from-gray-900/80 dark:to-gray-800/80'}
-                hover:shadow-md
+                flex items-center gap-4 p-4 border-2 transition-all card-hover
+                ${isSelected ? 'border-[var(--foreground)] bg-[var(--background-secondary)]' : 'border-[var(--border)] bg-[var(--background)]'}
+                hover:border-[var(--foreground)]
               `}
             >
               {/* 체크박스 */}
@@ -235,7 +235,7 @@ export default function FavoriteList({ stocks }: FavoriteListProps) {
                 type="checkbox"
                 checked={isSelected}
                 onChange={() => handleSelect(favorite.id)}
-                className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-blue-600 focus:ring-blue-500"
+                className="w-5 h-5 border-2 border-[var(--border)] bg-[var(--background)] accent-[var(--foreground)] focus:ring-0"
               />
 
               {/* 즐겨찾기 아이콘 */}
@@ -248,28 +248,28 @@ export default function FavoriteList({ stocks }: FavoriteListProps) {
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-bold text-gray-900 dark:text-white">
+                    <span className="font-black text-[var(--foreground)]">
                       {favorite.id}
                     </span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="text-sm text-[var(--foreground-muted)]">
                       {favorite.name}
                     </span>
                   </div>
                   {stock ? (
                     <div className="flex items-center gap-4 text-sm">
-                      <span className="text-gray-900 dark:text-white">
+                      <span className="text-[var(--foreground)]">
                         ${stock.currentPrice.toFixed(2)}
                       </span>
                       <span className={changeColor}>
                         {isPositive ? '+' : ''}
                         {stock.changePercent.toFixed(2)}%
                       </span>
-                      <span className="text-gray-600 dark:text-gray-400">
+                      <span className="text-[var(--foreground-muted)]">
                         거래량: {(stock.volume / 1000000).toFixed(1)}M
                       </span>
                     </div>
                   ) : (
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                    <div className="text-sm text-[var(--foreground-muted)]">
                       데이터 없음
                     </div>
                   )}
@@ -279,7 +279,7 @@ export default function FavoriteList({ stocks }: FavoriteListProps) {
               {/* 삭제 버튼 */}
               <button
                 onClick={() => handleRemove(favorite.id)}
-                className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                className="p-2 text-[var(--danger)] hover:bg-[var(--danger-light)] transition-colors"
                 aria-label="삭제"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

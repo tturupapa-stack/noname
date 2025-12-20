@@ -75,54 +75,54 @@ export default function AlertList({ onEdit, stocks }: AlertListProps) {
         return (
           <div
             key={alert.id}
-            className="p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900/50"
+            className="card p-4 hover-border"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-bold text-gray-900 dark:text-white">
+                  <span className="font-black text-[var(--foreground)]">
                     {alert.symbol}
                   </span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="text-sm text-[var(--foreground-muted)]">
                     {alert.symbolName}
                   </span>
                   <span
-                    className={`text-xs px-2 py-1 rounded ${
+                    className={`badge ${
                       alert.enabled
-                        ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                        ? 'badge-success'
+                        : 'badge-outline'
                     }`}
                   >
                     {alert.enabled ? '활성' : '비활성'}
                   </span>
                 </div>
-                <div className="text-sm text-gray-700 dark:text-gray-300">
+                <div className="text-sm text-[var(--foreground-secondary)]">
                   {getConditionText(alert)}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <div className="text-xs text-[var(--foreground-muted)] mt-1">
                   체크 주기: {alert.timeUnit === '1min' ? '1분' : alert.timeUnit === '5min' ? '5분' : alert.timeUnit === '1hour' ? '1시간' : '1일'}
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleToggle(alert.id)}
-                  className={`px-3 py-1 rounded text-sm ${
+                  className={`btn btn-xs ${
                     alert.enabled
-                      ? 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-                      : 'bg-green-600 text-white'
+                      ? 'btn-secondary'
+                      : 'btn-primary'
                   }`}
                 >
                   {alert.enabled ? '비활성화' : '활성화'}
                 </button>
                 <button
                   onClick={() => onEdit(alert)}
-                  className="px-3 py-1 rounded bg-blue-600 text-white text-sm hover:bg-blue-700"
+                  className="btn btn-xs btn-secondary"
                 >
                   수정
                 </button>
                 <button
                   onClick={() => handleDelete(alert.id)}
-                  className="px-3 py-1 rounded bg-red-600 text-white text-sm hover:bg-red-700"
+                  className="btn btn-xs text-[var(--danger)] border-[var(--danger)] hover:bg-[var(--danger)] hover:text-white"
                 >
                   삭제
                 </button>

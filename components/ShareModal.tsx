@@ -186,15 +186,15 @@ export default function ShareModal({
     >
       <div
         ref={modalRef}
-        className="relative w-full max-w-2xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-700 shadow-2xl overflow-hidden flex flex-col modal-content"
+        className="relative w-full max-w-2xl max-h-[90vh] bg-[var(--background)] border-2 border-[var(--foreground)] shadow-2xl overflow-hidden flex flex-col modal-content"
         style={{ zIndex: 'var(--z-modal)' }}
       >
         {/* 헤더 */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-300 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">브리핑 공유하기</h2>
+        <div className="flex items-center justify-between p-6 border-b-2 border-[var(--foreground)]">
+          <h2 className="text-2xl font-black tracking-tight text-[var(--foreground)]">브리핑 공유하기</h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-900 dark:text-white"
+            className="p-2 hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-colors text-[var(--foreground)]"
             aria-label="닫기"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,20 +212,20 @@ export default function ShareModal({
         <div className="flex-1 overflow-y-auto p-6">
           {isGenerating && (
             <div className="flex flex-col items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400">이미지 생성 중...</p>
+              <div className="animate-spin h-12 w-12 border-2 border-[var(--foreground)] border-t-transparent mb-4"></div>
+              <p className="text-[var(--foreground-muted)]">이미지 생성 중...</p>
             </div>
           )}
 
           {error && (
-            <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-              <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+            <div className="mb-4 p-4 bg-[var(--danger-light)] border-2 border-[var(--danger)]">
+              <p className="text-[var(--danger)] text-sm">{error}</p>
             </div>
           )}
 
           {previewImage && !isGenerating && (
             <div className="mb-6">
-              <div className="relative rounded-lg border border-gray-300 dark:border-gray-700 overflow-hidden bg-gray-100 dark:bg-gray-800">
+              <div className="relative border-2 border-[var(--border)] overflow-hidden bg-[var(--background-secondary)]">
                 <img
                   src={previewImage}
                   alt="브리핑 미리보기"
@@ -234,7 +234,7 @@ export default function ShareModal({
               </div>
               <button
                 onClick={generatePreview}
-                className="mt-4 w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm"
+                className="btn btn-secondary mt-4 w-full"
               >
                 이미지 다시 생성
               </button>
@@ -246,88 +246,88 @@ export default function ShareModal({
             {/* 카카오톡 */}
             <button
               onClick={() => handleShare('kakao')}
-              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="flex flex-col items-center gap-2 p-4 border border-[var(--border)] bg-[var(--background)] hover:border-[var(--foreground)] transition-colors"
             >
-              <div className="w-12 h-12 rounded-full bg-yellow-400 flex items-center justify-center text-2xl">
-                💬
+              <div className="w-12 h-12 bg-[var(--foreground)] flex items-center justify-center text-[var(--background)] text-2xl">
+                K
               </div>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">카카오톡</span>
+              <span className="text-sm font-bold text-[var(--foreground)]">카카오톡</span>
             </button>
 
             {/* 트위터 */}
             <button
               onClick={() => handleShare('twitter')}
-              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+              className="flex flex-col items-center gap-2 p-4 border border-[var(--border)] bg-[var(--background)] hover:border-[var(--foreground)] transition-colors"
             >
-              <div className="w-12 h-12 rounded-full bg-blue-400 flex items-center justify-center text-white text-xl font-bold">
-                𝕏
+              <div className="w-12 h-12 bg-[var(--foreground)] flex items-center justify-center text-[var(--background)] text-xl font-black">
+                X
               </div>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">트위터</span>
+              <span className="text-sm font-bold text-[var(--foreground)]">트위터</span>
             </button>
 
             {/* 페이스북 */}
             <button
               onClick={() => handleShare('facebook')}
-              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+              className="flex flex-col items-center gap-2 p-4 border border-[var(--border)] bg-[var(--background)] hover:border-[var(--foreground)] transition-colors"
             >
-              <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white text-xl font-bold">
+              <div className="w-12 h-12 bg-[var(--foreground)] flex items-center justify-center text-[var(--background)] text-xl font-black">
                 f
               </div>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">페이스북</span>
+              <span className="text-sm font-bold text-[var(--foreground)]">페이스북</span>
             </button>
 
             {/* 링크 복사 */}
             <button
               onClick={() => handleShare('link')}
-              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="flex flex-col items-center gap-2 p-4 border border-[var(--border)] bg-[var(--background)] hover:border-[var(--foreground)] transition-colors"
             >
-              <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <svg className="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 bg-[var(--background-secondary)] border border-[var(--border)] flex items-center justify-center">
+                <svg className="w-6 h-6 text-[var(--foreground)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
               </div>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">링크 복사</span>
+              <span className="text-sm font-bold text-[var(--foreground)]">링크 복사</span>
             </button>
 
             {/* 텍스트 복사 */}
             <button
               onClick={() => handleShare('text')}
-              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="flex flex-col items-center gap-2 p-4 border border-[var(--border)] bg-[var(--background)] hover:border-[var(--foreground)] transition-colors"
             >
-              <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <svg className="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 bg-[var(--background-secondary)] border border-[var(--border)] flex items-center justify-center">
+                <svg className="w-6 h-6 text-[var(--foreground)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">텍스트 복사</span>
+              <span className="text-sm font-bold text-[var(--foreground)]">텍스트 복사</span>
             </button>
 
             {/* 이미지 다운로드 */}
             <button
               onClick={() => handleShare('image')}
               disabled={!previewImage || isGenerating}
-              className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex flex-col items-center gap-2 p-4 border border-[var(--border)] bg-[var(--background)] hover:border-[var(--foreground)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <svg className="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 bg-[var(--background-secondary)] border border-[var(--border)] flex items-center justify-center">
+                <svg className="w-6 h-6 text-[var(--foreground)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
               </div>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">이미지 저장</span>
+              <span className="text-sm font-bold text-[var(--foreground)]">이미지 저장</span>
             </button>
 
             {/* 네이티브 공유 (모바일) */}
             {isNativeShareSupported() && (
               <button
                 onClick={() => handleShare('native')}
-                className="flex flex-col items-center gap-2 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors col-span-2 sm:col-span-1"
+                className="flex flex-col items-center gap-2 p-4 border border-[var(--border)] bg-[var(--foreground)] text-[var(--background)] hover:opacity-90 transition-colors col-span-2 sm:col-span-1"
               >
-                <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-[var(--background)] flex items-center justify-center">
+                  <svg className="w-6 h-6 text-[var(--foreground)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                   </svg>
                 </div>
-                <span className="text-sm font-medium text-gray-900 dark:text-white">공유하기</span>
+                <span className="text-sm font-bold">공유하기</span>
               </button>
             )}
           </div>

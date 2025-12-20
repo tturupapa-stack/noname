@@ -106,21 +106,21 @@ ${briefing.textSummary.investmentInsight}
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-700 shadow-2xl overflow-hidden flex flex-col modal-content"
+        className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--background)] border-2 border-[var(--foreground)] shadow-2xl overflow-hidden flex flex-col modal-content"
         style={{ zIndex: 'var(--z-modal)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* 헤더 */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-300 dark:border-gray-700">
+        <div className="flex items-center justify-between p-6 border-b-2 border-[var(--foreground)]">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">브리핑 미리보기</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <h2 className="text-2xl font-black tracking-tight text-[var(--foreground)]">브리핑 미리보기</h2>
+            <p className="text-sm text-[var(--foreground-muted)] mt-1">
               {briefing.symbol} · {formatDate(briefing.date)}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-colors"
             aria-label="닫기"
           >
             <svg
@@ -143,12 +143,12 @@ ${briefing.textSummary.investmentInsight}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* 브리핑 이미지 프리뷰 */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">브리핑 이미지</h3>
-            <div className="rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">
-              <div className="aspect-[3/4] w-full max-w-xs mx-auto bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded flex items-center justify-center">
+            <h3 className="text-lg font-bold mb-3 text-[var(--foreground)]">브리핑 이미지</h3>
+            <div className="border border-[var(--border)] bg-[var(--background-secondary)] p-4">
+              <div className="aspect-[3/4] w-full max-w-xs mx-auto bg-[var(--background-tertiary)] border border-[var(--border)] flex items-center justify-center">
                 <div className="text-center">
                   <svg
-                    className="w-16 h-16 mx-auto mb-4 text-gray-600"
+                    className="w-16 h-16 mx-auto mb-4 text-[var(--foreground-muted)]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -160,11 +160,11 @@ ${briefing.textSummary.investmentInsight}
                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-[var(--foreground-muted)] text-sm">
                     {briefing.imageBriefing.dimensions.width} ×{' '}
                     {briefing.imageBriefing.dimensions.height}
                   </p>
-                  <p className="text-gray-500 text-xs mt-1">
+                  <p className="text-[var(--foreground-muted)] text-xs mt-1">
                     {(briefing.imageBriefing.fileSize / 1024).toFixed(1)} KB
                   </p>
                 </div>
@@ -174,42 +174,42 @@ ${briefing.textSummary.investmentInsight}
 
           {/* 브리핑 리포트 마크다운 */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">리포트 텍스트</h3>
-            <div className="rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-6">
+            <h3 className="text-lg font-bold mb-3 text-[var(--foreground)]">리포트 텍스트</h3>
+            <div className="border border-[var(--border)] bg-[var(--background-secondary)] p-6">
               <div className="prose prose-invert dark:prose-invert max-w-none">
                 <ReactMarkdown
                   components={{
                     h1: ({ children }) => (
-                      <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+                      <h1 className="text-2xl font-black mb-4 text-[var(--foreground)]">
                         {children}
                       </h1>
                     ),
                     h2: ({ children }) => (
-                      <h2 className="text-xl font-semibold mt-6 mb-3 text-blue-600 dark:text-blue-400">
+                      <h2 className="text-xl font-bold mt-6 mb-3 text-[var(--foreground)]">
                         {children}
                       </h2>
                     ),
                     p: ({ children }) => (
-                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                      <p className="text-[var(--foreground-secondary)] leading-relaxed mb-4">
                         {children}
                       </p>
                     ),
                     ul: ({ children }) => (
-                      <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-4">
+                      <ul className="list-disc list-inside space-y-2 text-[var(--foreground-secondary)] mb-4">
                         {children}
                       </ul>
                     ),
                     li: ({ children }) => (
-                      <li className="text-gray-700 dark:text-gray-300">{children}</li>
+                      <li className="text-[var(--foreground-secondary)]">{children}</li>
                     ),
                     strong: ({ children }) => (
-                      <strong className="font-semibold text-gray-900 dark:text-white">
+                      <strong className="font-bold text-[var(--foreground)]">
                         {children}
                       </strong>
                     ),
-                    hr: () => <hr className="border-gray-300 dark:border-gray-600 my-6" />,
+                    hr: () => <hr className="border-[var(--border)] my-6" />,
                     em: ({ children }) => (
-                      <em className="text-gray-600 dark:text-gray-400 italic">{children}</em>
+                      <em className="text-[var(--foreground-muted)] italic">{children}</em>
                     ),
                   }}
                 >
@@ -221,18 +221,18 @@ ${briefing.textSummary.investmentInsight}
 
           {/* 발송 채널 선택 */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">발송 채널 선택</h3>
+            <h3 className="text-lg font-bold mb-3 text-[var(--foreground)]">발송 채널 선택</h3>
             <div className="space-y-3">
-              <label className="flex items-center gap-3 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+              <label className="flex items-center gap-3 p-4 border border-[var(--border)] bg-[var(--background-secondary)] cursor-pointer hover:border-[var(--foreground)] transition-colors">
                 <input
                   type="checkbox"
                   checked={selectedChannels.includes('email')}
                   onChange={() => handleChannelToggle('email')}
-                  className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-green-600 focus:ring-green-500 focus:ring-offset-white dark:focus:ring-offset-gray-900"
+                  className="w-5 h-5 border-2 border-[var(--border)] bg-[var(--background)] accent-[var(--foreground)] focus:ring-0"
                 />
                 <div className="flex items-center gap-2">
                   <svg
-                    className="w-5 h-5 text-green-500"
+                    className="w-5 h-5 text-[var(--foreground)]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -244,20 +244,20 @@ ${briefing.textSummary.investmentInsight}
                       d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                   </svg>
-                  <span className="font-medium text-gray-900 dark:text-white">이메일</span>
+                  <span className="font-bold text-[var(--foreground)]">이메일</span>
                 </div>
               </label>
 
-              <label className="flex items-center gap-3 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+              <label className="flex items-center gap-3 p-4 border border-[var(--border)] bg-[var(--background-secondary)] cursor-pointer hover:border-[var(--foreground)] transition-colors">
                 <input
                   type="checkbox"
                   checked={selectedChannels.includes('slack')}
                   onChange={() => handleChannelToggle('slack')}
-                  className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-white dark:focus:ring-offset-gray-900"
+                  className="w-5 h-5 border-2 border-[var(--border)] bg-[var(--background)] accent-[var(--foreground)] focus:ring-0"
                 />
                 <div className="flex items-center gap-2">
                   <svg
-                    className="w-5 h-5 text-purple-500"
+                    className="w-5 h-5 text-[var(--foreground)]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -269,7 +269,7 @@ ${briefing.textSummary.investmentInsight}
                       d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                     />
                   </svg>
-                  <span className="font-medium text-gray-900 dark:text-white">슬랙</span>
+                  <span className="font-bold text-[var(--foreground)]">슬랙</span>
                 </div>
               </label>
             </div>
@@ -277,17 +277,17 @@ ${briefing.textSummary.investmentInsight}
         </div>
 
         {/* 푸터 */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-300 dark:border-gray-700">
+        <div className="flex items-center justify-end gap-3 p-6 border-t-2 border-[var(--foreground)]">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="btn btn-secondary"
           >
             취소
           </button>
           <button
             onClick={handleSend}
             disabled={isSending || selectedChannels.length === 0}
-            className="px-6 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {isSending ? (
               <>

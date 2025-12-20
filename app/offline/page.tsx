@@ -95,21 +95,21 @@ export default function OfflinePage() {
 
         {isOnline ? (
           <div className="space-y-4 animate-fade-in-up">
-            <div className="card-glass p-4 border-l-4 border-l-emerald-500">
+            <div className="card p-4 border-l-4 border-l-[var(--success)]">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-8 h-8 bg-[var(--success)] flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <p className="text-emerald-600 dark:text-emerald-400 font-medium text-sm">
+                <p className="text-[var(--success)] font-bold text-sm">
                   연결이 복구되었습니다. 잠시 후 이동합니다...
                 </p>
               </div>
             </div>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] text-white rounded-xl font-medium hover:shadow-lg hover:shadow-[#ff7e5f]/25 transition-all"
+              className="btn btn-primary inline-flex items-center gap-2"
             >
               지금 이동하기
             </Link>
@@ -118,7 +118,7 @@ export default function OfflinePage() {
           <div className="space-y-4">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] text-white rounded-xl font-medium hover:shadow-lg hover:shadow-[#ff7e5f]/25 transition-all"
+              className="btn btn-primary inline-flex items-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -127,7 +127,7 @@ export default function OfflinePage() {
             </Link>
             <button
               onClick={() => window.location.reload()}
-              className="block w-full px-6 py-3 card-glass rounded-xl font-medium hover-lift transition-smooth"
+              className="btn btn-secondary block w-full"
             >
               <span className="flex items-center justify-center gap-2">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

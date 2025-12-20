@@ -154,9 +154,12 @@ export default function BriefingCalendar({ briefings }: BriefingCalendarProps) {
 
     return (
       <div className="w-full">
+        {/* List View Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">브리핑 목록</h2>
-          <div className="flex items-center gap-2">
+          <h2 className="font-bebas text-3xl tracking-wide text-[var(--foreground)]">
+            BRIEFING LIST
+          </h2>
+          <div className="flex items-center gap-3">
             <CalendarFilters
               briefings={briefings}
               filters={filters}
@@ -165,22 +168,26 @@ export default function BriefingCalendar({ briefings }: BriefingCalendarProps) {
             />
             <button
               onClick={() => handleViewModeChange('month')}
-              className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="btn btn-secondary btn-sm"
             >
-              달력 보기
+              CALENDAR
             </button>
           </div>
         </div>
-        <div className="space-y-4">
+
+        {/* List Items */}
+        <div className="space-y-3">
           {sortedBriefings.length === 0 ? (
-            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-              브리핑이 없습니다
+            <div className="border-2 border-dashed border-[var(--border)] p-12 text-center">
+              <p className="text-[var(--foreground-muted)] text-sm font-bold uppercase tracking-wide">
+                No Briefings Available
+              </p>
             </div>
           ) : (
             sortedBriefings.map((briefing) => (
               <div
                 key={briefing.briefingId}
-                className="p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900/50 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                className="border-2 border-[var(--border)] bg-[var(--card-bg)] p-5 cursor-pointer transition-all hover:border-[var(--foreground)]"
                 onClick={() => {
                   setSelectedDate(parseDateKey(briefing.date));
                   setIsPanelOpen(true);
@@ -188,21 +195,24 @@ export default function BriefingCalendar({ briefings }: BriefingCalendarProps) {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="font-bold text-gray-900 dark:text-white">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="badge badge-primary">
                         {briefing.symbol}
                       </span>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                      <span className="text-xs font-bold uppercase tracking-wide text-[var(--foreground-muted)]">
                         {new Date(briefing.date).toLocaleDateString('ko-KR')}
                       </span>
                     </div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
+                    <h3 className="font-bold text-[var(--foreground)] mb-2">
                       {briefing.textSummary.title}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                    <p className="text-sm text-[var(--foreground-secondary)] line-clamp-2">
                       {briefing.textSummary.summary}
                     </p>
                   </div>
+                  <svg className="w-5 h-5 text-[var(--foreground-muted)] flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
               </div>
             ))
@@ -214,19 +224,22 @@ export default function BriefingCalendar({ briefings }: BriefingCalendarProps) {
 
   return (
     <div className="w-full">
-      {/* 헤더 */}
+      {/* Calendar Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <div className="flex items-center gap-4">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {viewMode === 'week' 
-              ? `${currentDate.getFullYear()}년 ${currentDate.getMonth() + 1}월 ${currentDate.getDate()}일 주`
-              : getMonthName(currentDate.getFullYear(), currentDate.getMonth())
+          {/* Month/Year Title */}
+          <h2 className="font-bebas text-3xl sm:text-4xl tracking-wide text-[var(--foreground)]">
+            {viewMode === 'week'
+              ? `${currentDate.getFullYear()}.${String(currentDate.getMonth() + 1).padStart(2, '0')}`
+              : getMonthName(currentDate.getFullYear(), currentDate.getMonth()).toUpperCase().replace('년 ', '.').replace('월', '')
             }
           </h2>
-          <div className="flex items-center gap-2">
+
+          {/* Navigation Buttons */}
+          <div className="flex items-center gap-1">
             <button
               onClick={handlePrevMonth}
-              className="p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="w-10 h-10 flex items-center justify-center border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-all"
               aria-label={viewMode === 'week' ? '이전 주' : '이전 달'}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,13 +248,13 @@ export default function BriefingCalendar({ briefings }: BriefingCalendarProps) {
             </button>
             <button
               onClick={handleToday}
-              className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"
+              className="h-10 px-4 text-xs font-bold uppercase tracking-wide border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-all"
             >
-              오늘
+              Today
             </button>
             <button
               onClick={handleNextMonth}
-              className="p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="w-10 h-10 flex items-center justify-center border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-all"
               aria-label={viewMode === 'week' ? '다음 주' : '다음 달'}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -250,7 +263,9 @@ export default function BriefingCalendar({ briefings }: BriefingCalendarProps) {
             </button>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+
+        {/* View Mode & Filters */}
+        <div className="flex items-center gap-3">
           <CalendarFilters
             briefings={briefings}
             filters={filters}
@@ -260,31 +275,36 @@ export default function BriefingCalendar({ briefings }: BriefingCalendarProps) {
           <select
             value={viewMode}
             onChange={(e) => handleViewModeChange(e.target.value as CalendarViewMode)}
-            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+            className="h-10 px-4 text-xs font-bold uppercase tracking-wide border-2 border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] cursor-pointer appearance-none bg-no-repeat select"
+            style={{ paddingRight: '2.5rem' }}
           >
-            <option value="month">월간</option>
-            <option value="week">주간</option>
-            <option value="list">목록</option>
+            <option value="month">MONTH</option>
+            <option value="week">WEEK</option>
+            <option value="list">LIST</option>
           </select>
         </div>
       </div>
 
-      {/* 달력 */}
-      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-700 p-4">
-        {/* 요일 헤더 */}
-        <div className="grid grid-cols-7 gap-1 mb-2">
-          {getWeekdayNames(weekStartDay).map((day) => (
+      {/* Calendar Grid */}
+      <div className="border-2 border-[var(--foreground)] bg-[var(--card-bg)]">
+        {/* Weekday Header */}
+        <div className="grid grid-cols-7 border-b-2 border-[var(--foreground)]">
+          {getWeekdayNames(weekStartDay).map((day, index) => (
             <div
               key={day}
-              className="text-center text-sm font-semibold text-gray-600 dark:text-gray-400 py-2"
+              className={`
+                text-center text-xs font-bold uppercase tracking-wider py-3
+                text-[var(--foreground)]
+                ${index < 6 ? 'border-r border-[var(--border)]' : ''}
+              `}
             >
               {day}
             </div>
           ))}
         </div>
 
-        {/* 날짜 그리드 */}
-        <div className="grid grid-cols-7 gap-1">
+        {/* Date Grid */}
+        <div className="grid grid-cols-7">
           {calendarDays.map((date, index) => {
             const dateKey = formatDateKey(date);
             const isCurrentMonth = viewMode === 'week' ? true : isSameMonth(date, currentDate);
@@ -292,35 +312,48 @@ export default function BriefingCalendar({ briefings }: BriefingCalendarProps) {
             const isTodayDate = isToday(date);
             const isSelected = selectedDate && isSameDay(date, selectedDate);
             const briefingCount = getBriefingCountForDate(briefingsByDate, date);
+            const rowIndex = Math.floor(index / 7);
+            const isLastRow = rowIndex === Math.floor((calendarDays.length - 1) / 7);
 
             return (
               <button
                 key={`${dateKey}-${index}`}
                 onClick={() => handleDateClick(date)}
                 className={`
-                  relative p-2 rounded-lg text-sm transition-colors
-                  ${viewMode === 'week' ? 'min-h-[80px]' : ''}
-                  ${!isCurrentMonth ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-white'}
+                  relative text-sm transition-all
+                  ${viewMode === 'week' ? 'min-h-[100px]' : 'min-h-[72px] sm:min-h-[80px]'}
+                  ${index % 7 < 6 ? 'border-r border-[var(--border)]' : ''}
+                  ${!isLastRow ? 'border-b border-[var(--border)]' : ''}
+                  ${!isCurrentMonth ? 'text-[var(--foreground-muted)] bg-[var(--background-secondary)]' : 'text-[var(--foreground)] bg-[var(--card-bg)]'}
                   ${viewMode === 'week' && !isCurrentWeek ? 'opacity-50' : ''}
-                  ${isTodayDate ? 'ring-2 ring-blue-500 dark:ring-blue-400' : ''}
-                  ${isSelected ? 'bg-blue-100 dark:bg-blue-900/30' : ''}
-                  ${isCurrentMonth && isCurrentWeek ? 'hover:bg-gray-100 dark:hover:bg-gray-800' : ''}
+                  ${isTodayDate ? 'bg-[var(--foreground)] text-[var(--background)]' : ''}
+                  ${isSelected && !isTodayDate ? 'bg-[var(--accent-light)]' : ''}
+                  ${isCurrentMonth && isCurrentWeek && !isTodayDate ? 'hover:bg-[var(--background-tertiary)]' : ''}
                 `}
                 aria-label={`${dateKey} ${briefingCount > 0 ? `${briefingCount}개 브리핑` : ''}`}
               >
-                <div className="flex flex-col items-center gap-1">
-                  <span className="font-medium">{date.getDate()}</span>
+                <div className="flex flex-col items-center justify-start h-full pt-2 gap-1">
+                  {/* Date Number */}
+                  <span className={`
+                    font-bold text-base
+                    ${isTodayDate ? 'text-[var(--background)]' : ''}
+                  `}>
+                    {date.getDate()}
+                  </span>
+
+                  {/* Briefing Indicator */}
                   {briefingCount > 0 && (
                     <div className="flex flex-col items-center gap-1">
-                      <span
-                        className={`
-                          w-1.5 h-1.5 rounded-full
-                          ${briefingCount === 1 ? 'bg-blue-500' : 'bg-green-500'}
-                        `}
-                        title={`${briefingCount}개 브리핑`}
-                      />
-                      {briefingCount > 1 && (
-                        <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {briefingCount === 1 ? (
+                        <span
+                          className={`w-2 h-2 ${isTodayDate ? 'bg-[var(--background)]' : 'bg-[var(--accent)]'}`}
+                          title="1 briefing"
+                        />
+                      ) : (
+                        <span className={`
+                          text-[10px] font-black min-w-[18px] h-[18px] flex items-center justify-center
+                          ${isTodayDate ? 'bg-[var(--background)] text-[var(--foreground)]' : 'bg-[var(--accent)] text-white'}
+                        `}>
                           {briefingCount}
                         </span>
                       )}
@@ -333,7 +366,7 @@ export default function BriefingCalendar({ briefings }: BriefingCalendarProps) {
         </div>
       </div>
 
-      {/* 브리핑 목록 패널 */}
+      {/* Briefing List Panel */}
       {isPanelOpen && selectedDate && (
         <BriefingListPanel
           date={selectedDate}

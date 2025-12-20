@@ -146,12 +146,12 @@ export default function PWAInstallPrompt() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-800 dark:to-blue-800 text-white shadow-2xl"
+            className="fixed bottom-0 left-0 right-0 p-4 bg-[var(--foreground)] text-[var(--background)] shadow-2xl"
             style={{ zIndex: 'var(--z-pwa-prompt)' }}
           >
             <div className="container mx-auto max-w-4xl flex items-center justify-between gap-4">
               <div className="flex-1">
-                <h3 className="font-bold text-lg mb-1">앱으로 설치하고 매일 아침 브리핑 받기</h3>
+                <h3 className="font-black text-lg mb-1">앱으로 설치하고 매일 아침 브리핑 받기</h3>
                 <p className="text-sm opacity-90">
                   홈 화면에 추가하여 더 빠르게 접근하세요
                 </p>
@@ -160,21 +160,21 @@ export default function PWAInstallPrompt() {
                 {platform === 'ios' ? (
                   <button
                     onClick={handleIOSInstall}
-                    className="px-4 py-2 bg-white text-purple-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                    className="px-4 py-2 bg-[var(--background)] text-[var(--foreground)] font-bold hover:opacity-80 transition-colors"
                   >
                     설치 가이드
                   </button>
                 ) : (
                   <button
                     onClick={handleInstall}
-                    className="px-4 py-2 bg-white text-purple-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                    className="px-4 py-2 bg-[var(--background)] text-[var(--foreground)] font-bold hover:opacity-80 transition-colors"
                   >
                     설치하기
                   </button>
                 )}
                 <button
                   onClick={handleDismiss}
-                  className="px-4 py-2 bg-white/20 text-white rounded-lg font-medium hover:bg-white/30 transition-colors"
+                  className="px-4 py-2 border-2 border-[var(--background)] text-[var(--background)] font-bold hover:bg-[var(--background)] hover:text-[var(--foreground)] transition-colors"
                 >
                   나중에
                 </button>
@@ -200,26 +200,26 @@ export default function PWAInstallPrompt() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-gray-900 rounded-lg p-6 max-w-md w-full shadow-2xl"
+              className="bg-[var(--background)] border-2 border-[var(--foreground)] p-6 max-w-md w-full shadow-2xl"
             >
-              <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+              <h3 className="text-2xl font-black mb-4 text-[var(--foreground)]">
                 iOS에서 설치하기
               </h3>
-              <div className="space-y-4 text-gray-700 dark:text-gray-300">
+              <div className="space-y-4 text-[var(--foreground-secondary)]">
                 <div className="flex items-start gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">
+                  <span className="flex-shrink-0 w-8 h-8 bg-[var(--foreground)] text-[var(--background)] flex items-center justify-center font-black">
                     1
                   </span>
-                  <p>하단의 <strong>공유 버튼(📤)</strong>을 탭하세요</p>
+                  <p>하단의 <strong className="text-[var(--foreground)]">공유 버튼</strong>을 탭하세요</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">
+                  <span className="flex-shrink-0 w-8 h-8 bg-[var(--foreground)] text-[var(--background)] flex items-center justify-center font-black">
                     2
                   </span>
-                  <p><strong>"홈 화면에 추가"</strong>를 선택하세요</p>
+                  <p><strong className="text-[var(--foreground)]">"홈 화면에 추가"</strong>를 선택하세요</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">
+                  <span className="flex-shrink-0 w-8 h-8 bg-[var(--foreground)] text-[var(--background)] flex items-center justify-center font-black">
                     3
                   </span>
                   <p>확인 버튼을 눌러 설치를 완료하세요</p>
@@ -227,7 +227,7 @@ export default function PWAInstallPrompt() {
               </div>
               <button
                 onClick={() => setShowIOSGuide(false)}
-                className="mt-6 w-full px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                className="btn btn-primary mt-6 w-full"
               >
                 확인
               </button>
