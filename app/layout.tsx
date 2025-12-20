@@ -1,22 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Serif_KR } from "next/font/google";
-import { Geist } from "next/font/google";
+import { Gowun_Dodum, IBM_Plex_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import ThemeTransition from "@/components/ThemeTransition";
 
-// Noto Serif KR - 우아한 한국어 세리프 (헤드라인용)
-const notoSerifKR = Noto_Serif_KR({
-  variable: "--font-noto-serif-kr",
+// Gowun Dodum - 둥글고 친근한 한국어 폰트 (헤드라인용)
+const gowunDodum = Gowun_Dodum({
+  variable: "--font-gowun-dodum",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400"],
   display: "swap",
 });
 
-// Geist - 본문용 산세리프
-const geist = Geist({
-  variable: "--font-geist-sans",
+// IBM Plex Sans KR - 깔끔하고 부드러운 본문용
+const ibmPlexSansKR = IBM_Plex_Sans_KR({
+  variable: "--font-ibm-plex-kr",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -63,11 +64,6 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="잠든사이" />
-        {/* Pretendard 폰트 CDN */}
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
-        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -86,8 +82,8 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${notoSerifKR.variable} ${geist.variable} antialiased`}
-        style={{ fontFamily: "'Pretendard Variable', var(--font-geist-sans), system-ui, sans-serif" }}
+        className={`${gowunDodum.variable} ${ibmPlexSansKR.variable} antialiased`}
+        style={{ fontFamily: "var(--font-ibm-plex-kr), system-ui, sans-serif" }}
       >
         <ThemeProvider>
           <ThemeTransition />
