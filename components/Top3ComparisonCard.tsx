@@ -44,14 +44,14 @@ function Top3ComparisonCard({
 
           {/* Content */}
           <div className="p-5 pt-14">
-            {/* Symbol & Name */}
+            {/* Name & Symbol */}
             <div className="flex items-start justify-between mb-4">
               <div className="min-w-0 flex-1">
-                <h3 className="text-xl sm:text-2xl font-black text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
-                  {stock.symbol}
-                </h3>
-                <p className="text-xs text-[var(--foreground-muted)] line-clamp-1 mt-1 uppercase tracking-wide">
+                <h3 className="text-xl sm:text-2xl font-black text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors line-clamp-1">
                   {stock.shortName}
+                </h3>
+                <p className="text-xs text-[var(--foreground-muted)] mt-1 uppercase tracking-wide">
+                  {stock.symbol}
                 </p>
               </div>
               <div onClick={(e) => e.preventDefault()}>

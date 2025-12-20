@@ -30,7 +30,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // API 데이터 로드
+  // API 데이터 로드 (최적화: 모든 API 병렬 호출)
   useEffect(() => {
     setFavoriteSymbols(getFavorites().map(f => f.id));
 
@@ -39,6 +39,7 @@ export default function Home() {
       setError(null);
 
       try {
+        // 1단계: 핵심 데이터 병렬 로드 (TOP 종목 + TOP N + 브리핑)
         const [trendingRes, topNRes, briefingsRes] = await Promise.all([
           fetchTrendingStock('most_actives'),
           fetchTopNStocks('most_actives', 3),
@@ -57,19 +58,23 @@ export default function Home() {
         const adaptedBriefings = adaptBriefings(briefingsRes.briefings);
         setBriefings(adaptedBriefings);
 
+        // 2단계: 로딩 완료 표시 (차트는 백그라운드에서 로드)
+        setIsLoading(false);
+
+        // 3단계: 차트 데이터 비동기 로드 (UI 블로킹 없음)
         if (adaptedTopStock) {
-          try {
-            const chartRes = await fetchStockChart(adaptedTopStock.symbol, '5d');
-            const adaptedChartData = adaptChartData(chartRes.data);
-            setChartData(adaptedChartData);
-          } catch (chartErr) {
-            console.error('차트 데이터 로드 실패:', chartErr);
-          }
+          fetchStockChart(adaptedTopStock.symbol, '5d')
+            .then((chartRes) => {
+              const adaptedChartData = adaptChartData(chartRes.data);
+              setChartData(adaptedChartData);
+            })
+            .catch((chartErr) => {
+              console.error('차트 데이터 로드 실패:', chartErr);
+            });
         }
       } catch (err) {
         console.error('API 호출 실패:', err);
         setError(err instanceof Error ? err.message : 'API 호출 실패');
-      } finally {
         setIsLoading(false);
       }
     }
@@ -149,7 +154,7 @@ export default function Home() {
       {/* Main Content */}
       <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-12">
         {/* Hero Section - Editorial Style */}
-        <section className="mb-16 sm:mb-24 animate-fade-in-up">
+        <section className="mb-16 sm:mb-24 animate-fade-in-up relative z-[100]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Left: Big Typography */}
             <div className="lg:col-span-5 flex flex-col justify-center">
@@ -163,7 +168,7 @@ export default function Home() {
               </p>
 
               {/* Search Bar */}
-              <div className="max-w-md">
+              <div className="max-w-md relative z-[200]">
                 <StockSearchBar stocks={allStocks} />
               </div>
             </div>
@@ -173,7 +178,17 @@ export default function Home() {
               {isLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className="skeleton h-64" />
+                    <div key={i} className="border-2 border-[var(--border)] p-5 animate-pulse">
+                      <div className="h-6 w-16 bg-[var(--border)] mb-4" />
+                      <div className="h-8 w-24 bg-[var(--border)] mb-2" />
+                      <div className="h-4 w-32 bg-[var(--border)] mb-6" />
+                      <div className="h-10 w-20 bg-[var(--border)] mb-2" />
+                      <div className="h-4 w-16 bg-[var(--border)]" />
+                      <div className="mt-4 pt-4 border-t border-[var(--border)]">
+                        <div className="h-3 w-full bg-[var(--border)] mb-2" />
+                        <div className="h-3 w-3/4 bg-[var(--border)]" />
+                      </div>
+                    </div>
                   ))}
                 </div>
               ) : error ? (
@@ -243,8 +258,37 @@ export default function Home() {
 
           {isLoading ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-              <div className="skeleton h-96" />
-              <div className="skeleton h-96" />
+              {/* Stock Card Skeleton */}
+              <div className="border-2 border-[var(--border)] p-6 animate-pulse">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="h-8 w-32 bg-[var(--border)]" />
+                  <div className="h-6 w-6 bg-[var(--border)]" />
+                </div>
+                <div className="h-6 w-48 bg-[var(--border)] mb-6" />
+                <div className="h-12 w-28 bg-[var(--border)] mb-2" />
+                <div className="h-5 w-20 bg-[var(--border)] mb-6" />
+                <div className="h-40 w-full bg-[var(--border)] mb-4" />
+                <div className="flex gap-4">
+                  <div className="h-4 w-24 bg-[var(--border)]" />
+                  <div className="h-4 w-24 bg-[var(--border)]" />
+                </div>
+              </div>
+              {/* Criteria Card Skeleton */}
+              <div className="border-2 border-[var(--border)] p-6 animate-pulse">
+                <div className="h-8 w-48 bg-[var(--border)] mb-6" />
+                <div className="space-y-4">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="h-10 w-10 bg-[var(--border)]" />
+                      <div className="flex-1">
+                        <div className="h-4 w-24 bg-[var(--border)] mb-2" />
+                        <div className="h-2 w-full bg-[var(--border)]" />
+                      </div>
+                      <div className="h-6 w-8 bg-[var(--border)]" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           ) : topStock && selectionCriteria ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 grid-isolated">
@@ -284,21 +328,21 @@ export default function Home() {
                     style={{ animationDelay: `${index * 0.05}s`, opacity: 0 }}
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <span className="font-black text-lg text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
-                        {stock.symbol}
+                      <span className="font-black text-lg text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors truncate max-w-[150px]">
+                        {stock.shortName}
                       </span>
                       <div onClick={(e) => e.preventDefault()}>
                         <FavoriteIcon stock={stock} size="sm" />
                       </div>
                     </div>
                     <p className={`text-2xl font-black ${isPositive ? 'price-up' : 'price-down'}`}>
-                      ${stock.currentPrice.toFixed(2)}
+                      {/^\d{6}$/.test(stock.symbol) ? `₩${stock.currentPrice.toLocaleString()}` : `$${stock.currentPrice.toFixed(2)}`}
                     </p>
                     <p className={`text-sm font-bold mt-1 ${isPositive ? 'price-up' : 'price-down'}`}>
                       {isPositive ? '+' : ''}{stock.changePercent.toFixed(2)}%
                     </p>
                     <p className="text-xs text-[var(--foreground-muted)] mt-3 truncate">
-                      {stock.shortName}
+                      {stock.symbol}
                     </p>
                   </Link>
                 );
@@ -339,7 +383,16 @@ export default function Home() {
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="skeleton h-48" />
+                <div key={i} className="border-2 border-[var(--border)] p-5 animate-pulse">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="h-4 w-20 bg-[var(--border)]" />
+                    <div className="h-4 w-16 bg-[var(--border)]" />
+                  </div>
+                  <div className="h-6 w-full bg-[var(--border)] mb-2" />
+                  <div className="h-4 w-3/4 bg-[var(--border)] mb-4" />
+                  <div className="h-3 w-full bg-[var(--border)] mb-2" />
+                  <div className="h-3 w-5/6 bg-[var(--border)]" />
+                </div>
               ))}
             </div>
           ) : briefings.length > 0 ? (

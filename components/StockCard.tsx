@@ -28,15 +28,15 @@ function StockCard({
       {/* Header with Score Badge */}
       <div className="flex items-start justify-between p-5 sm:p-6 border-b border-[var(--border)]">
         <div className="flex-1 min-w-0">
-          {/* Symbol & Name */}
+          {/* Name & Symbol */}
           <div className="flex items-center gap-3 mb-2">
             <h3 className="font-black text-2xl sm:text-3xl text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
-              {stock.symbol}
+              {stock.shortName}
             </h3>
             <FavoriteIcon stock={stock} size={isLarge ? 'md' : 'sm'} />
           </div>
           <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wide">
-            {stock.shortName}
+            {stock.symbol}
           </p>
 
           {/* Price Display */}
@@ -44,8 +44,8 @@ function StockCard({
             <span className={`text-3xl sm:text-4xl font-black ${isPositive ? 'price-up' : 'price-down'}`}>
               <AnimatedNumber
                 value={stock.currentPrice}
-                prefix="$"
-                decimals={2}
+                prefix={/^\d{6}$/.test(stock.symbol) ? '₩' : '$'}
+                decimals={/^\d{6}$/.test(stock.symbol) ? 0 : 2}
                 duration={1.5}
               />
             </span>

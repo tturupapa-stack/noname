@@ -102,7 +102,7 @@ export default function StockSearch({
   const recentStocks = stocks.filter((s) => recentSearches.includes(s.symbol));
 
   return (
-    <div ref={searchRef} className="relative w-full">
+    <div ref={searchRef} className="relative w-full z-[200]">
       <div className="relative">
         <input
           ref={inputRef}
@@ -133,7 +133,7 @@ export default function StockSearch({
       </div>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-[var(--background)] border-2 border-[var(--foreground)] shadow-xl max-h-96 overflow-y-auto">
+        <div className="absolute w-full mt-1 bg-[var(--background)] border-2 border-[var(--foreground)] shadow-xl max-h-96 overflow-y-auto z-[300]">
           {/* 즐겨찾기 */}
           {favoriteStocks.length > 0 && !searchQuery && (
             <div className="p-2 border-b border-[var(--border)]">
@@ -156,10 +156,10 @@ export default function StockSearch({
                 >
                   <div>
                     <div className="font-bold text-[var(--foreground)]">
-                      {stock.symbol}
+                      {stock.shortName}
                     </div>
                     <div className="text-sm text-[var(--foreground-muted)]">
-                      {stock.shortName}
+                      {stock.symbol}
                     </div>
                   </div>
                   <button
@@ -199,10 +199,10 @@ export default function StockSearch({
                 >
                   <div>
                     <div className="font-bold text-[var(--foreground)]">
-                      {stock.symbol}
+                      {stock.shortName}
                     </div>
                     <div className="text-sm text-[var(--foreground-muted)]">
-                      {stock.shortName}
+                      {stock.symbol}
                     </div>
                   </div>
                 </div>
@@ -229,10 +229,10 @@ export default function StockSearch({
                 >
                   <div>
                     <div className="font-bold text-[var(--foreground)]">
-                      {stock.symbol}
+                      {stock.shortName}
                     </div>
                     <div className="text-sm text-[var(--foreground-muted)]">
-                      {stock.shortName}
+                      {stock.symbol}
                     </div>
                   </div>
                   <button

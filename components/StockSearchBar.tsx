@@ -141,7 +141,7 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
 
   return (
     <>
-      <div ref={searchRef} className="relative w-full z-10">
+      <div ref={searchRef} className="relative w-full z-[200]">
         {/* Search Input - Musinsa Style */}
         <div className="relative">
           <input
@@ -194,7 +194,7 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
           <div
             className={`
               absolute w-full mt-0 bg-[var(--background)] border-2 border-t-0 border-[var(--foreground)]
-              max-h-96 overflow-y-auto dropdown-menu
+              max-h-96 overflow-y-auto z-[300]
               ${isMobile && isOpen ? 'fixed top-14 left-0 right-0 max-h-[calc(100vh-3.5rem)]' : ''}
               animate-fade-in
             `}
@@ -247,11 +247,11 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
                       className="flex items-center justify-between px-4 py-3 hover:bg-[var(--background-secondary)] border-b border-[var(--border)] transition-colors cursor-pointer group"
                     >
                       <div className="flex-1 min-w-0">
-                        <div className="font-bold text-sm text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
-                          {stock.symbol}
-                        </div>
-                        <div className="text-xs text-[var(--foreground-muted)] truncate">
+                        <div className="font-bold text-sm text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors truncate">
                           {stock.shortName}
+                        </div>
+                        <div className="text-xs text-[var(--foreground-muted)]">
+                          {stock.symbol}
                         </div>
                       </div>
                       <button
@@ -296,15 +296,15 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <span
-                            className="font-bold text-sm text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors"
+                            className="font-bold text-sm text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors truncate"
                             dangerouslySetInnerHTML={{
-                              __html: highlightText(stock.symbol, query),
+                              __html: highlightText(stock.shortName, query),
                             }}
                           />
                           <span
-                            className="text-xs text-[var(--foreground-muted)] truncate uppercase tracking-wide"
+                            className="text-xs text-[var(--foreground-muted)] uppercase tracking-wide"
                             dangerouslySetInnerHTML={{
-                              __html: highlightText(stock.shortName, query),
+                              __html: highlightText(stock.symbol, query),
                             }}
                           />
                         </div>
@@ -348,8 +348,7 @@ export default function StockSearchBar({ stocks, onSelect }: StockSearchBarProps
         {/* Mobile Overlay */}
         {isMobile && isOpen && (
           <div
-            className="fixed inset-0 bg-black/50"
-            style={{ zIndex: 'var(--z-dropdown)' }}
+            className="fixed inset-0 bg-black/50 z-[199]"
             onClick={() => setIsOpen(false)}
           />
         )}

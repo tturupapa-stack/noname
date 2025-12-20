@@ -169,8 +169,9 @@ export default function BriefingDetailPage({ params }: BriefingDetailPageProps) 
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-display text-3xl sm:text-4xl text-dawn mb-2">{briefing.symbol}</h1>
-              <p className="opacity-60">{formatDate(briefing.date)}</p>
+              <h1 className="text-2xl sm:text-3xl font-black text-dawn mb-1">{briefing.shortName}</h1>
+              <p className="text-sm text-[var(--foreground-muted)] mb-1">{briefing.symbol}</p>
+              <p className="opacity-60 text-sm">{formatDate(briefing.date)}</p>
             </div>
             <div className="flex flex-wrap gap-2">
               <ShareButton briefing={briefing} variant="button" />
@@ -238,7 +239,7 @@ export default function BriefingDetailPage({ params }: BriefingDetailPageProps) 
           <div className="card-glass p-6 sm:p-8 space-y-8">
             {/* 제목 */}
             <div>
-              <h3 className="text-display text-2xl text-dawn">
+              <h3 className="text-xl sm:text-2xl font-bold text-dawn leading-tight">
                 {briefing.textSummary.title}
               </h3>
             </div>

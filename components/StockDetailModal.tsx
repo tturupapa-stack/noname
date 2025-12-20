@@ -66,13 +66,15 @@ export default function StockDetailModal({
 
   const isPositive = stock.change >= 0;
 
+  const isKoreanStock = /^\d{6}$/.test(stock.symbol);
+
   const formatPrice = (price: number) => {
-    return stock.symbol.length === 6 ? `${price.toLocaleString()}` : `$${price.toFixed(2)}`;
+    return isKoreanStock ? `₩${price.toLocaleString()}` : `$${price.toFixed(2)}`;
   };
 
   const formatMarketCap = (marketCap: number) => {
-    if (stock.symbol.length === 6) {
-      return `${(marketCap / 1000000000000).toFixed(1)}T`;
+    if (isKoreanStock) {
+      return `₩${(marketCap / 1000000000000).toFixed(1)}T`;
     }
     if (marketCap >= 1000000000000) {
       return `$${(marketCap / 1000000000000).toFixed(2)}T`;
@@ -95,9 +97,14 @@ export default function StockDetailModal({
         {/* Header - Musinsa Style */}
         <div className="flex items-center justify-between p-5 sm:p-6 border-b-2 border-[var(--foreground)]">
           <div className="flex items-center gap-4">
-            <h2 className="font-bebas text-3xl sm:text-4xl text-[var(--foreground)]">
-              {stock.symbol}
-            </h2>
+            <div>
+              <h2 className="font-bebas text-3xl sm:text-4xl text-[var(--foreground)]">
+                {stock.shortName}
+              </h2>
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wide">
+                {stock.symbol}
+              </p>
+            </div>
             <FavoriteIcon stock={stock} size="md" />
             {stock.rank > 0 && (
               <span className="inline-flex items-center justify-center w-8 h-8 bg-[var(--accent)] text-white font-black text-sm">
@@ -118,11 +125,6 @@ export default function StockDetailModal({
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-6">
-          {/* Name */}
-          <p className="text-sm text-[var(--foreground-muted)] uppercase tracking-wide mb-6">
-            {stock.shortName}
-          </p>
-
           {/* Price Info - Bold Display */}
           <div className={`border-2 p-5 sm:p-6 mb-6 ${isPositive ? 'border-[var(--success)]' : 'border-[var(--danger)]'}`}>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -133,8 +135,8 @@ export default function StockDetailModal({
                 <div className={`text-2xl sm:text-3xl font-black ${isPositive ? 'price-up' : 'price-down'}`}>
                   <AnimatedNumber
                     value={stock.currentPrice}
-                    prefix={stock.symbol.length === 6 ? '' : '$'}
-                    decimals={stock.symbol.length === 6 ? 0 : 2}
+                    prefix={isKoreanStock ? '₩' : '$'}
+                    decimals={isKoreanStock ? 0 : 2}
                     duration={1}
                   />
                 </div>

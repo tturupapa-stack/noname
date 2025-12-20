@@ -249,10 +249,10 @@ export default function FavoriteList({ stocks }: FavoriteListProps) {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-black text-[var(--foreground)]">
-                      {favorite.id}
+                      {favorite.name}
                     </span>
                     <span className="text-sm text-[var(--foreground-muted)]">
-                      {favorite.name}
+                      {favorite.id}
                     </span>
                   </div>
                   {stock ? (

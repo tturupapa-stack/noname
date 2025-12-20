@@ -80,10 +80,10 @@ export default function AlertList({ onEdit, stocks }: AlertListProps) {
             {/* 상단: 종목 정보 및 상태 */}
             <div className="flex items-center flex-wrap gap-2 mb-2">
               <span className="font-black text-[var(--foreground)]">
-                {alert.symbol}
+                {alert.symbolName}
               </span>
               <span className="text-sm text-[var(--foreground-muted)]">
-                {alert.symbolName}
+                {alert.symbol}
               </span>
               <span
                 className={`badge ${

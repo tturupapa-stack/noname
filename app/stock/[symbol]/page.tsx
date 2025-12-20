@@ -166,7 +166,7 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
               <span className="text-overline mb-4 block">STOCK DETAIL</span>
               <div className="flex items-center gap-4 mb-4">
                 <h2 className="font-bebas text-5xl sm:text-6xl lg:text-7xl leading-[0.85] text-[var(--foreground)]">
-                  {stock.symbol}
+                  {stock.shortName}
                 </h2>
                 {stock.rank > 0 && (
                   <span className="inline-flex items-center justify-center w-10 h-10 bg-[var(--accent)] text-white font-black text-lg">
@@ -176,7 +176,7 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
                 <FavoriteIcon stock={stock} size="md" />
               </div>
               <p className="text-body text-[var(--foreground-secondary)] uppercase tracking-wide">
-                {stock.shortName}
+                {stock.symbol}
               </p>
             </div>
 

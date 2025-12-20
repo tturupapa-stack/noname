@@ -1,6 +1,18 @@
 // 백엔드 API 연동 서비스
 
+import { apiCache, cacheKeys, cacheTTL } from './apiCache';
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+// 한국 주식 코드를 Yahoo Finance 형식으로 변환
+// 6자리 숫자 코드는 코스피(.KS) 형식으로 변환
+function toYahooSymbol(ticker: string): string {
+  // 6자리 숫자인 경우 한국 주식으로 간주하고 .KS 추가
+  if (/^\d{6}$/.test(ticker)) {
+    return `${ticker}.KS`;
+  }
+  return ticker;
+}
 
 // 백엔드 응답 타입
 export interface ApiStockDetail {
@@ -76,40 +88,72 @@ export interface ApiBriefingListResponse {
   total_pages: number;
 }
 
-// API 호출 함수들
+// API 호출 함수들 (캐시 적용)
 export async function fetchTrendingStock(type: string = 'most_actives'): Promise<ApiTrendingResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/stocks/trending?type=${type}`);
-  if (!response.ok) {
-    throw new Error(`API 호출 실패: ${response.status}`);
-  }
-  return response.json();
+  const cacheKey = cacheKeys.trending(type);
+
+  return apiCache.fetchWithCache(
+    cacheKey,
+    async () => {
+      const response = await fetch(`${API_BASE_URL}/api/stocks/trending?type=${type}`);
+      if (!response.ok) {
+        throw new Error(`API 호출 실패: ${response.status}`);
+      }
+      return response.json();
+    },
+    cacheTTL.trending
+  );
 }
 
 export async function fetchTopNStocks(type: string = 'most_actives', count: number = 5): Promise<ApiTopNResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/stocks/trending/top?type=${type}&count=${count}`);
-  if (!response.ok) {
-    throw new Error(`API 호출 실패: ${response.status}`);
-  }
-  return response.json();
+  const cacheKey = cacheKeys.topN(type, count);
+
+  return apiCache.fetchWithCache(
+    cacheKey,
+    async () => {
+      const response = await fetch(`${API_BASE_URL}/api/stocks/trending/top?type=${type}&count=${count}`);
+      if (!response.ok) {
+        throw new Error(`API 호출 실패: ${response.status}`);
+      }
+      return response.json();
+    },
+    cacheTTL.topN
+  );
 }
 
 export async function fetchBriefings(page: number = 1, limit: number = 10): Promise<ApiBriefingListResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/briefings?page=${page}&limit=${limit}`);
-  if (!response.ok) {
-    throw new Error(`API 호출 실패: ${response.status}`);
-  }
-  return response.json();
+  const cacheKey = cacheKeys.briefings(page, limit);
+
+  return apiCache.fetchWithCache(
+    cacheKey,
+    async () => {
+      const response = await fetch(`${API_BASE_URL}/api/briefings?page=${page}&limit=${limit}`);
+      if (!response.ok) {
+        throw new Error(`API 호출 실패: ${response.status}`);
+      }
+      return response.json();
+    },
+    cacheTTL.briefings
+  );
 }
 
 export async function fetchBriefingByDate(date: string): Promise<{ briefing: ApiBriefing }> {
-  const response = await fetch(`${API_BASE_URL}/api/briefings/${date}`);
-  if (!response.ok) {
-    if (response.status === 404) {
-      throw new Error(`${date} 날짜의 브리핑을 찾을 수 없습니다`);
-    }
-    throw new Error(`API 호출 실패: ${response.status}`);
-  }
-  return response.json();
+  const cacheKey = cacheKeys.briefingByDate(date);
+
+  return apiCache.fetchWithCache(
+    cacheKey,
+    async () => {
+      const response = await fetch(`${API_BASE_URL}/api/briefings/${date}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error(`${date} 날짜의 브리핑을 찾을 수 없습니다`);
+        }
+        throw new Error(`API 호출 실패: ${response.status}`);
+      }
+      return response.json();
+    },
+    cacheTTL.briefings
+  );
 }
 
 // 차트 데이터 타입
@@ -130,11 +174,20 @@ export interface ApiChartDataResponse {
 }
 
 export async function fetchStockChart(ticker: string, period: string = '5d'): Promise<ApiChartDataResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/stocks/${ticker}/chart?period=${period}`);
-  if (!response.ok) {
-    throw new Error(`차트 조회 실패: ${response.status}`);
-  }
-  return response.json();
+  const yahooTicker = toYahooSymbol(ticker);
+  const cacheKey = cacheKeys.stockChart(yahooTicker, period);
+
+  return apiCache.fetchWithCache(
+    cacheKey,
+    async () => {
+      const response = await fetch(`${API_BASE_URL}/api/stocks/${yahooTicker}/chart?period=${period}`);
+      if (!response.ok) {
+        throw new Error(`차트 조회 실패: ${response.status}`);
+      }
+      return response.json();
+    },
+    cacheTTL.chart
+  );
 }
 
 // 종목 상세 정보 응답
@@ -144,12 +197,30 @@ export interface ApiStockDetailResponse {
 }
 
 export async function fetchStockDetail(ticker: string): Promise<ApiStockDetailResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/stocks/${ticker}`);
-  if (!response.ok) {
-    if (response.status === 404) {
-      throw new Error(`종목 '${ticker}'를 찾을 수 없습니다`);
-    }
-    throw new Error(`종목 조회 실패: ${response.status}`);
+  const yahooTicker = toYahooSymbol(ticker);
+  const cacheKey = cacheKeys.stockDetail(yahooTicker);
+
+  return apiCache.fetchWithCache(
+    cacheKey,
+    async () => {
+      const response = await fetch(`${API_BASE_URL}/api/stocks/${yahooTicker}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error(`종목 '${ticker}'를 찾을 수 없습니다`);
+        }
+        throw new Error(`종목 조회 실패: ${response.status}`);
+      }
+      return response.json();
+    },
+    cacheTTL.stockDetail
+  );
+}
+
+// 캐시 무효화 유틸리티 (필요시 사용)
+export function invalidateCache(pattern?: string): void {
+  if (pattern) {
+    apiCache.invalidatePattern(pattern);
+  } else {
+    apiCache.clear();
   }
-  return response.json();
 }

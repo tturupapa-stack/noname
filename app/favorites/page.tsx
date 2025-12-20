@@ -171,19 +171,24 @@ export default function FavoritesPage() {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="text-xl font-black text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
-                            {stock.symbol}
+                            {stock.shortName}
                           </h3>
                           <div onClick={(e) => e.stopPropagation()}>
                             <FavoriteIcon stock={stock} size="sm" />
                           </div>
                         </div>
                         <p className="text-xs text-[var(--foreground-muted)] truncate uppercase tracking-wide">
-                          {stock.shortName}
+                          {stock.symbol}
                         </p>
                       </div>
                       <div className="text-right flex-shrink-0 ml-4">
                         <p className={`text-2xl font-black ${isPositive ? 'price-up' : 'price-down'}`}>
-                          <AnimatedNumber value={stock.currentPrice} prefix="$" decimals={2} duration={1} />
+                          <AnimatedNumber
+                            value={stock.currentPrice}
+                            prefix={/^\d{6}$/.test(stock.symbol) ? '₩' : '$'}
+                            decimals={/^\d{6}$/.test(stock.symbol) ? 0 : 2}
+                            duration={1}
+                          />
                         </p>
                         <p className={`text-sm font-bold ${isPositive ? 'price-up' : 'price-down'}`}>
                           {isPositive ? '+' : ''}{stock.changePercent.toFixed(2)}%

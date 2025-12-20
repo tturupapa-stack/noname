@@ -63,6 +63,7 @@ export function adaptBriefing(apiBriefing: ApiBriefing): Briefing {
   return {
     briefingId: `brief_${apiBriefing.date.replace(/-/g, '')}_${apiBriefing.stock.symbol}_001`,
     symbol: apiBriefing.stock.symbol,
+    shortName: apiBriefing.stock.name,
     date: apiBriefing.date,
     status: 'completed',
     textSummary: {

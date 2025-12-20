@@ -18,6 +18,7 @@ export interface Stock {
 export interface Briefing {
   briefingId: string;
   symbol: string;
+  shortName: string;
   date: string;
   status: 'completed' | 'processing' | 'failed';
   textSummary: {

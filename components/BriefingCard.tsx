@@ -79,16 +79,16 @@ function BriefingCard({ briefing, index = 0 }: BriefingCardProps) {
               </div>
             </div>
 
-            {/* Symbol & Status */}
+            {/* Name & Symbol */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-xl font-black text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
-                  {briefing.symbol}
+                <h3 className="text-xl font-black text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors truncate">
+                  {briefing.shortName}
                 </h3>
                 {getStatusBadge(briefing.status)}
               </div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)]">
-                Market Briefing
+                {briefing.symbol} · Market Briefing
               </p>
             </div>
           </div>
