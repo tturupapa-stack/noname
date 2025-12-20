@@ -4,8 +4,6 @@ import { memo } from 'react';
 import { Briefing } from '@/types';
 import Link from 'next/link';
 import ShareButton from './ShareButton';
-import AnimatedCard from './AnimatedCard';
-import AnimatedNumber from './AnimatedNumber';
 
 interface BriefingCardProps {
   briefing: Briefing;
@@ -16,22 +14,21 @@ function BriefingCard({ briefing, index = 0 }: BriefingCardProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: 'long',
+      month: 'short',
       day: 'numeric',
     });
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusStyles = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-green-500/20 text-green-400 border-green-500/30';
+        return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400';
       case 'processing':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+        return 'bg-amber-500/10 text-amber-600 dark:text-amber-400';
       case 'failed':
-        return 'bg-red-500/20 text-red-400 border-red-500/30';
+        return 'bg-red-500/10 text-red-600 dark:text-red-400';
       default:
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+        return 'bg-gray-500/10 text-gray-600 dark:text-gray-400';
     }
   };
 
@@ -49,64 +46,56 @@ function BriefingCard({ briefing, index = 0 }: BriefingCardProps) {
   };
 
   return (
-    <AnimatedCard
-      direction="up"
-      delay={index * 100}
-      className="relative rounded-2xl border-2 border-gray-300 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900/80 dark:to-gray-800/80 backdrop-blur-sm card-hover card-glow shadow-lg hover:shadow-xl overflow-hidden"
+    <div
+      className="card-dawn transition-smooth hover-lift animate-fade-in-up"
+      style={{ animationDelay: `${index * 0.1}s`, opacity: 0 }}
     >
-      {/* 그라데이션 오버레이 - 애니메이션 */}
-      <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-10 bg-gradient-to-br from-purple-400 to-blue-400 animate-float" style={{ animationDelay: `${index * 0.2}s` }}></div>
-      <div className="absolute bottom-0 left-0 w-20 h-20 rounded-full blur-xl opacity-10 bg-gradient-to-br from-pink-400 to-purple-400 animate-float" style={{ animationDelay: `${index * 0.2 + 1}s` }}></div>
       {/* 공유 버튼 */}
-      <div className="absolute top-3 right-3 z-10" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="absolute top-3 right-3 z-10"
+        onClick={(e) => e.stopPropagation()}
+      >
         <ShareButton briefing={briefing} variant="icon" size="sm" />
       </div>
 
       <Link href={`/briefing/${briefing.briefingId}`}>
-        <div className="p-4 cursor-pointer relative z-10">
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex-1 pr-8">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-lg font-bold text-gray-900 dark:text-white">{briefing.symbol}</span>
-                <span
-                  className={`text-xs px-2 py-1 rounded border ${getStatusColor(
-                    briefing.status
-                  )}`}
-                >
-                  {getStatusLabel(briefing.status)}
-                </span>
-              </div>
-              <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                {briefing.textSummary.title}
-              </h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                {briefing.textSummary.summary}
-              </p>
+        <div className="p-5 cursor-pointer">
+          {/* 상단: 심볼 + 날짜 + 상태 */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-bold">{briefing.symbol}</span>
+              <span className="text-xs opacity-50">{formatDate(briefing.date)}</span>
             </div>
-            {briefing.imageBriefing && (
-              <div className="ml-4 flex-shrink-0">
-                <div className="w-20 h-20 rounded bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 flex items-center justify-center">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">이미지</span>
-                </div>
-              </div>
-            )}
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusStyles(briefing.status)}`}
+            >
+              {getStatusLabel(briefing.status)}
+            </span>
           </div>
-          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-            <span>{formatDate(briefing.date)}</span>
-            <span>
-              <AnimatedNumber
-                value={briefing.textSummary.keyPoints.length}
-                suffix="개 핵심 포인트"
-                decimals={0}
-                duration={1}
-              />
+
+          {/* 제목 */}
+          <h4 className="font-semibold mb-2 line-clamp-2 leading-snug">
+            {briefing.textSummary.title}
+          </h4>
+
+          {/* 요약 */}
+          <p className="text-sm opacity-60 line-clamp-2 leading-relaxed">
+            {briefing.textSummary.summary}
+          </p>
+
+          {/* 하단: 핵심 포인트 개수 */}
+          <div className="flex items-center gap-1.5 mt-4 text-xs">
+            <svg className="w-3.5 h-3.5 text-[#ff7e5f]" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span className="opacity-50">
+              {briefing.textSummary.keyPoints.length}개 핵심 포인트
             </span>
           </div>
         </div>
       </Link>
-    </AnimatedCard>
+    </div>
   );
 }
 
 export default memo(BriefingCard);
-

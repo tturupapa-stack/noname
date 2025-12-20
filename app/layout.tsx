@@ -1,22 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Noto_Serif_KR } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import ThemeTransition from "@/components/ThemeTransition";
 
-const geistSans = Geist({
+// Noto Serif KR - 우아한 한국어 세리프 (헤드라인용)
+const notoSerifKR = Noto_Serif_KR({
+  variable: "--font-noto-serif-kr",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+// Geist - 본문용 산세리프
+const geist = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "당신이 잠든 사이 - 대시보드",
-  description: "오늘의 화제 종목 대시보드",
+  title: "당신이 잠든 사이",
+  description: "밤새 시장에서 무슨 일이 있었는지, 새벽이 밝아올 때 알려드립니다",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -26,10 +31,23 @@ export const metadata: Metadata = {
   icons: {
     apple: "/icon-180.png",
   },
+  keywords: ["주식", "브리핑", "대시보드", "화제 종목", "시장 분석"],
+  authors: [{ name: "잠든사이" }],
+  openGraph: {
+    title: "당신이 잠든 사이",
+    description: "밤새 시장에서 무슨 일이 있었는지, 새벽이 밝아올 때 알려드립니다",
+    type: "website",
+    locale: "ko_KR",
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1a1a2e",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf8f5" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a12" },
+  ],
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -45,7 +63,11 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="잠든사이" />
-        <meta name="theme-color" content="#1a1a2e" />
+        {/* Pretendard 폰트 CDN */}
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -63,14 +85,15 @@ export default function RootLayout({
           }}
         />
       </head>
-            <body
-              className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            >
-              <ThemeProvider>
-                <ThemeTransition />
-                {children}
-              </ThemeProvider>
-            </body>
+      <body
+        className={`${notoSerifKR.variable} ${geist.variable} antialiased`}
+        style={{ fontFamily: "'Pretendard Variable', var(--font-geist-sans), system-ui, sans-serif" }}
+      >
+        <ThemeProvider>
+          <ThemeTransition />
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

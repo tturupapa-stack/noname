@@ -6,7 +6,7 @@ import Navigation from '@/components/Navigation';
 import ThemeToggle from '@/components/ThemeToggle';
 import StockDetailModal from '@/components/StockDetailModal';
 import FavoriteIcon from '@/components/FavoriteIcon';
-import { Stock } from '@/types';
+import { Stock, FavoriteStock } from '@/types';
 import { getFavorites } from '@/utils/favoriteStorage';
 import { mockAllStocks } from '@/data/mockData';
 import { fetchTopNStocks } from '@/services/api';
@@ -21,8 +21,8 @@ export default function FavoritesPage() {
   const [sortBy, setSortBy] = useState<SortOption>('added');
 
   useEffect(() => {
-    // 관심 종목 로드
-    setFavoriteSymbols(getFavorites());
+    // 관심 종목 로드 (FavoriteStock[] -> string[] 변환)
+    setFavoriteSymbols(getFavorites().map(f => f.id));
 
     // API에서 최신 데이터 로드
     async function loadStocks() {
@@ -38,7 +38,7 @@ export default function FavoritesPage() {
 
     // 로컬스토리지 변경 감지
     const handleStorage = () => {
-      setFavoriteSymbols(getFavorites());
+      setFavoriteSymbols(getFavorites().map(f => f.id));
     };
     window.addEventListener('storage', handleStorage);
     return () => window.removeEventListener('storage', handleStorage);

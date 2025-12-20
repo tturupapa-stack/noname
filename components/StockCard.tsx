@@ -4,7 +4,6 @@ import { memo } from 'react';
 import { Stock, PriceData } from '@/types';
 import StockChart from './StockChart';
 import FavoriteIcon from './FavoriteIcon';
-import AnimatedCard from './AnimatedCard';
 import AnimatedNumber from './AnimatedNumber';
 
 interface StockCardProps {
@@ -19,56 +18,42 @@ function StockCard({
   chartData,
 }: StockCardProps) {
   const isPositive = stock.change >= 0;
-  const changeColor = isPositive ? 'text-green-500' : 'text-red-500';
-  const bgColor = isPositive ? 'bg-green-500/10' : 'bg-red-500/10';
-  const borderColor = isPositive ? 'border-green-500/20' : 'border-red-500/20';
 
   return (
-    <AnimatedCard
-      direction="fade"
-      delay={0}
-      className={`rounded-2xl border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900/80 dark:to-gray-800/80 p-6 backdrop-blur-sm card-hover card-glow shadow-lg hover:shadow-xl ${
-        isLarge ? 'col-span-full md:col-span-2' : ''
-      } ${borderColor} relative overflow-hidden`}
+    <div
+      className={`card-glass p-6 transition-smooth hover-lift ${
+        isLarge ? 'col-span-full lg:col-span-1' : ''
+      }`}
     >
-      {/* 그라데이션 오버레이 - 애니메이션 */}
-      <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-20 animate-float ${
-        isPositive ? 'bg-green-400' : 'bg-red-400'
-      }`} style={{ animationDelay: '0s' }}></div>
-      <div className={`absolute bottom-0 left-0 w-24 h-24 rounded-full blur-2xl opacity-15 animate-float ${
-        isPositive ? 'bg-green-300' : 'bg-red-300'
-      }`} style={{ animationDelay: '1.5s' }}></div>
-      <div className="flex items-start justify-between relative z-10">
+      {/* 헤더 */}
+      <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <h3 className={`font-bold text-gray-900 dark:text-white ${isLarge ? 'text-2xl' : 'text-xl'}`}>
-              {stock.symbol}
-            </h3>
-            <span className="text-sm text-gray-600 dark:text-gray-400">{stock.shortName}</span>
+          <div className="flex items-center gap-3 mb-1">
+            <h3 className="font-bold text-xl sm:text-2xl">{stock.symbol}</h3>
+            <span className="text-sm opacity-60">{stock.shortName}</span>
             <FavoriteIcon stock={stock} size={isLarge ? 'md' : 'sm'} />
           </div>
-          <div className="flex items-baseline gap-3 mb-4">
-            <span className={`text-3xl font-bold ${changeColor}`}>
+
+          {/* 가격 정보 */}
+          <div className="flex items-baseline gap-3">
+            <span className={`text-2xl sm:text-3xl font-bold ${isPositive ? 'price-up' : 'price-down'}`}>
               <AnimatedNumber
                 value={stock.currentPrice}
                 prefix="$"
                 decimals={2}
                 duration={1.5}
-                className={changeColor}
               />
             </span>
-            <div className={`flex items-center gap-1 px-2 py-1 rounded ${bgColor}`}>
-              <span className={`text-sm font-semibold ${changeColor}`}>
+            <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg ${isPositive ? 'price-up-bg' : 'price-down-bg'}`}>
+              <span className={`text-sm font-semibold ${isPositive ? 'price-up' : 'price-down'}`}>
                 {isPositive ? '+' : ''}
                 <AnimatedNumber
                   value={stock.change}
-                  prefix={isPositive ? '+' : ''}
                   decimals={2}
                   duration={1.5}
-                  className={changeColor}
                 />
               </span>
-              <span className={`text-sm font-semibold ${changeColor}`}>
+              <span className={`text-sm font-semibold ${isPositive ? 'price-up' : 'price-down'}`}>
                 (
                 <AnimatedNumber
                   value={stock.changePercent}
@@ -76,63 +61,18 @@ function StockCard({
                   suffix="%"
                   decimals={2}
                   duration={1.5}
-                  className={changeColor}
                 />
                 )
               </span>
             </div>
           </div>
-          {isLarge && (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm">
-                <div>
-                  <span className="text-gray-600 dark:text-gray-400">거래량:</span>
-                  <span className="ml-2 text-gray-900 dark:text-white">
-                    <AnimatedNumber
-                      value={stock.volume / 1000000}
-                      suffix="M"
-                      decimals={1}
-                      duration={1.5}
-                    />
-                  </span>
-                </div>
-                <div>
-                  <span className="text-gray-600 dark:text-gray-400">시가총액:</span>
-                  <span className="ml-2 text-gray-900 dark:text-white">
-                    $
-                    <AnimatedNumber
-                      value={stock.marketCap / 1000000000}
-                      suffix="B"
-                      decimals={1}
-                      duration={1.5}
-                    />
-                  </span>
-                </div>
-                <div>
-                  <span className="text-gray-600 dark:text-gray-400">섹터:</span>
-                  <span className="ml-2 text-gray-900 dark:text-white">{stock.sector}</span>
-                </div>
-                <div>
-                  <span className="text-gray-600 dark:text-gray-400">산업:</span>
-                  <span className="ml-2 text-gray-900 dark:text-white">{stock.industry}</span>
-                </div>
-              </div>
-              {/* 주가 차트 */}
-              {chartData && chartData.length > 0 && (
-                <div className="mt-6 pt-6 border-t border-gray-300 dark:border-gray-700">
-                  <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">
-                    최근 5일간 주가 추이
-                  </h4>
-                  <StockChart data={chartData} isPositive={isPositive} />
-                </div>
-              )}
-            </>
-          )}
         </div>
+
+        {/* 복합 점수 배지 */}
         {isLarge && (
           <div className="text-right">
-            <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">복합 점수</div>
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="text-xs opacity-50 mb-1">복합 점수</div>
+            <div className="score-badge">
               <AnimatedNumber
                 value={stock.compositeScore}
                 decimals={1}
@@ -142,9 +82,56 @@ function StockCard({
           </div>
         )}
       </div>
-    </AnimatedCard>
+
+      {/* 상세 정보 (isLarge일 때만) */}
+      {isLarge && (
+        <>
+          <div className="grid grid-cols-2 gap-4 text-sm mb-6">
+            <div className="flex justify-between">
+              <span className="opacity-50">거래량</span>
+              <span className="font-medium">
+                <AnimatedNumber
+                  value={stock.volume / 1000000}
+                  suffix="M"
+                  decimals={1}
+                  duration={1.5}
+                />
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="opacity-50">시가총액</span>
+              <span className="font-medium">
+                $<AnimatedNumber
+                  value={stock.marketCap / 1000000000}
+                  suffix="B"
+                  decimals={1}
+                  duration={1.5}
+                />
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="opacity-50">섹터</span>
+              <span className="font-medium truncate ml-2">{stock.sector}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="opacity-50">산업</span>
+              <span className="font-medium truncate ml-2">{stock.industry}</span>
+            </div>
+          </div>
+
+          {/* 차트 */}
+          {chartData && chartData.length > 0 && (
+            <div className="pt-6 border-t border-[var(--card-border)]">
+              <h4 className="text-sm font-semibold opacity-70 mb-4">
+                최근 5일간 주가 추이
+              </h4>
+              <StockChart data={chartData} isPositive={isPositive} />
+            </div>
+          )}
+        </>
+      )}
+    </div>
   );
 }
 
 export default memo(StockCard);
-

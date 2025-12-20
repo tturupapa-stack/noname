@@ -1,10 +1,9 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { Stock } from '@/types';
 import Link from 'next/link';
 import FavoriteIcon from './FavoriteIcon';
-import AnimatedCard from './AnimatedCard';
 import AnimatedNumber from './AnimatedNumber';
 
 interface Top3ComparisonCardProps {
@@ -18,180 +17,108 @@ function Top3ComparisonCard({
   rank,
   index = 0,
 }: Top3ComparisonCardProps) {
-  const [showTooltip, setShowTooltip] = useState(false);
   const isPositive = stock.change >= 0;
-  const changeColor = isPositive ? 'text-green-500' : 'text-red-500';
-  const bgColor = isPositive ? 'bg-green-500/10' : 'bg-red-500/10';
-  const borderColor = isPositive ? 'border-green-500/20' : 'border-red-500/20';
 
-  const getRankBadgeColor = (rank: number) => {
+  const getRankClass = (rank: number) => {
     switch (rank) {
       case 1:
-        return 'bg-yellow-500 text-black';
+        return 'rank-1';
       case 2:
-        return 'bg-gray-400 text-black';
+        return 'rank-2';
       case 3:
-        return 'bg-orange-600 text-white';
+        return 'rank-3';
       default:
-        return 'bg-gray-600 text-white';
-    }
-  };
-
-  const getRankLabel = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return '1위';
-      case 2:
-        return '2위';
-      case 3:
-        return '3위';
-      default:
-        return `${rank}위`;
+        return 'bg-gray-500 text-white';
     }
   };
 
   return (
-    <AnimatedCard
-      direction="scale"
-      delay={index * 150}
-      className="relative z-10 h-full"
+    <div
+      className="animate-fade-in-up"
+      style={{ animationDelay: `${index * 0.15}s`, opacity: 0 }}
     >
       <Link href={`/stock/${stock.symbol}`}>
-        <div
-          className="relative rounded-2xl border-2 border-gray-300 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900/80 dark:to-gray-800/80 p-6 backdrop-blur-sm card-hover card-glow shadow-lg hover:shadow-xl cursor-pointer h-full flex flex-col overflow-hidden"
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-        >
-          {/* 그라데이션 오버레이 - 애니메이션 */}
-          <div className={`absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-15 animate-float ${
-            isPositive ? 'bg-green-400' : 'bg-red-400'
-          }`} style={{ animationDelay: `${index * 0.3}s` }}></div>
-          <div className={`absolute bottom-0 left-0 w-20 h-20 rounded-full blur-xl opacity-10 animate-float ${
-            isPositive ? 'bg-green-300' : 'bg-red-300'
-          }`} style={{ animationDelay: `${index * 0.3 + 1.5}s` }}></div>
-        {/* 순위 뱃지 */}
-        <div className="absolute top-4 right-4 z-10">
-          <div
-            className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm ${getRankBadgeColor(
-              rank
-            )}`}
-          >
-            {rank}
-          </div>
-        </div>
-
-        {/* 종목 정보 */}
-        <div className="flex-1 relative z-10">
-          <div className="mb-4">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">{stock.symbol}</h3>
-              <FavoriteIcon stock={stock} size="sm" />
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-              {stock.shortName}
-            </p>
-          </div>
-
-          {/* 주가 */}
-          <div className="mb-4">
-            <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">주가</div>
-            <div className={`text-2xl font-bold ${changeColor}`}>
-              <AnimatedNumber
-                value={stock.currentPrice}
-                prefix="$"
-                decimals={2}
-                duration={1.5}
-                className={changeColor}
-              />
+        <div className="card-glass p-6 h-full flex flex-col cursor-pointer transition-smooth hover-lift group">
+          {/* 헤더: 순위 + 심볼 */}
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className={`rank-badge ${getRankClass(rank)}`}>
+                {rank}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-bold">{stock.symbol}</h3>
+                  <FavoriteIcon stock={stock} size="sm" />
+                </div>
+                <p className="text-sm opacity-50 line-clamp-1">{stock.shortName}</p>
+              </div>
             </div>
           </div>
 
-          {/* 변동률 */}
-          <div className="mb-4">
-            <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">변동률</div>
-            <div className={`flex items-center gap-2 ${changeColor}`}>
-              <span className="text-lg font-semibold">
+          {/* 가격 정보 */}
+          <div className="flex-1">
+            <div className="mb-4">
+              <div className="text-xs opacity-40 mb-1">현재가</div>
+              <div className={`text-2xl font-bold ${isPositive ? 'price-up' : 'price-down'}`}>
                 <AnimatedNumber
-                  value={stock.changePercent}
-                  prefix={isPositive ? '+' : ''}
-                  suffix="%"
+                  value={stock.currentPrice}
+                  prefix="$"
                   decimals={2}
                   duration={1.5}
-                  className={changeColor}
                 />
-              </span>
-              <span className="text-sm">
-                (
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <div className="text-xs opacity-40 mb-1">변동률</div>
+                <div className={`font-semibold ${isPositive ? 'price-up' : 'price-down'}`}>
+                  <AnimatedNumber
+                    value={stock.changePercent}
+                    prefix={isPositive ? '+' : ''}
+                    suffix="%"
+                    decimals={2}
+                    duration={1.5}
+                  />
+                </div>
+              </div>
+              <div>
+                <div className="text-xs opacity-40 mb-1">거래량</div>
+                <div className="font-semibold">
+                  <AnimatedNumber
+                    value={stock.volume / 1000000}
+                    suffix="M"
+                    decimals={1}
+                    duration={1.5}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 하단: 복합 점수 */}
+          <div className="mt-4 pt-4 border-t border-[var(--card-border)] flex items-center justify-between">
+            <span className="text-xs opacity-40">복합 점수</span>
+            <div className="flex items-center gap-2">
+              <div className="w-24 h-1.5 bg-[var(--card-border)] rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] rounded-full transition-all duration-1000"
+                  style={{ width: `${(stock.compositeScore / 40) * 100}%` }}
+                />
+              </div>
+              <span className="text-sm font-bold text-[#ff7e5f]">
                 <AnimatedNumber
-                  value={stock.change}
-                  prefix={isPositive ? '+' : ''}
-                  decimals={2}
+                  value={stock.compositeScore}
+                  decimals={1}
                   duration={1.5}
-                  className={changeColor}
                 />
-                )
               </span>
             </div>
           </div>
-
-          {/* 거래량 */}
-          <div>
-            <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">거래량</div>
-            <div className="text-base font-semibold text-gray-900 dark:text-white">
-              <AnimatedNumber
-                value={stock.volume / 1000000}
-                suffix="M"
-                decimals={1}
-                duration={1.5}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* 복합 점수 */}
-        <div className="mt-4 pt-4 border-t border-gray-300 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-600 dark:text-gray-400">복합 점수</span>
-            <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
-              <AnimatedNumber
-                value={stock.compositeScore}
-                decimals={1}
-                duration={1.5}
-              />
-            </span>
-          </div>
-        </div>
-
-        {/* 호버 툴팁 */}
-        {showTooltip && (
-          <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-xl z-[50] hidden md:block">
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">섹터:</span>
-                <span className="text-gray-900 dark:text-white">{stock.sector}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">산업:</span>
-                <span className="text-gray-900 dark:text-white">{stock.industry}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">시가총액:</span>
-                <span className="text-gray-900 dark:text-white">
-                  ${(stock.marketCap / 1000000000).toFixed(1)}B
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">순위:</span>
-                <span className="text-gray-900 dark:text-white">{getRankLabel(rank)}</span>
-              </div>
-            </div>
-          </div>
-        )}
         </div>
       </Link>
-    </AnimatedCard>
+    </div>
   );
 }
 
 export default memo(Top3ComparisonCard);
-
