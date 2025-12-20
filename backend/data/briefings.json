@@ -2,7 +2,7 @@
   {
     "id": "2025-12-20",
     "date": "2025-12-20",
-    "created_at": "2025-12-20 08:56:54.250057",
+    "created_at": "2025-12-20 09:18:36.581274",
     "stock": {
       "symbol": "FOLD",
       "name": "Amicus Therapeutics, Inc.",
@@ -45,34 +45,34 @@
     ],
     "news": [
       {
-        "title": "Amicus Therapeutics (NASDAQ:FOLD) Reaches New 1- ...",
-        "url": "https://www.marketbeat.com/instant-alerts/amicus-therapeutics-nasdaqfold-reaches-new-1-year-high-heres-what-happened-2025-12-18/",
-        "published_date": "2025-12-17 23:56:53.572000+00:00",
+        "title": "BioMarin Soars 18% After Folding In The $4.8 Billion ...",
+        "url": "https://www.investors.com/news/technology/biomarin-amicus-acquisition/",
+        "published_date": "2025-12-19 21:18:35.655000+00:00",
+        "source": "investors.com"
+      },
+      {
+        "title": "BioMarin to Acquire Amicus Therapeutics for $4.8 Billion ...",
+        "url": "https://ir.amicusrx.com/news-releases/news-release-details/biomarin-acquire-amicus-therapeutics-48-billion-expanding",
+        "published_date": "2025-12-19 13:18:35.655000+00:00",
+        "source": "ir.amicusrx.com"
+      },
+      {
+        "title": "Amicus Therapeutics (NASDAQ:FOLD) Shares Gap Up",
+        "url": "https://www.marketbeat.com/instant-alerts/amicus-therapeutics-nasdaqfold-shares-gap-up-time-to-buy-2025-12-19/",
+        "published_date": "2025-12-19 16:18:35.655000+00:00",
         "source": "marketbeat.com"
       },
       {
-        "title": "All News for FOLD : Amicus Therapeutics",
-        "url": "https://www.zacks.com/stock/research/FOLD/all-news",
-        "published_date": "2025-12-17 23:56:53.572000+00:00",
-        "source": "zacks.com"
+        "title": "Senate confirms Trump crypto-friendly nominees to take over CFTC, FDIC",
+        "url": "https://www.coindesk.com/policy/2025/12/11/senate-confirms-trump-crypto-friendly-nominees-to-take-over-cftc-fdic",
+        "published_date": "2025-12-19 00:00:00+00:00",
+        "source": "coindesk.com"
       },
       {
-        "title": "Fold Becomes First Public Bitcoin Financial Services ...",
-        "url": "https://markets.businessinsider.com/news/stocks/fold-becomes-first-public-bitcoin-financial-services-company-to-operate-nationwide-through-bitgo-s-federally-chartered-trust-framework-1035656734",
-        "published_date": "2025-12-18 23:56:53.572000+00:00",
-        "source": "markets.businessinsider.com"
-      },
-      {
-        "title": "Fold Holdings (FLD) Stock Price & Overview",
-        "url": "https://stockanalysis.com/stocks/fld/",
-        "published_date": "2025-12-17 23:56:53.572000+00:00",
-        "source": "stockanalysis.com"
-      },
-      {
-        "title": "Fold Holdings, Inc Stock Price, News & Analysis - FLD",
-        "url": "https://www.stocktitan.net/news/FLD/",
-        "published_date": "2025-12-18 23:56:53.572000+00:00",
-        "source": "stocktitan.net"
+        "title": "This Artificial Intelligence IPO Stock Is Up 73% So Far in 2025. Here Is Why It Could Be a Bust in 2026.",
+        "url": "https://www.fool.com/investing/2025/12/18/this-artificial-intelligence-ipo-stock-is-up-73-so/",
+        "published_date": "2025-12-19 00:00:00+00:00",
+        "source": "fool.com"
       }
     ]
   },
