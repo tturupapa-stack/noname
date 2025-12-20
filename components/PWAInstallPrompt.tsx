@@ -146,7 +146,8 @@ export default function PWAInstallPrompt() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-0 left-0 right-0 z-[200] p-4 bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-800 dark:to-blue-800 text-white shadow-2xl"
+            className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-800 dark:to-blue-800 text-white shadow-2xl"
+            style={{ zIndex: 'var(--z-pwa-prompt)' }}
           >
             <div className="container mx-auto max-w-4xl flex items-center justify-between gap-4">
               <div className="flex-1">
@@ -190,7 +191,8 @@ export default function PWAInstallPrompt() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            style={{ zIndex: 'var(--z-fullscreen)' }}
             onClick={() => setShowIOSGuide(false)}
           >
             <motion.div

@@ -40,11 +40,13 @@ export default function AlertHistory() {
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 dark:bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 flex items-center justify-center p-4 bg-black/80 dark:bg-black/80 backdrop-blur-sm modal-backdrop"
+          style={{ zIndex: 'var(--z-modal-backdrop)' }}
           onClick={() => setIsOpen(false)}
         >
           <div
-            className="relative w-full max-w-2xl max-h-[80vh] bg-white dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-700 shadow-2xl overflow-hidden flex flex-col"
+            className="relative w-full max-w-2xl max-h-[80vh] bg-white dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-700 shadow-2xl overflow-hidden flex flex-col modal-content"
+            style={{ zIndex: 'var(--z-modal)' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-6 border-b border-gray-300 dark:border-gray-700">

@@ -52,8 +52,9 @@ export default function ThemeTransition() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-[200] pointer-events-none"
+          className="fixed inset-0 pointer-events-none"
           style={{
+            zIndex: 'var(--z-notification)',
             background: transitionType === 'sunrise'
               ? 'linear-gradient(to top, rgba(255, 200, 87, 0.8) 0%, rgba(255, 159, 64, 0.6) 30%, rgba(255, 107, 107, 0.4) 60%, transparent 100%)'
               : 'linear-gradient(to bottom, rgba(59, 130, 246, 0.6) 0%, rgba(139, 92, 246, 0.5) 30%, rgba(30, 41, 59, 0.7) 60%, rgba(15, 23, 42, 0.9) 100%)',

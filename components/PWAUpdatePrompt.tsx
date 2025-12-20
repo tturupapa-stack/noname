@@ -75,7 +75,8 @@ export default function PWAUpdatePrompt() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed top-0 left-0 right-0 z-[200] p-4 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 text-white shadow-2xl"
+          className="fixed top-0 left-0 right-0 p-4 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 text-white shadow-2xl"
+          style={{ zIndex: 'var(--z-notification)' }}
         >
           <div className="container mx-auto max-w-4xl flex items-center justify-between gap-4">
             <div className="flex-1">

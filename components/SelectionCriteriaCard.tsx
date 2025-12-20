@@ -1,6 +1,7 @@
+'use client';
+
 import { memo } from 'react';
 import { SelectionCriteria } from '@/types';
-import Link from 'next/link';
 
 interface SelectionCriteriaCardProps {
   criteria: SelectionCriteria;
@@ -14,32 +15,74 @@ function SelectionCriteriaCard({
   const getTypeLabel = (type: string) => {
     switch (type) {
       case 'volume':
-        return '거래량';
+        return 'VOLUME';
       case 'gain':
-        return '상승률';
+        return 'GAIN';
       case 'composite':
-        return '복합 점수';
+        return 'COMPOSITE';
       default:
-        return type;
+        return type.toUpperCase();
     }
   };
 
   return (
-    <div className="rounded-2xl border-2 border-blue-500/30 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 backdrop-blur-sm card-hover card-glow shadow-lg hover:shadow-xl relative overflow-hidden">
-      {/* 그라데이션 오버레이 - 애니메이션 */}
-      <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-20 bg-gradient-to-br from-blue-400 to-purple-400 animate-float"></div>
-      <div className="absolute bottom-0 left-0 w-28 h-28 rounded-full blur-2xl opacity-15 bg-gradient-to-br from-purple-400 to-pink-400 animate-float" style={{ animationDelay: '1s' }}></div>
-      <div className="flex items-center justify-between relative z-10">
-        <div>
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">선정 기준</div>
-          <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">
-            {getTypeLabel(criteria.type)} {criteria.rank}위
+    <div className="group border-2 border-[var(--border)] hover:border-[var(--foreground)] transition-all h-full relative isolate overflow-hidden">
+      {/* Header */}
+      <div className="p-5 sm:p-6 border-b border-[var(--border)]">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)] mb-1">
+              Selection Criteria
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-xl sm:text-2xl font-black text-[var(--foreground)]">
+                {getTypeLabel(criteria.type)}
+              </span>
+              <span className="inline-flex items-center justify-center w-8 h-8 bg-[var(--foreground)] text-[var(--background)] font-black text-sm">
+                #{criteria.rank}
+              </span>
+            </div>
           </div>
-          <div className="text-sm text-gray-700 dark:text-gray-300 mt-1">{criteria.description}</div>
+          <div className="text-right">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)] mb-1">
+              Symbol
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
+              {stockSymbol}
+            </div>
+          </div>
         </div>
-        <div className="text-right">
-          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">종목</div>
-          <div className="text-xl font-bold text-gray-900 dark:text-white">{stockSymbol}</div>
+      </div>
+
+      {/* Description */}
+      <div className="p-5 sm:p-6">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)] mb-3">
+          Why This Stock?
+        </div>
+        <p className="text-sm sm:text-base text-[var(--foreground-secondary)] leading-relaxed">
+          {criteria.description}
+        </p>
+
+        {/* Visual Indicator */}
+        <div className="mt-6 pt-6 border-t border-[var(--border)]">
+          <div className="flex items-center gap-4">
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)]">
+                  Ranking Position
+                </span>
+                <span className="text-sm font-bold text-[var(--foreground)]">
+                  Top {criteria.rank}
+                </span>
+              </div>
+              <div className="h-1 bg-[var(--border)] overflow-hidden">
+                <div
+                  className="h-full bg-[var(--foreground)] transition-all duration-1000"
+                  style={{ width: `${Math.max(100 - (criteria.rank - 1) * 20, 20)}%` }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -47,4 +90,3 @@ function SelectionCriteriaCard({
 }
 
 export default memo(SelectionCriteriaCard);
-

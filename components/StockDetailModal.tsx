@@ -5,6 +5,7 @@ import { Stock, PriceData } from '@/types';
 import Link from 'next/link';
 import FavoriteIcon from './FavoriteIcon';
 import StockChart from './StockChart';
+import AnimatedNumber from './AnimatedNumber';
 import { fetchStockChart } from '@/services/api';
 import { adaptChartData } from '@/services/apiAdapters';
 
@@ -41,7 +42,6 @@ export default function StockDetailModal({
     };
   }, [isOpen, onClose]);
 
-  // 모달이 열릴 때 차트 데이터 로드
   useEffect(() => {
     async function loadChartData() {
       if (!isOpen || !stock) return;
@@ -52,7 +52,7 @@ export default function StockDetailModal({
         const adaptedChartData = adaptChartData(chartRes.data);
         setChartData(adaptedChartData);
       } catch (err) {
-        console.error('차트 데이터 로드 실패:', err);
+        console.error('Failed to load chart:', err);
         setChartData([]);
       } finally {
         setIsChartLoading(false);
@@ -65,164 +65,208 @@ export default function StockDetailModal({
   if (!isOpen) return null;
 
   const isPositive = stock.change >= 0;
-  const changeColor = isPositive ? 'text-green-500' : 'text-red-500';
-  const bgColor = isPositive ? 'bg-green-500/10' : 'bg-red-500/10';
-  const borderColor = isPositive ? 'border-green-500/20' : 'border-red-500/20';
+
+  const formatPrice = (price: number) => {
+    return stock.symbol.length === 6 ? `${price.toLocaleString()}` : `$${price.toFixed(2)}`;
+  };
+
+  const formatMarketCap = (marketCap: number) => {
+    if (stock.symbol.length === 6) {
+      return `${(marketCap / 1000000000000).toFixed(1)}T`;
+    }
+    if (marketCap >= 1000000000000) {
+      return `$${(marketCap / 1000000000000).toFixed(2)}T`;
+    }
+    return `$${(marketCap / 1000000000).toFixed(1)}B`;
+  };
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 dark:bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 flex items-center justify-center p-4 bg-black/60 modal-backdrop"
+      style={{ zIndex: 'var(--z-modal-backdrop)' }}
       onClick={onClose}
     >
       <div
         ref={modalRef}
-        className="relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-700 shadow-2xl overflow-hidden flex flex-col z-[101]"
+        className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--background)] border-2 border-[var(--foreground)] overflow-hidden flex flex-col animate-scale-in modal-content"
+        style={{ zIndex: 'var(--z-modal)' }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 헤더 */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-300 dark:border-gray-700">
-          <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+        {/* Header - Musinsa Style */}
+        <div className="flex items-center justify-between p-5 sm:p-6 border-b-2 border-[var(--foreground)]">
+          <div className="flex items-center gap-4">
+            <h2 className="font-bebas text-3xl sm:text-4xl text-[var(--foreground)]">
               {stock.symbol}
             </h2>
             <FavoriteIcon stock={stock} size="md" />
+            {stock.rank > 0 && (
+              <span className="inline-flex items-center justify-center w-8 h-8 bg-[var(--accent)] text-white font-black text-sm">
+                #{stock.rank}
+              </span>
+            )}
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            aria-label="닫기"
+            className="w-10 h-10 flex items-center justify-center border-2 border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-all"
+            aria-label="Close"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        {/* 내용 */}
-        <div className="flex-1 overflow-y-auto p-6">
-          <div className="mb-6">
-            <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
-              {stock.shortName}
-            </p>
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-5 sm:p-6">
+          {/* Name */}
+          <p className="text-sm text-[var(--foreground-muted)] uppercase tracking-wide mb-6">
+            {stock.shortName}
+          </p>
 
-            {/* 주가 정보 */}
-            <div className={`rounded-lg border p-6 mb-6 ${borderColor} ${bgColor}`}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">현재가</div>
-                  <div className={`text-3xl font-bold ${changeColor}`}>
-                    {stock.symbol.length === 6 ? `₩${stock.currentPrice.toLocaleString()}` : `$${stock.currentPrice.toFixed(2)}`}
-                  </div>
+          {/* Price Info - Bold Display */}
+          <div className={`border-2 p-5 sm:p-6 mb-6 ${isPositive ? 'border-[var(--success)]' : 'border-[var(--danger)]'}`}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)] mb-2">
+                  Current Price
                 </div>
-                <div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">변동률</div>
-                  <div className={`text-2xl font-bold ${changeColor}`}>
-                    {isPositive ? '+' : ''}
-                    {stock.changePercent.toFixed(2)}%
-                  </div>
-                  <div className={`text-sm ${changeColor} mt-1`}>
-                    {isPositive ? '+' : ''}
-                    {stock.symbol.length === 6 ? `${stock.change.toLocaleString()}` : `${stock.change.toFixed(2)}`}
-                  </div>
+                <div className={`text-2xl sm:text-3xl font-black ${isPositive ? 'price-up' : 'price-down'}`}>
+                  <AnimatedNumber
+                    value={stock.currentPrice}
+                    prefix={stock.symbol.length === 6 ? '' : '$'}
+                    decimals={stock.symbol.length === 6 ? 0 : 2}
+                    duration={1}
+                  />
                 </div>
-                <div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">거래량</div>
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {(stock.volume / 1000000).toFixed(1)}M
-                  </div>
+              </div>
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)] mb-2">
+                  Change
                 </div>
-                <div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">복합 점수</div>
-                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                    {stock.compositeScore.toFixed(1)}
-                  </div>
+                <div className={`text-xl sm:text-2xl font-black ${isPositive ? 'price-up' : 'price-down'}`}>
+                  {isPositive ? '+' : ''}{stock.changePercent.toFixed(2)}%
+                </div>
+                <div className={`text-sm font-bold ${isPositive ? 'price-up' : 'price-down'} mt-1`}>
+                  {isPositive ? '+' : ''}{formatPrice(Math.abs(stock.change))}
+                </div>
+              </div>
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)] mb-2">
+                  Volume
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-[var(--foreground)]">
+                  {(stock.volume / 1000000).toFixed(1)}M
+                </div>
+              </div>
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)] mb-2">
+                  Score
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-[var(--foreground)]">
+                  {stock.compositeScore.toFixed(1)}
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* 상세 정보 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">기본 정보</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">섹터</span>
-                    <span className="text-gray-900 dark:text-white">{stock.sector}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">산업</span>
-                    <span className="text-gray-900 dark:text-white">{stock.industry}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">시가총액</span>
-                    <span className="text-gray-900 dark:text-white">
-                      {stock.symbol.length === 6
-                        ? `₩${(stock.marketCap / 1000000000000).toFixed(1)}T`
-                        : `$${(stock.marketCap / 1000000000).toFixed(1)}B`}
-                    </span>
-                  </div>
-                </div>
+          {/* Detail Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
+            {/* Basic Info */}
+            <div className="border-2 border-[var(--border)]">
+              <div className="p-4 border-b border-[var(--border)]">
+                <h3 className="text-xs font-black text-[var(--foreground)] uppercase tracking-wide flex items-center gap-2">
+                  <span className="w-1 h-3 bg-[var(--foreground)]" />
+                  Basic Info
+                </h3>
               </div>
-
-              <div className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">거래 정보</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">거래량</span>
-                    <span className="text-gray-900 dark:text-white">
-                      {(stock.volume / 1000000).toFixed(1)}M
+              <div className="p-4 space-y-3">
+                {[
+                  { label: 'Sector', value: stock.sector || 'N/A' },
+                  { label: 'Industry', value: stock.industry || 'N/A' },
+                  { label: 'Market Cap', value: formatMarketCap(stock.marketCap) },
+                ].map((item) => (
+                  <div key={item.label} className="flex justify-between items-center py-2 border-b border-[var(--border)] last:border-0">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)]">
+                      {item.label}
+                    </span>
+                    <span className="font-bold text-sm text-[var(--foreground)] truncate ml-4 max-w-[50%] text-right">
+                      {item.value}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">순위</span>
-                    <span className="text-gray-900 dark:text-white">{stock.rank}위</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
-            {/* 주가 차트 */}
-            <div className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">최근 5일간 주가 추이</h3>
+            {/* Trading Info */}
+            <div className="border-2 border-[var(--border)]">
+              <div className="p-4 border-b border-[var(--border)]">
+                <h3 className="text-xs font-black text-[var(--foreground)] uppercase tracking-wide flex items-center gap-2">
+                  <span className="w-1 h-3 bg-[var(--foreground)]" />
+                  Trading Info
+                </h3>
+              </div>
+              <div className="p-4 space-y-3">
+                {[
+                  { label: 'Volume', value: `${(stock.volume / 1000000).toFixed(1)}M shares` },
+                  { label: 'Rank', value: stock.rank > 0 ? `#${stock.rank}` : 'N/A' },
+                ].map((item) => (
+                  <div key={item.label} className="flex justify-between items-center py-2 border-b border-[var(--border)] last:border-0">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)]">
+                      {item.label}
+                    </span>
+                    <span className="font-bold text-sm text-[var(--foreground)]">
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Chart */}
+          <div className="border-2 border-[var(--border)] relative isolate overflow-hidden">
+            <div className="p-4 border-b border-[var(--border)]">
+              <h3 className="text-xs font-black text-[var(--foreground)] uppercase tracking-wide flex items-center gap-2">
+                <span className="w-1 h-3 bg-[var(--foreground)]" />
+                5-Day Price Trend
+              </h3>
+            </div>
+            <div className="p-4">
               {isChartLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                  <span className="ml-3 text-gray-500 dark:text-gray-400">차트 로딩 중...</span>
+                <div className="flex items-center justify-center py-12">
+                  <div className="w-8 h-8 border-2 border-[var(--foreground)] border-t-transparent animate-spin" />
+                  <span className="ml-3 text-sm font-bold uppercase tracking-widest text-[var(--foreground-muted)]">
+                    Loading...
+                  </span>
                 </div>
               ) : chartData.length > 0 ? (
-                <StockChart data={chartData} isPositive={isPositive} />
+                <div className="chart-container">
+                  <StockChart data={chartData} isPositive={isPositive} />
+                </div>
               ) : (
-                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  차트 데이터가 없습니다
+                <div className="text-center py-12">
+                  <p className="text-sm font-bold uppercase tracking-wide text-[var(--foreground-muted)]">
+                    No Chart Data Available
+                  </p>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* 푸터 */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-300 dark:border-gray-700">
+        {/* Footer */}
+        <div className="flex items-center justify-end gap-3 p-5 sm:p-6 border-t-2 border-[var(--foreground)]">
           <Link
             href={`/stock/${stock.symbol}`}
-            className="px-6 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
+            className="px-6 py-2.5 bg-[var(--foreground)] text-[var(--background)] font-bold text-xs uppercase tracking-wider hover:bg-transparent hover:text-[var(--foreground)] border-2 border-[var(--foreground)] transition-all"
           >
-            상세 페이지 보기
+            View Full Detail
           </Link>
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="px-6 py-2.5 border-2 border-[var(--foreground)] text-[var(--foreground)] font-bold text-xs uppercase tracking-wider hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-all"
           >
-            닫기
+            Close
           </button>
         </div>
       </div>

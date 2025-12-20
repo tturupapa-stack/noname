@@ -6,22 +6,13 @@ import Link from 'next/link';
 import StockChart from '@/components/StockChart';
 import FavoriteIcon from '@/components/FavoriteIcon';
 import AnimatedNumber from '@/components/AnimatedNumber';
+import ThemeToggle from '@/components/ThemeToggle';
+import Navigation from '@/components/Navigation';
 import { fetchStockDetail, fetchStockChart } from '@/services/api';
 import { adaptStockDetail, adaptChartData } from '@/services/apiAdapters';
 
 interface StockDetailPageProps {
   params: Promise<{ symbol: string }>;
-}
-
-// 별 생성 함수
-function generateStars(count: number) {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 60}%`,
-    animationDelay: `${Math.random() * 4}s`,
-    size: Math.random() * 2 + 1,
-  }));
 }
 
 export default function StockDetailPage({ params }: StockDetailPageProps) {
@@ -30,11 +21,6 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
   const [chartData, setChartData] = useState<PriceData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [stars, setStars] = useState<Array<{id: number; left: string; top: string; animationDelay: string; size: number}>>([]);
-
-  useEffect(() => {
-    setStars(generateStars(40));
-  }, []);
 
   useEffect(() => {
     async function loadStockData() {
@@ -53,8 +39,8 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
         const adaptedChartData = adaptChartData(chartRes.data);
         setChartData(adaptedChartData);
       } catch (err) {
-        console.error('종목 데이터 로드 실패:', err);
-        setError(err instanceof Error ? err.message : '데이터 로드 실패');
+        console.error('Failed to load stock data:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load data');
       } finally {
         setIsLoading(false);
       }
@@ -65,15 +51,12 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen relative bg-dawn-gradient flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#ff7e5f] to-[#feb47b] flex items-center justify-center animate-pulse">
-            <svg className="w-8 h-8 text-white animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-          </div>
-          <p className="opacity-60">종목 정보를 불러오는 중...</p>
+          <div className="w-16 h-16 mx-auto mb-4 border-4 border-[var(--foreground)] border-t-transparent animate-spin" />
+          <p className="text-sm font-bold uppercase tracking-widest text-[var(--foreground-muted)]">
+            Loading...
+          </p>
         </div>
       </div>
     );
@@ -81,22 +64,24 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
 
   if (error || !stock) {
     return (
-      <div className="min-h-screen relative bg-dawn-gradient flex items-center justify-center">
-        <div className="text-center card-glass p-10 max-w-md mx-4">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center">
-            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
+        <div className="text-center border-2 border-[var(--foreground)] p-10 max-w-md mx-4">
+          <div className="w-16 h-16 mx-auto mb-4 bg-[var(--danger)] flex items-center justify-center">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="text-xl font-bold mb-3">{error || '종목을 찾을 수 없습니다'}</h1>
+          <h1 className="text-xl font-black mb-3 uppercase tracking-wide">
+            {error || 'Stock Not Found'}
+          </h1>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-[#ff7e5f] hover:text-[#feb47b] transition-colors"
+            className="inline-flex items-center gap-2 text-[var(--foreground)] font-bold text-xs uppercase tracking-wider hover:underline"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            대시보드로 돌아가기
+            Back to Dashboard
           </Link>
         </div>
       </div>
@@ -106,12 +91,12 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
   const isPositive = stock.change >= 0;
 
   const formatPrice = (price: number) => {
-    return stock.symbol.length === 6 ? `₩${price.toLocaleString()}` : `$${price.toFixed(2)}`;
+    return stock.symbol.length === 6 ? `${price.toLocaleString()}` : `$${price.toFixed(2)}`;
   };
 
   const formatMarketCap = (marketCap: number) => {
     if (stock.symbol.length === 6) {
-      return `₩${(marketCap / 1000000000000).toFixed(1)}T`;
+      return `${(marketCap / 1000000000000).toFixed(1)}T`;
     }
     if (marketCap >= 1000000000000) {
       return `$${(marketCap / 1000000000000).toFixed(2)}T`;
@@ -120,147 +105,100 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
   };
 
   return (
-    <div className="min-h-screen relative bg-dawn-gradient">
-      {/* 별 배경 */}
-      <div className="stars-container">
-        {stars.map((star) => (
-          <div
-            key={star.id}
-            className="star"
-            style={{
-              left: star.left,
-              top: star.top,
-              width: `${star.size}px`,
-              height: `${star.size}px`,
-              animationDelay: star.animationDelay,
-            }}
-          />
-        ))}
+    <div className="min-h-screen bg-[var(--background)]">
+      {/* Top Bar - Musinsa Style */}
+      <div className="border-b-[3px] border-[var(--foreground)] bg-[var(--background)]">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="flex items-center justify-between h-16 sm:h-20">
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--foreground)] flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
+                <img
+                  src="/logo-main.png"
+                  alt="Logo"
+                  className="w-full h-full object-cover invert dark:invert-0"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    if (target.parentElement) {
+                      target.parentElement.innerHTML = '<span class="text-[var(--background)] font-black text-xl">W</span>';
+                    }
+                  }}
+                />
+              </div>
+              <div className="hidden sm:block">
+                <h1 className="font-bebas text-2xl sm:text-3xl tracking-wide text-[var(--foreground)] leading-none">
+                  WHILE YOU WERE SLEEPING
+                </h1>
+                <p className="text-[10px] font-bold tracking-[0.2em] text-[var(--foreground-muted)] uppercase">
+                  Market Briefing Dashboard
+                </p>
+              </div>
+              <h1 className="sm:hidden font-bebas text-xl text-[var(--foreground)]">
+                WYWS
+              </h1>
+            </Link>
+
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Navigation />
+              <ThemeToggle />
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-6xl relative z-10">
-        {/* Header */}
-        <header className="mb-8 animate-fade-in-up">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-[#ff7e5f] hover:text-[#feb47b] transition-colors mb-6"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            대시보드로 돌아가기
-          </Link>
+      {/* Main Content */}
+      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-12">
+        {/* Back Link */}
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] font-bold text-xs uppercase tracking-wider transition-colors mb-8"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Back to Dashboard
+        </Link>
 
-          <div className="flex items-start justify-between">
+        {/* Hero Section */}
+        <section className="mb-12 sm:mb-16 animate-fade-in-up">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-display text-4xl sm:text-5xl text-dawn">{stock.symbol}</h1>
+              <span className="text-overline mb-4 block">STOCK DETAIL</span>
+              <div className="flex items-center gap-4 mb-4">
+                <h2 className="font-bebas text-5xl sm:text-6xl lg:text-7xl leading-[0.85] text-[var(--foreground)]">
+                  {stock.symbol}
+                </h2>
                 {stock.rank > 0 && (
-                  <span className="px-3 py-1 bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] text-white rounded-full text-sm font-semibold">
-                    {stock.rank}위
+                  <span className="inline-flex items-center justify-center w-10 h-10 bg-[var(--accent)] text-white font-black text-lg">
+                    #{stock.rank}
                   </span>
                 )}
                 <FavoriteIcon stock={stock} size="md" />
               </div>
-              <p className="text-lg opacity-60">{stock.shortName}</p>
+              <p className="text-body text-[var(--foreground-secondary)] uppercase tracking-wide">
+                {stock.shortName}
+              </p>
             </div>
-          </div>
-        </header>
 
-        {/* 주가 정보 카드 */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s', opacity: 0 }}>
-          <div className={`card-glass p-6 border-l-4 ${isPositive ? 'border-l-emerald-500' : 'border-l-red-500'}`}>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div>
-                <div className="text-xs opacity-40 mb-2">현재가</div>
-                <div className={`text-3xl font-bold ${isPositive ? 'price-up' : 'price-down'}`}>
-                  <AnimatedNumber
-                    value={stock.currentPrice}
-                    prefix={stock.symbol.length === 6 ? '₩' : '$'}
-                    decimals={stock.symbol.length === 6 ? 0 : 2}
-                    duration={1.5}
-                  />
-                </div>
+            {/* Price Display - Big */}
+            <div className="lg:text-right">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)] mb-2">
+                Current Price
               </div>
-              <div>
-                <div className="text-xs opacity-40 mb-2">변동률</div>
-                <div className={`text-2xl font-bold ${isPositive ? 'price-up' : 'price-down'}`}>
-                  <AnimatedNumber
-                    value={stock.changePercent}
-                    prefix={isPositive ? '+' : ''}
-                    suffix="%"
-                    decimals={2}
-                    duration={1.5}
-                  />
-                </div>
-                <div className={`text-sm ${isPositive ? 'price-up' : 'price-down'} mt-1`}>
-                  {isPositive ? '+' : ''}
-                  {stock.symbol.length === 6 ? stock.change.toLocaleString() : stock.change.toFixed(2)}
-                </div>
+              <div className={`font-bebas text-5xl sm:text-6xl lg:text-7xl leading-none ${isPositive ? 'price-up' : 'price-down'}`}>
+                <AnimatedNumber
+                  value={stock.currentPrice}
+                  prefix={stock.symbol.length === 6 ? '' : '$'}
+                  decimals={stock.symbol.length === 6 ? 0 : 2}
+                  duration={1.5}
+                />
               </div>
-              <div>
-                <div className="text-xs opacity-40 mb-2">거래량</div>
-                <div className="text-2xl font-bold">
-                  <AnimatedNumber
-                    value={stock.volume / 1000000}
-                    suffix="M"
-                    decimals={1}
-                    duration={1.5}
-                  />
-                </div>
-              </div>
-              <div>
-                <div className="text-xs opacity-40 mb-2">시가총액</div>
-                <div className="text-2xl font-bold text-[#ff7e5f]">
-                  {formatMarketCap(stock.marketCap)}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 상세 정보 */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="card-glass p-6 animate-fade-in-up" style={{ animationDelay: '0.2s', opacity: 0 }}>
-            <h3 className="text-sm font-semibold text-[#ff7e5f] mb-4 flex items-center gap-2">
-              <span className="w-1 h-4 bg-gradient-to-b from-[#ff7e5f] to-[#feb47b] rounded-full"></span>
-              기본 정보
-            </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b border-[var(--card-border)]">
-                <span className="opacity-60">심볼</span>
-                <span className="font-medium">{stock.symbol}</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-[var(--card-border)]">
-                <span className="opacity-60">종목명</span>
-                <span className="font-medium">{stock.shortName}</span>
-              </div>
-              <div className="flex justify-between items-center py-2">
-                <span className="opacity-60">시가총액</span>
-                <span className="font-medium">{formatMarketCap(stock.marketCap)}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="card-glass p-6 animate-fade-in-up" style={{ animationDelay: '0.25s', opacity: 0 }}>
-            <h3 className="text-sm font-semibold text-[#ff7e5f] mb-4 flex items-center gap-2">
-              <span className="w-1 h-4 bg-gradient-to-b from-[#ff7e5f] to-[#feb47b] rounded-full"></span>
-              거래 정보
-            </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b border-[var(--card-border)]">
-                <span className="opacity-60">거래량</span>
-                <span className="font-medium">{stock.volume.toLocaleString()} 주</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-[var(--card-border)]">
-                <span className="opacity-60">등락</span>
-                <span className={`font-medium ${isPositive ? 'price-up' : 'price-down'}`}>
+              <div className={`mt-2 inline-flex items-center gap-2 px-3 py-1 text-lg font-bold ${isPositive ? 'price-up-bg' : 'price-down-bg'}`}>
+                <span>
                   {isPositive ? '+' : ''}{stock.changePercent.toFixed(2)}%
                 </span>
-              </div>
-              <div className="flex justify-between items-center py-2">
-                <span className="opacity-60">변동액</span>
-                <span className={`font-medium ${isPositive ? 'price-up' : 'price-down'}`}>
+                <span className="opacity-70">|</span>
+                <span>
                   {isPositive ? '+' : ''}{formatPrice(Math.abs(stock.change))}
                 </span>
               </div>
@@ -268,27 +206,130 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
           </div>
         </section>
 
-        {/* 주가 차트 */}
-        <section className="animate-fade-in-up" style={{ animationDelay: '0.3s', opacity: 0 }}>
-          <div className="section-header">
-            <h3 className="section-title text-lg">최근 5일간 주가 추이</h3>
+        {/* Divider */}
+        <div className="section-divider-bold mb-12 sm:mb-16" />
+
+        {/* Stats Grid */}
+        <section className="mb-12 sm:mb-16 animate-fade-in-up stagger-1" style={{ opacity: 0 }}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            {[
+              { label: 'Volume', value: `${(stock.volume / 1000000).toFixed(1)}M` },
+              { label: 'Market Cap', value: formatMarketCap(stock.marketCap) },
+              { label: 'Sector', value: stock.sector || 'N/A' },
+              { label: 'Industry', value: stock.industry || 'N/A' },
+            ].map((item) => (
+              <div key={item.label} className="border-2 border-[var(--border)] p-5">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground-muted)] mb-2">
+                  {item.label}
+                </div>
+                <div className="text-lg sm:text-xl font-black text-[var(--foreground)] truncate">
+                  {item.value}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="card-glass p-6">
+        </section>
+
+        {/* Detail Cards Grid */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-12 sm:mb-16">
+          {/* Basic Info */}
+          <div className="border-2 border-[var(--border)] animate-fade-in-up stagger-2" style={{ opacity: 0 }}>
+            <div className="p-5 border-b border-[var(--border)]">
+              <h3 className="text-sm font-black text-[var(--foreground)] uppercase tracking-wide flex items-center gap-2">
+                <span className="w-1 h-4 bg-[var(--foreground)]" />
+                Basic Info
+              </h3>
+            </div>
+            <div className="p-5 space-y-4">
+              {[
+                { label: 'Symbol', value: stock.symbol },
+                { label: 'Name', value: stock.shortName },
+                { label: 'Market Cap', value: formatMarketCap(stock.marketCap) },
+              ].map((item) => (
+                <div key={item.label} className="flex justify-between items-center py-2 border-b border-[var(--border)] last:border-0">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--foreground-muted)]">
+                    {item.label}
+                  </span>
+                  <span className="font-bold text-[var(--foreground)]">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Trading Info */}
+          <div className="border-2 border-[var(--border)] animate-fade-in-up stagger-3" style={{ opacity: 0 }}>
+            <div className="p-5 border-b border-[var(--border)]">
+              <h3 className="text-sm font-black text-[var(--foreground)] uppercase tracking-wide flex items-center gap-2">
+                <span className="w-1 h-4 bg-[var(--foreground)]" />
+                Trading Info
+              </h3>
+            </div>
+            <div className="p-5 space-y-4">
+              {[
+                { label: 'Volume', value: `${stock.volume.toLocaleString()} shares` },
+                { label: 'Change %', value: `${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%`, isColored: true },
+                { label: 'Change', value: `${isPositive ? '+' : ''}${formatPrice(Math.abs(stock.change))}`, isColored: true },
+              ].map((item) => (
+                <div key={item.label} className="flex justify-between items-center py-2 border-b border-[var(--border)] last:border-0">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--foreground-muted)]">
+                    {item.label}
+                  </span>
+                  <span className={`font-bold ${item.isColored ? (isPositive ? 'price-up' : 'price-down') : 'text-[var(--foreground)]'}`}>
+                    {item.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Chart Section */}
+        <section className="animate-fade-in-up stagger-4" style={{ opacity: 0 }}>
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <span className="section-caption">PERFORMANCE</span>
+              <h3 className="section-title">5-Day Price Trend</h3>
+            </div>
+          </div>
+          <div className="border-2 border-[var(--border)] p-5 sm:p-6 relative isolate overflow-hidden">
             {chartData.length > 0 ? (
-              <StockChart data={chartData} isPositive={isPositive} />
+              <div className="chart-container">
+                <StockChart data={chartData} isPositive={isPositive} />
+              </div>
             ) : (
-              <div className="text-center py-12">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#ff7e5f]/10 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-[#ff7e5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="text-center py-16">
+                <div className="w-16 h-16 mx-auto mb-4 border-2 border-[var(--foreground-muted)] flex items-center justify-center">
+                  <svg className="w-8 h-8 text-[var(--foreground-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
                   </svg>
                 </div>
-                <p className="opacity-60">차트 데이터가 없습니다</p>
+                <p className="text-sm font-bold uppercase tracking-wide text-[var(--foreground-muted)]">
+                  No Chart Data Available
+                </p>
               </div>
             )}
           </div>
         </section>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t-[3px] border-[var(--foreground)] mt-16">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="font-bebas text-xl tracking-wide text-[var(--foreground)]">
+                WYWS
+              </span>
+              <span className="text-xs text-[var(--foreground-muted)]">
+                While You Were Sleeping
+              </span>
+            </div>
+            <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+              Market Data &amp; Analysis
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -35,9 +35,10 @@ export default function Toast({
 
   return (
     <div
-      className={`fixed bottom-4 right-4 z-[110] px-6 py-4 rounded-lg shadow-lg ${bgColor} text-white transition-all duration-300 ${
+      className={`fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg ${bgColor} text-white transition-all duration-300 toast-container ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
       }`}
+      style={{ zIndex: 'var(--z-toast)' }}
     >
       <div className="flex items-center gap-3">
         <span>{message}</span>
@@ -74,7 +75,7 @@ export function useToast() {
   };
 
   const ToastContainer = () => (
-    <div className="fixed bottom-4 right-4 z-[110] space-y-2">
+    <div className="fixed bottom-4 right-4 space-y-2 toast-container" style={{ zIndex: 'var(--z-toast)' }}>
       {toasts.map((toast) => (
         <Toast
           key={toast.id}

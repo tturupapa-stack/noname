@@ -4,31 +4,31 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import ThemeTransition from "@/components/ThemeTransition";
 
 export const metadata: Metadata = {
-  title: "당신이 잠든 사이",
-  description: "밤새 시장에서 무슨 일이 있었는지, 새벽이 밝아올 때 알려드립니다",
+  title: "WYWS | While You Were Sleeping",
+  description: "Your overnight market briefing dashboard. Track trending stocks and get AI-powered analysis.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "잠든사이",
+    title: "WYWS",
   },
   icons: {
     apple: "/icon-180.png",
   },
-  keywords: ["주식", "브리핑", "대시보드", "화제 종목", "시장 분석"],
-  authors: [{ name: "잠든사이" }],
+  keywords: ["stocks", "market", "briefing", "analysis", "trading", "finance"],
+  authors: [{ name: "WYWS" }],
   openGraph: {
-    title: "당신이 잠든 사이",
-    description: "밤새 시장에서 무슨 일이 있었는지, 새벽이 밝아올 때 알려드립니다",
+    title: "WYWS | While You Were Sleeping",
+    description: "Your overnight market briefing dashboard",
     type: "website",
-    locale: "ko_KR",
+    locale: "en_US",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f0f0f" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -40,14 +40,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icon-180.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="잠든사이" />
-        {/* Pretendard - 토스, 카카오뱅크 등에서 사용하는 현대적인 한국어 폰트 */}
+        <meta name="apple-mobile-web-app-title" content="WYWS" />
+        {/* Pretendard - Modern Korean Font */}
         <link
           rel="stylesheet"
           as="style"

@@ -34,7 +34,7 @@ export default function StockChart({ data, isPositive }: StockChartProps) {
   const barColor = isPositive ? '#22c55e' : '#ef4444';
 
   return (
-    <div className="w-full h-80 mt-6">
+    <div className="w-full h-80 mt-6 relative isolate">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />

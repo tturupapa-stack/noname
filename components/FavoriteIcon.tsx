@@ -18,35 +18,31 @@ export default function FavoriteIcon({
   showText = false,
   onToggle,
 }: FavoriteIconProps) {
-  // Hydration 에러 방지: 서버와 클라이언트에서 동일한 초기값 사용
   const [favorite, setFavorite] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { showToast } = useToast();
 
-  // 마운트 후 실제 즐겨찾기 상태 로드
   useEffect(() => {
     setMounted(true);
     setFavorite(isFavorite(stock.symbol));
   }, [stock.symbol]);
 
-  // 상태 동기화 (외부에서 변경된 경우 대비)
   useEffect(() => {
     if (mounted) {
       setFavorite(isFavorite(stock.symbol));
     }
   }, [stock.symbol, mounted]);
 
-  // 즐겨찾기 변경 이벤트 리스너
   useEffect(() => {
     if (!mounted) return;
-    
+
     const handleFavoritesUpdate = () => {
       setFavorite(isFavorite(stock.symbol));
     };
-    
+
     window.addEventListener('favorites-updated', handleFavoritesUpdate);
     window.addEventListener('storage', handleFavoritesUpdate);
-    
+
     return () => {
       window.removeEventListener('favorites-updated', handleFavoritesUpdate);
       window.removeEventListener('storage', handleFavoritesUpdate);
@@ -62,20 +58,19 @@ export default function FavoriteIcon({
       success = removeFavorite(stock.symbol);
       if (success) {
         setFavorite(false);
-        showToast('관심 종목에서 제거되었습니다.', 'info');
+        showToast('Removed from watchlist', 'info');
       }
     } else {
       success = addFavorite(stock.symbol, stock.shortName);
       if (success) {
         setFavorite(true);
-        showToast('관심 종목에 추가되었습니다.', 'success');
+        showToast('Added to watchlist', 'success');
       }
     }
 
     if (success) {
-      // storage 이벤트를 발생시켜 다른 컴포넌트에 알림
       window.dispatchEvent(new Event('favorites-updated'));
-      
+
       if (onToggle) {
         onToggle(!favorite);
       }
@@ -83,43 +78,53 @@ export default function FavoriteIcon({
   };
 
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-6 h-6',
+    sm: 'w-7 h-7',
+    md: 'w-8 h-8',
+    lg: 'w-10 h-10',
   };
 
-  // Hydration 에러 방지: 마운트 전에는 기본값 사용
+  const iconSizes = {
+    sm: 'w-3.5 h-3.5',
+    md: 'w-4 h-4',
+    lg: 'w-5 h-5',
+  };
+
   const displayFavorite = mounted ? favorite : false;
 
   return (
     <button
       onClick={handleClick}
       className={`
-        flex items-center gap-1 p-1 rounded transition-all
-        hover:bg-gray-100 dark:hover:bg-gray-800
-        focus:outline-none focus:ring-2 focus:ring-blue-500
-        ${showText ? 'px-2 py-1' : ''}
+        flex items-center justify-center gap-1 transition-all
+        ${sizeClasses[size]}
+        ${displayFavorite
+          ? 'bg-[var(--foreground)] text-[var(--background)]'
+          : 'border border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--foreground)] hover:text-[var(--foreground)]'
+        }
+        ${showText ? 'px-3 py-1.5' : ''}
       `}
-      aria-label={displayFavorite ? '관심 종목에서 제거' : '관심 종목에 추가'}
-      title={displayFavorite ? '관심 종목에서 제거' : '관심 종목에 추가'}
+      aria-label={displayFavorite ? 'Remove from watchlist' : 'Add to watchlist'}
+      title={displayFavorite ? 'Remove from watchlist' : 'Add to watchlist'}
       suppressHydrationWarning
     >
-      <span
-        className={`
-          ${sizeClasses[size]} transition-transform duration-200
-          ${displayFavorite ? 'text-yellow-500' : 'text-gray-400 dark:text-gray-600'}
-          ${displayFavorite ? 'scale-110' : 'hover:scale-110'}
-        `}
-        suppressHydrationWarning
+      <svg
+        className={`${iconSizes[size]} transition-transform ${displayFavorite ? 'scale-100' : 'scale-90'}`}
+        fill={displayFavorite ? 'currentColor' : 'none'}
+        stroke="currentColor"
+        viewBox="0 0 24 24"
       >
-        {displayFavorite ? '⭐' : '☆'}
-      </span>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={displayFavorite ? 0 : 2}
+          d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+        />
+      </svg>
       {showText && (
-        <span className="text-sm text-gray-700 dark:text-gray-300" suppressHydrationWarning>
-          {displayFavorite ? '관심 종목' : '추가'}
+        <span className="text-xs font-bold uppercase tracking-wide" suppressHydrationWarning>
+          {displayFavorite ? 'Saved' : 'Save'}
         </span>
       )}
     </button>
   );
 }
-

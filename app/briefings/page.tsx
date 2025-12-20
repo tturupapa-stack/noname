@@ -29,7 +29,7 @@ export default function BriefingsPage() {
         const adapted = adaptBriefings(response.briefings);
         setBriefings(adapted);
       } catch (err) {
-        setError(err instanceof Error ? err.message : '브리핑 로드 실패');
+        setError(err instanceof Error ? err.message : 'Failed to load briefings');
       } finally {
         setIsLoading(false);
       }
@@ -39,35 +39,36 @@ export default function BriefingsPage() {
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        {/* Header */}
-        <header className="mb-8 sm:mb-10 animate-fade-in-up">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3 sm:gap-4 group">
-              <div className="relative">
-                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[var(--primary-500)] flex items-center justify-center overflow-hidden">
-                  <img
-                    src="/logo-main.png"
-                    alt="로고"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      if (target.parentElement) {
-                        target.parentElement.innerHTML = '<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>';
-                      }
-                    }}
-                  />
-                </div>
+      {/* Top Bar - Musinsa Style */}
+      <div className="border-b-[3px] border-[var(--foreground)] bg-[var(--background)]">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="flex items-center justify-between h-16 sm:h-20">
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--foreground)] flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
+                <img
+                  src="/logo-main.png"
+                  alt="Logo"
+                  className="w-full h-full object-cover invert dark:invert-0"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    if (target.parentElement) {
+                      target.parentElement.innerHTML = '<span class="text-[var(--background)] font-black text-xl">W</span>';
+                    }
+                  }}
+                />
               </div>
-              <div>
-                <h1 className="text-lg sm:text-xl font-bold text-[var(--foreground)] tracking-tight group-hover:text-[var(--primary-500)] transition-colors">
-                  당신이 잠든 사이
+              <div className="hidden sm:block">
+                <h1 className="font-bebas text-2xl sm:text-3xl tracking-wide text-[var(--foreground)] leading-none">
+                  WHILE YOU WERE SLEEPING
                 </h1>
-                <p className="text-xs text-[var(--foreground-muted)]">
-                  오늘의 시장 브리핑
+                <p className="text-[10px] font-bold tracking-[0.2em] text-[var(--foreground-muted)] uppercase">
+                  Market Briefing Dashboard
                 </p>
               </div>
+              <h1 className="sm:hidden font-bebas text-xl text-[var(--foreground)]">
+                WYWS
+              </h1>
             </Link>
 
             <div className="flex items-center gap-2 sm:gap-3">
@@ -75,66 +76,105 @@ export default function BriefingsPage() {
               <ThemeToggle />
             </div>
           </div>
-        </header>
+        </div>
+      </div>
 
-        {/* Page Title */}
-        <section className="mb-8 sm:mb-10 animate-fade-in-up" style={{ animationDelay: '0.05s', opacity: 0 }}>
-          <div className="section-header">
-            <h2 className="section-title text-xl sm:text-2xl">브리핑 히스토리</h2>
-          </div>
-          <p className="text-sm text-[var(--foreground-secondary)] mt-2">
-            과거 브리핑을 달력에서 확인하고 상세 내용을 조회하세요
+      {/* Main Content */}
+      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-12">
+        {/* Page Hero */}
+        <section className="mb-12 sm:mb-16 animate-fade-in-up">
+          <span className="text-overline mb-4 block">ARCHIVE</span>
+          <h2 className="font-bebas text-4xl sm:text-5xl lg:text-6xl leading-[0.9] text-[var(--foreground)] mb-4">
+            BRIEFING<br />
+            <span className="text-[var(--accent)]">HISTORY</span>
+          </h2>
+          <p className="text-body text-[var(--foreground-secondary)] max-w-lg">
+            Browse past briefings in the calendar and explore detailed analysis for each day.
           </p>
         </section>
 
-        {/* 브리핑 달력 */}
-        <section className="mb-10 sm:mb-12 animate-fade-in-up" style={{ animationDelay: '0.1s', opacity: 0 }}>
-          <div className="section-header">
-            <h3 className="section-title text-base sm:text-lg">브리핑 달력</h3>
+        {/* Divider */}
+        <div className="section-divider-bold mb-12 sm:mb-16" />
+
+        {/* Calendar Section */}
+        <section className="mb-12 sm:mb-16 animate-fade-in-up stagger-1" style={{ opacity: 0 }}>
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <span className="section-caption">CALENDAR VIEW</span>
+              <h3 className="section-title">Select Date</h3>
+            </div>
           </div>
-          <div className="card-glass p-4 sm:p-6">
+          <div className="border-2 border-[var(--border)] p-4 sm:p-6">
             <BriefingCalendar briefings={briefings} />
           </div>
         </section>
 
-        {/* 브리핑 목록 */}
-        <section className="animate-fade-in-up" style={{ animationDelay: '0.15s', opacity: 0 }}>
-          <div className="section-header">
-            <h3 className="section-title text-base sm:text-lg">전체 브리핑 목록</h3>
+        {/* Briefings List */}
+        <section className="animate-fade-in-up stagger-2" style={{ opacity: 0 }}>
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <span className="section-caption">ALL BRIEFINGS</span>
+              <h3 className="section-title">Full Archive</h3>
+            </div>
+            <span className="text-sm font-bold text-[var(--foreground-muted)] uppercase tracking-wide">
+              {briefings.length} Total
+            </span>
           </div>
+
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="skeleton h-44 sm:h-48"></div>
+                <div key={i} className="skeleton h-48"></div>
               ))}
             </div>
           ) : error ? (
-            <div className="card-glass p-6 sm:p-8 text-center">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-[var(--danger-light)] flex items-center justify-center">
-                <svg className="w-7 h-7 text-[var(--danger)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="border-2 border-[var(--danger)] p-8 sm:p-12 text-center">
+              <div className="w-14 h-14 mx-auto mb-4 bg-[var(--danger)] flex items-center justify-center">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p className="text-[var(--danger)] font-medium">{error}</p>
+              <p className="text-[var(--danger)] font-bold uppercase tracking-wide">{error}</p>
             </div>
           ) : briefings.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {briefings.map((briefing, index) => (
                 <BriefingCard key={briefing.briefingId} briefing={briefing} index={index} />
               ))}
             </div>
           ) : (
-            <div className="card-glass p-10 sm:p-12 text-center">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-[var(--primary-100)] dark:bg-[rgba(255,107,77,0.15)] flex items-center justify-center">
-                <svg className="w-7 h-7 text-[var(--primary-500)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="border-2 border-dashed border-[var(--border)] p-12 text-center">
+              <div className="w-14 h-14 mx-auto mb-4 border-2 border-[var(--foreground-muted)] flex items-center justify-center">
+                <svg className="w-7 h-7 text-[var(--foreground-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <p className="text-[var(--foreground-muted)]">브리핑 히스토리가 없습니다</p>
+              <p className="text-[var(--foreground-muted)] text-sm font-bold uppercase tracking-wide">
+                No Briefings Available
+              </p>
             </div>
           )}
         </section>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t-[3px] border-[var(--foreground)] mt-16">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="font-bebas text-xl tracking-wide text-[var(--foreground)]">
+                WYWS
+              </span>
+              <span className="text-xs text-[var(--foreground-muted)]">
+                While You Were Sleeping
+              </span>
+            </div>
+            <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+              Market Data &amp; Analysis
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -2,7 +2,7 @@
   {
     "id": "2025-12-20",
     "date": "2025-12-20",
-    "created_at": "2025-12-20 09:18:36.581274",
+    "created_at": "2025-12-20 11:49:06.317046",
     "stock": {
       "symbol": "FOLD",
       "name": "Amicus Therapeutics, Inc.",
@@ -10,7 +10,7 @@
       "change": 3.29,
       "change_percent": 30.2112,
       "volume": 185744933,
-      "avg_volume": 5282119,
+      "avg_volume": 5282146,
       "volume_ratio": 35.16,
       "market_cap": 4375005696.0,
       "pe_ratio": null,
@@ -45,34 +45,34 @@
     ],
     "news": [
       {
+        "title": "Amicus Therapeutics, Inc. (FOLD) Stock Price, News, ...",
+        "url": "https://finance.yahoo.com/quote/FOLD/",
+        "published_date": "2025-12-20 01:49:05.682000+00:00",
+        "source": "finance.yahoo.com"
+      },
+      {
         "title": "BioMarin Soars 18% After Folding In The $4.8 Billion ...",
         "url": "https://www.investors.com/news/technology/biomarin-amicus-acquisition/",
-        "published_date": "2025-12-19 21:18:35.655000+00:00",
+        "published_date": "2025-12-19 20:49:05.682000+00:00",
         "source": "investors.com"
+      },
+      {
+        "title": "Biggest stock movers Friday: FOLD, CRWV, KBH, NKE and ...",
+        "url": "https://seekingalpha.com/news/4533338-biggest-stock-movers-friday-nne-corz-nke-and-more",
+        "published_date": "2025-12-19 09:49:05.682000+00:00",
+        "source": "seekingalpha.com"
       },
       {
         "title": "BioMarin to Acquire Amicus Therapeutics for $4.8 Billion ...",
         "url": "https://ir.amicusrx.com/news-releases/news-release-details/biomarin-acquire-amicus-therapeutics-48-billion-expanding",
-        "published_date": "2025-12-19 13:18:35.655000+00:00",
+        "published_date": "2025-12-19 12:49:05.682000+00:00",
         "source": "ir.amicusrx.com"
       },
       {
-        "title": "Amicus Therapeutics (NASDAQ:FOLD) Shares Gap Up",
-        "url": "https://www.marketbeat.com/instant-alerts/amicus-therapeutics-nasdaqfold-shares-gap-up-time-to-buy-2025-12-19/",
-        "published_date": "2025-12-19 16:18:35.655000+00:00",
-        "source": "marketbeat.com"
-      },
-      {
-        "title": "Senate confirms Trump crypto-friendly nominees to take over CFTC, FDIC",
-        "url": "https://www.coindesk.com/policy/2025/12/11/senate-confirms-trump-crypto-friendly-nominees-to-take-over-cftc-fdic",
-        "published_date": "2025-12-19 00:00:00+00:00",
-        "source": "coindesk.com"
-      },
-      {
-        "title": "This Artificial Intelligence IPO Stock Is Up 73% So Far in 2025. Here Is Why It Could Be a Bust in 2026.",
-        "url": "https://www.fool.com/investing/2025/12/18/this-artificial-intelligence-ipo-stock-is-up-73-so/",
-        "published_date": "2025-12-19 00:00:00+00:00",
-        "source": "fool.com"
+        "title": "$FOLD stock is up 30% today. Here's what we see in our ...",
+        "url": "https://www.quiverquant.com/news/%24FOLD+stock+is+up+30%25+today.+Here%27s+what+we+see+in+our+data.",
+        "published_date": "2025-12-19 14:49:05.682000+00:00",
+        "source": "quiverquant.com"
       }
     ]
   },
