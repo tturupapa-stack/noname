@@ -3,9 +3,13 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+
 from api.stock import router as stock_router
 from api.briefing import router as briefing_router
 from api.briefing_generate import router as briefing_generate_router
+from api.cache import router as cache_router
+from services.cache_service import cache_manager
+from config import cache_settings
 
 # .env 파일 로드
 load_dotenv()
@@ -57,15 +61,29 @@ async def preload_cache():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """앱 생명주기 관리"""
-    # 시작 시: 백그라운드에서 캐시 프리로딩
+    # 시작 시: 캐시 매니저 초기화
+    print(f"🚀 캐시 매니저 초기화 (backend={cache_settings.cache_backend})...")
+    await cache_manager.initialize(
+        backend=cache_settings.cache_backend,
+        redis_url=cache_settings.cache_redis_url,
+        max_entries=cache_settings.cache_l1_max_entries,
+        max_memory_mb=cache_settings.cache_l1_max_memory_mb
+    )
+
+    # 백그라운드에서 캐시 프리로딩
     asyncio.create_task(preload_cache())
+
     yield
-    # 종료 시: 정리 작업
+
+    # 종료 시: 캐시 매니저 정리
+    print("🛑 캐시 매니저 종료...")
+    await cache_manager.shutdown()
+
 
 app = FastAPI(
     title="당신이 잠든 사이 API",
     description="주식 브리핑 대시보드 백엔드 API",
-    version="0.1.0",
+    version="0.2.0",
     lifespan=lifespan
 )
 
@@ -74,7 +92,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "http://localhost:3001",
         "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -84,15 +104,21 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "당신이 잠든 사이 API", "status": "running"}
+    return {"message": "당신이 잠든 사이 API", "status": "running", "version": "0.2.0"}
 
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    """서버 및 캐시 헬스 체크"""
+    cache_health = await cache_manager.health_check()
+    return {
+        "status": "healthy" if cache_health["status"] != "unhealthy" else "degraded",
+        "cache": cache_health
+    }
 
 
 # 라우터 등록
 app.include_router(stock_router)
 app.include_router(briefing_router)
 app.include_router(briefing_generate_router)
+app.include_router(cache_router)

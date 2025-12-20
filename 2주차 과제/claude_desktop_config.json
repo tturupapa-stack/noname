@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "exa": {
+      "transport": "http",
+      "url": "https://server.smithery.ai/exa/mcp"
+    },
+    "upstash-context7-mcp": {
+      "transport": "http",
+      "url": "https://server.smithery.ai/@upstash/context7-mcp/mcp"
+    }
+  }
+}

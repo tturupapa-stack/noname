@@ -91,8 +91,10 @@ async def get_stock_chart(
             data=data_points
         )
 
-        # 캐시 저장
-        cache.set(cache_key, response, CACHE_TTL_CHART)
+        # 캐시 저장 (기간별 가변 TTL)
+        from services.cache_service import CacheTTL
+        chart_ttl = CacheTTL.get_chart_ttl(period)
+        cache.set(cache_key, response, chart_ttl)
 
         return response
 

@@ -1,14 +1,168 @@
 [
   {
+    "id": "2025-12-20",
+    "date": "2025-12-20",
+    "created_at": "2025-12-20 08:56:54.250057",
+    "stock": {
+      "symbol": "FOLD",
+      "name": "Amicus Therapeutics, Inc.",
+      "price": 14.18,
+      "change": 3.29,
+      "change_percent": 30.2112,
+      "volume": 185744933,
+      "avg_volume": 5282119,
+      "volume_ratio": 35.16,
+      "market_cap": 4375005696.0,
+      "pe_ratio": null,
+      "fifty_two_week_high": 14.36,
+      "fifty_two_week_low": 5.51,
+      "currency": "USD"
+    },
+    "score": {
+      "volume_score": 10,
+      "price_change_score": 10,
+      "momentum_score": 10,
+      "market_cap_score": 10,
+      "total": 40
+    },
+    "why_hot": [
+      {
+        "icon": "✅",
+        "message": "거래량 급증 (평소 대비 35.16배)"
+      },
+      {
+        "icon": "✅",
+        "message": "당일 30.2% 상승"
+      },
+      {
+        "icon": "✅",
+        "message": "5일·10일 수익률 모두 양수 (상승 추세)"
+      },
+      {
+        "icon": "✅",
+        "message": "적정 시가총액 구간 ($2B~$100B)"
+      }
+    ],
+    "news": [
+      {
+        "title": "Amicus Therapeutics (NASDAQ:FOLD) Reaches New 1- ...",
+        "url": "https://www.marketbeat.com/instant-alerts/amicus-therapeutics-nasdaqfold-reaches-new-1-year-high-heres-what-happened-2025-12-18/",
+        "published_date": "2025-12-17 23:56:53.572000+00:00",
+        "source": "marketbeat.com"
+      },
+      {
+        "title": "All News for FOLD : Amicus Therapeutics",
+        "url": "https://www.zacks.com/stock/research/FOLD/all-news",
+        "published_date": "2025-12-17 23:56:53.572000+00:00",
+        "source": "zacks.com"
+      },
+      {
+        "title": "Fold Becomes First Public Bitcoin Financial Services ...",
+        "url": "https://markets.businessinsider.com/news/stocks/fold-becomes-first-public-bitcoin-financial-services-company-to-operate-nationwide-through-bitgo-s-federally-chartered-trust-framework-1035656734",
+        "published_date": "2025-12-18 23:56:53.572000+00:00",
+        "source": "markets.businessinsider.com"
+      },
+      {
+        "title": "Fold Holdings (FLD) Stock Price & Overview",
+        "url": "https://stockanalysis.com/stocks/fld/",
+        "published_date": "2025-12-17 23:56:53.572000+00:00",
+        "source": "stockanalysis.com"
+      },
+      {
+        "title": "Fold Holdings, Inc Stock Price, News & Analysis - FLD",
+        "url": "https://www.stocktitan.net/news/FLD/",
+        "published_date": "2025-12-18 23:56:53.572000+00:00",
+        "source": "stocktitan.net"
+      }
+    ]
+  },
+  {
+    "id": "2025-12-19",
+    "date": "2025-12-19",
+    "created_at": "2025-12-19 23:42:11.607447",
+    "stock": {
+      "symbol": "FOLD",
+      "name": "Amicus Therapeutics, Inc.",
+      "price": 14.275,
+      "change": 3.3849993,
+      "change_percent": 31.083557,
+      "volume": 75798653,
+      "avg_volume": 5282119,
+      "volume_ratio": 14.35,
+      "market_cap": 4404316160.0,
+      "pe_ratio": null,
+      "fifty_two_week_high": 14.35,
+      "fifty_two_week_low": 5.51,
+      "currency": "USD"
+    },
+    "score": {
+      "volume_score": 10,
+      "price_change_score": 10,
+      "momentum_score": 10,
+      "market_cap_score": 10,
+      "total": 40
+    },
+    "why_hot": [
+      {
+        "icon": "✅",
+        "message": "거래량 급증 (평소 대비 14.35배)"
+      },
+      {
+        "icon": "✅",
+        "message": "당일 31.1% 상승"
+      },
+      {
+        "icon": "✅",
+        "message": "5일·10일 수익률 모두 양수 (상승 추세)"
+      },
+      {
+        "icon": "✅",
+        "message": "적정 시가총액 구간 ($2B~$100B)"
+      }
+    ],
+    "news": [
+      {
+        "title": "Amicus Therapeutics, Inc. (FOLD) Stock Price, News, ...",
+        "url": "https://finance.yahoo.com/quote/FOLD/",
+        "published_date": "2025-12-19 07:42:10.886000+00:00",
+        "source": "finance.yahoo.com"
+      },
+      {
+        "title": "Amicus Therapeutics (NASDAQ:FOLD) Reaches New 1- ...",
+        "url": "https://www.marketbeat.com/instant-alerts/amicus-therapeutics-nasdaqfold-reaches-new-1-year-high-heres-what-happened-2025-12-18/",
+        "published_date": "2025-12-18 14:42:10.886000+00:00",
+        "source": "marketbeat.com"
+      },
+      {
+        "title": "Fold Holdings, Inc. (FLD) Stock Price, News, Quote & History",
+        "url": "https://finance.yahoo.com/quote/FLD/",
+        "published_date": "2025-12-19 06:42:10.886000+00:00",
+        "source": "finance.yahoo.com"
+      },
+      {
+        "title": "Release Details - Fold Holdings - Foldapp",
+        "url": "https://investor.foldapp.com/news-releases/news-release-details/fold-becomes-first-public-bitcoin-financial-services-company",
+        "published_date": "2025-12-18 19:42:10.886000+00:00",
+        "source": "investor.foldapp.com"
+      },
+      {
+        "title": "Fold Becomes First Public Bitcoin Financial Services ...",
+        "url": "https://markets.businessinsider.com/news/stocks/fold-becomes-first-public-bitcoin-financial-services-company-to-operate-nationwide-through-bitgo-s-federally-chartered-trust-framework-1035656734",
+        "published_date": "2025-12-18 14:42:10.886000+00:00",
+        "source": "markets.businessinsider.com"
+      }
+    ]
+  },
+  {
     "id": "2025-12-16",
     "date": "2025-12-16",
-    "created_at": "2025-12-16 09:48:43.434424",
+    "created_at": "2025-12-16 10:04:16.729194",
     "stock": {
       "symbol": "IMNM",
       "name": "Immunome, Inc.",
       "price": 22.64,
-      "change": 3.0699997,
-      "change_percent": 15.687275,
+      "change": 3.07,
+      "change_percent": 15.6873,
       "volume": 12922018,
       "avg_volume": 1447941,
       "volume_ratio": 8.92,
@@ -45,22 +199,22 @@
     ],
     "news": [
       {
-        "title": "Stocks making the biggest moves midday: Z, KLAC, IRBT, ...",
-        "url": "https://www.cnbc.com/2025/12/15/stocks-making-the-biggest-moves-midday-z-klac-irbt-imnm.html",
-        "published_date": "2025-12-15 17:48:42.841000+00:00",
-        "source": "cnbc.com"
-      },
-      {
         "title": "Why Is IMNM Stock Rising Today?",
         "url": "https://stocktwits.com/news-articles/markets/equity/why-is-imnm-stock-rising-today/cLe4drWREoh",
-        "published_date": "2025-12-15 14:48:42.841000+00:00",
+        "published_date": "2025-12-15 16:04:16.068000+00:00",
         "source": "stocktwits.com"
       },
       {
         "title": "Why Immunome Stock Surged Today",
         "url": "https://www.fool.com/investing/2025/12/15/why-immunome-stock-surged-today/",
-        "published_date": "2025-12-15 22:48:42.841000+00:00",
+        "published_date": "2025-12-15 23:04:16.068000+00:00",
         "source": "fool.com"
+      },
+      {
+        "title": "Stocks making the biggest moves midday: Z, KLAC, IRBT, ...",
+        "url": "https://www.cnbc.com/2025/12/15/stocks-making-the-biggest-moves-midday-z-klac-irbt-imnm.html",
+        "published_date": "2025-12-15 18:04:16.068000+00:00",
+        "source": "cnbc.com"
       },
       {
         "title": "Yahoo Finance",

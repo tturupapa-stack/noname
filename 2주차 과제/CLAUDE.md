@@ -23,6 +23,15 @@ uvicorn main:app --reload        # 개발 서버 실행 (http://localhost:8000)
 
 **풀스택 구조**: Next.js 16 App Router 프론트엔드 + FastAPI 백엔드
 
+### Data Flow
+```
+Next.js Frontend (localhost:3000)
+    ↓ API calls to /api/...
+FastAPI Backend (localhost:8000)
+    ↓ External API calls
+Yahoo Finance (yahooquery) + Exa API (news)
+```
+
 ### Frontend (Next.js 16, React 19, TypeScript, Tailwind CSS 4)
 
 - **app/**: Next.js App Router 페이지
@@ -40,7 +49,7 @@ uvicorn main:app --reload        # 개발 서버 실행 (http://localhost:8000)
 
 ### Backend (FastAPI, Python)
 
-- **backend/main.py**: FastAPI 앱 엔트리포인트, CORS 설정, 라우터 등록
+- **backend/main.py**: FastAPI 앱 엔트리포인트, CORS 설정, 라우터 등록, 캐시 프리로드
 - **backend/api/**: API 엔드포인트 라우터
   - `stock.py`: 종목 데이터 API (`/api/stocks/...`)
   - `briefing.py`: 브리핑 조회 API
@@ -60,10 +69,6 @@ uvicorn main:app --reload        # 개발 서버 실행 (http://localhost:8000)
 ```
 EXA_API_KEY=your_exa_api_key_here
 ```
-
-### API 연동
-
-프론트엔드는 `http://localhost:8000/api/...`로 백엔드 API 호출. 백엔드는 Yahoo Finance(yahooquery)와 Exa API를 통해 실시간 데이터 수집.
 
 ### 테마 시스템
 
