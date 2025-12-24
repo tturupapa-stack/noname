@@ -54,6 +54,7 @@ interface AIBriefingModalProps {
   briefingData: AIBriefingData | null;
   stockName?: string;
   showSaveButton?: boolean;
+  showRegenerateButton?: boolean;
 }
 
 // JSON 문자열을 파싱하는 유틸리티
@@ -75,6 +76,7 @@ export default function AIBriefingModal({
   briefingData,
   stockName,
   showSaveButton = true,
+  showRegenerateButton = true,
 }: AIBriefingModalProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
@@ -231,16 +233,19 @@ export default function AIBriefingModal({
                   )}
                 </button>
               )}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRegenerate();
-                }}
-                className="px-4 py-2 border-2 border-[var(--foreground)] font-bold text-xs uppercase tracking-wide hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-colors"
-              >
-                Regenerate
-              </button>
+              {showRegenerateButton && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onRegenerate();
+                  }}
+                  className="px-4 py-2 border-2 border-[var(--foreground)] font-bold text-xs uppercase tracking-wide hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-colors cursor-pointer"
+                >
+                  Regenerate
+                </button>
+              )}
               <button
                 onClick={onClose}
                 className="px-4 py-2 bg-[var(--foreground)] text-[var(--background)] font-bold text-xs uppercase tracking-wide hover:bg-[var(--foreground)]/80 transition-colors"

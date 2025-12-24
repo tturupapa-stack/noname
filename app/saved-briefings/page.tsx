@@ -258,6 +258,7 @@ export default function SavedBriefingsPage() {
         briefingData={selectedBriefing}
         stockName={selectedBriefing?.meta.name}
         showSaveButton={false}
+        showRegenerateButton={false}
       />
     </div>
   );
