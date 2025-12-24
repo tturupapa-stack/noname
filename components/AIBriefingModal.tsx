@@ -232,7 +232,11 @@ export default function AIBriefingModal({
                 </button>
               )}
               <button
-                onClick={onRegenerate}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRegenerate();
+                }}
                 className="px-4 py-2 border-2 border-[var(--foreground)] font-bold text-xs uppercase tracking-wide hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-colors"
               >
                 Regenerate
