@@ -2,7 +2,7 @@
   {
     "id": "2025-12-24",
     "date": "2025-12-24",
-    "created_at": "2025-12-24 20:25:08.867070",
+    "created_at": "2025-12-24 23:14:42.957334",
     "stock": {
       "symbol": "HYMC",
       "name": "Hycroft Mining Holding Corporat",
@@ -10,8 +10,8 @@
       "change": 2.62,
       "change_percent": 10.6852,
       "volume": 15666770,
-      "avg_volume": 2014193,
-      "volume_ratio": 7.78,
+      "avg_volume": 2233249,
+      "volume_ratio": 7.02,
       "market_cap": 2206036736.0,
       "pe_ratio": null,
       "fifty_two_week_high": null,
@@ -28,7 +28,7 @@
     "why_hot": [
       {
         "icon": "✅",
-        "message": "거래량 급증 (평소 대비 7.78배)"
+        "message": "거래량 급증 (평소 대비 7.02배)"
       },
       {
         "icon": "✅",
@@ -47,7 +47,7 @@
       {
         "title": "Hycroft Mining Holding Corp (HYMC) News, Articles, ...",
         "url": "https://stocktwits.com/symbol/HYMC/news",
-        "published_date": "2025-12-23 14:25:08.208000+00:00",
+        "published_date": "2025-12-23 14:14:42.646000+00:00",
         "source": "stocktwits.com"
       },
       {
