@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import Link from 'next/link';
 import { Stock, PriceData } from '@/types';
 import StockChart from './StockChart';
 import FavoriteIcon from './FavoriteIcon';
@@ -30,14 +31,18 @@ function StockCard({
         <div className="flex-1 min-w-0">
           {/* Name & Symbol */}
           <div className="flex items-center gap-3 mb-2">
-            <h3 className="font-black text-2xl sm:text-3xl text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
-              {stock.shortName}
-            </h3>
+            <Link href={`/stock/${stock.symbol}`}>
+              <h3 className="font-black text-2xl sm:text-3xl text-[var(--foreground)] hover:text-[var(--accent)] transition-colors cursor-pointer">
+                {stock.shortName}
+              </h3>
+            </Link>
             <FavoriteIcon stock={stock} size={isLarge ? 'md' : 'sm'} />
           </div>
-          <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wide">
-            {stock.symbol}
-          </p>
+          <Link href={`/stock/${stock.symbol}`} className="inline-block">
+            <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wide hover:text-[var(--accent)] transition-colors">
+              {stock.symbol}
+            </p>
+          </Link>
 
           {/* Price Display */}
           <div className="flex items-baseline gap-3 mt-4 flex-wrap">
