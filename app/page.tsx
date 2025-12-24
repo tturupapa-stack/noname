@@ -358,12 +358,44 @@ export default function Home() {
         {/* Divider */}
         <div className="section-divider mb-16 sm:mb-20" />
 
-        {/* Recent Briefings Section */}
+        {/* MY ANALYSIS CTA Banner */}
+        <section className="mb-16 sm:mb-20 animate-fade-in-up stagger-3-5" style={{ opacity: 0 }}>
+          <div className="border-2 border-dashed border-[var(--accent)]/40 hover:border-[var(--accent)] transition-colors p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-[var(--accent)] flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-black text-lg text-[var(--foreground)] uppercase tracking-wide">
+                    Want Deeper Analysis?
+                  </h3>
+                  <p className="text-sm text-[var(--foreground-muted)]">
+                    종목 상세 페이지에서 AI 기반 심층 분석을 생성해보세요
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/saved-briefings"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--foreground)] text-[var(--background)] font-bold text-xs uppercase tracking-wider hover:opacity-80 transition-opacity whitespace-nowrap"
+              >
+                MY ANALYSIS
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Recent Briefings Section - Daily Hot */}
         <section className="mb-12 animate-fade-in-up stagger-4" style={{ opacity: 0 }}>
           <div className="flex items-end justify-between mb-8">
             <div>
-              <span className="section-caption">ARCHIVE</span>
-              <h2 className="section-title-lg">Briefings</h2>
+              <span className="section-caption">AUTO-GENERATED</span>
+              <h2 className="section-title-lg">Daily Hot</h2>
             </div>
             <Link href="/briefings" className="section-link hover-arrow">
               View All

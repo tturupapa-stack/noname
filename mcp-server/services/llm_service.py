@@ -123,7 +123,8 @@ class LLMService:
         stock_info: Dict,
         news_summary: str,
         chart_analysis: str,
-        score_info: Optional[Dict] = None
+        score_info: Optional[Dict] = None,
+        news_items: Optional[List[Dict]] = None
     ) -> str:
         """
         최종 브리핑 JSON 생성 (구조화된 데이터)
@@ -133,6 +134,7 @@ class LLMService:
             news_summary: 뉴스 요약 텍스트
             chart_analysis: 차트 분석 텍스트
             score_info: 점수 정보 (선택)
+            news_items: 뉴스 아이템 리스트 (title, url, source 포함) - 소스 표시용
 
         Returns:
             브리핑 JSON 문자열
@@ -244,6 +246,18 @@ class LLMService:
                     "generatedAt": today.isoformat()
                 }
 
+                # 뉴스 소스 정보 추가 (최대 5개)
+                if news_items:
+                    parsed["newsSources"] = [
+                        {
+                            "title": item.get("title", ""),
+                            "url": item.get("url", ""),
+                            "source": item.get("source", "Unknown")
+                        }
+                        for item in news_items[:5]
+                        if item.get("title") and item.get("url")
+                    ]
+
                 return json.dumps(parsed, ensure_ascii=False, indent=2)
 
             except (json.JSONDecodeError, ValueError) as e:
@@ -280,6 +294,19 @@ class LLMService:
                     },
                     "_rawResponse": response_text[:500]  # 디버깅용
                 }
+
+                # 폴백에도 뉴스 소스 추가
+                if news_items:
+                    fallback["newsSources"] = [
+                        {
+                            "title": item.get("title", ""),
+                            "url": item.get("url", ""),
+                            "source": item.get("source", "Unknown")
+                        }
+                        for item in news_items[:5]
+                        if item.get("title") and item.get("url")
+                    ]
+
                 return json.dumps(fallback, ensure_ascii=False, indent=2)
 
         except Exception as e:

@@ -105,13 +105,13 @@ export default function SavedBriefingsPage() {
       <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-12">
         {/* Page Hero */}
         <section className="mb-12 sm:mb-16 animate-fade-in-up">
-          <span className="text-overline mb-4 block">MY COLLECTION</span>
+          <span className="text-overline mb-4 block">AI-POWERED INSIGHTS</span>
           <h2 className="font-bebas text-4xl sm:text-5xl lg:text-6xl leading-[0.9] text-[var(--foreground)] mb-4">
-            SAVED<br />
-            <span className="text-[var(--accent)]">AI BRIEFINGS</span>
+            MY<br />
+            <span className="text-[var(--accent)]">ANALYSIS</span>
           </h2>
           <p className="text-body text-[var(--foreground-secondary)] max-w-lg">
-            Your saved AI briefings. Click on any briefing to view the full analysis.
+            직접 생성한 AI 분석 리포트 모음입니다. 원하는 종목을 선택하여 상세 분석을 확인하세요.
           </p>
         </section>
 
@@ -122,11 +122,11 @@ export default function SavedBriefingsPage() {
         <section className="animate-fade-in-up stagger-1" style={{ opacity: 0 }}>
           <div className="flex items-end justify-between mb-8">
             <div>
-              <span className="section-caption">SAVED BRIEFINGS</span>
-              <h3 className="section-title">Your Collection</h3>
+              <span className="section-caption">YOUR AI REPORTS</span>
+              <h3 className="section-title">Saved Analysis</h3>
             </div>
             <span className="text-sm font-bold text-[var(--foreground-muted)] uppercase tracking-wide">
-              {savedBriefings.length} Saved
+              {savedBriefings.length} Reports
             </span>
           </div>
 

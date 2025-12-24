@@ -1,7 +1,15 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { saveBriefing } from '@/services/savedBriefings';
+
+// 뉴스 소스 타입
+export interface NewsSource {
+  title: string;
+  url: string;
+  source: string;
+}
 
 // AI 브리핑 데이터 타입
 export interface AIBriefingData {
@@ -24,6 +32,7 @@ export interface AIBriefingData {
     risks: string[];
     conclusion: string;
   };
+  newsSources?: NewsSource[]; // 참고한 뉴스 소스
   meta: {
     symbol: string;
     name: string;
@@ -177,7 +186,7 @@ export default function AIBriefingModal({
           ) : error ? (
             <ErrorState error={error} onRetry={onRegenerate} />
           ) : briefingData ? (
-            <BriefingContent data={briefingData} sentimentConfig={sentimentConfig} />
+            <BriefingContent data={briefingData} sentimentConfig={sentimentConfig} onClose={onClose} />
           ) : null}
         </div>
 
@@ -296,9 +305,11 @@ function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) 
 function BriefingContent({
   data,
   sentimentConfig,
+  onClose,
 }: {
   data: AIBriefingData;
   sentimentConfig: { color: string; bg: string; label: string };
+  onClose: () => void;
 }) {
   const isPositive = data.meta.changePercent >= 0;
 
@@ -320,10 +331,16 @@ function BriefingContent({
                 {sentimentConfig.label}
               </span>
             </div>
-            <h2 className="font-bebas text-3xl sm:text-4xl text-[var(--foreground)] tracking-wide leading-none">
-              {data.meta.symbol}
-            </h2>
-            <p className="text-sm text-[var(--foreground-secondary)]">{data.meta.name}</p>
+            <Link
+              href={`/stock/${data.meta.symbol}`}
+              onClick={onClose}
+              className="group block"
+            >
+              <h2 className="font-bebas text-3xl sm:text-4xl text-[var(--foreground)] tracking-wide leading-none group-hover:text-[var(--accent)] transition-colors">
+                {data.meta.symbol}
+              </h2>
+              <p className="text-sm text-[var(--foreground-secondary)] group-hover:text-[var(--accent)] transition-colors">{data.meta.name}</p>
+            </Link>
           </div>
 
           {/* Price Box */}
@@ -484,6 +501,44 @@ function BriefingContent({
           </p>
         </div>
       </section>
+
+      {/* News Sources Section */}
+      {data.newsSources && data.newsSources.length > 0 && (
+        <section className="border-t-2 border-[var(--border)] pt-4">
+          <SectionHeader title="SOURCES" subtitle="News References" />
+          <div className="space-y-2">
+            {data.newsSources.slice(0, 5).map((source, idx) => (
+              <a
+                key={idx}
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-start gap-3 p-2 -mx-2 hover:bg-[var(--background-secondary)] transition-colors"
+              >
+                <span className="flex-shrink-0 w-5 h-5 bg-[var(--foreground)]/10 flex items-center justify-center text-[10px] font-bold text-[var(--foreground-muted)]">
+                  {idx + 1}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-[var(--foreground)] font-medium leading-snug group-hover:text-[var(--accent)] transition-colors truncate">
+                    {source.title}
+                  </p>
+                  <p className="text-[10px] text-[var(--foreground-muted)] uppercase tracking-wider mt-0.5">
+                    {source.source}
+                  </p>
+                </div>
+                <svg
+                  className="flex-shrink-0 w-4 h-4 text-[var(--foreground-muted)] group-hover:text-[var(--accent)] transition-colors mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Disclaimer */}
       <div className="text-xs text-[var(--foreground-muted)] text-center pt-4 border-t border-[var(--border)]">

@@ -292,7 +292,8 @@ async def generate_ai_briefing(request: AIBriefingRequest):
             briefing_markdown = llm_service.generate_briefing(
                 stock_info=stock_info,
                 news_summary=news_summary,
-                chart_analysis=chart_analysis
+                chart_analysis=chart_analysis,
+                news_items=news_items  # 뉴스 소스 정보 전달
             )
         except LLMServiceError as e:
             return AIBriefingResponse(

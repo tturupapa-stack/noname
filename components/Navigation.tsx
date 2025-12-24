@@ -11,8 +11,8 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: '/', label: 'HOME', shortLabel: 'H' },
-  { href: '/briefings', label: 'BRIEFINGS', shortLabel: 'B' },
-  { href: '/saved-briefings', label: 'SAVED AI', shortLabel: 'S' },
+  { href: '/briefings', label: 'DAILY HOT', shortLabel: 'D' },
+  { href: '/saved-briefings', label: 'MY ANALYSIS', shortLabel: 'M' },
   { href: '/alerts', label: 'ALERTS', shortLabel: 'A' },
   { href: '/favorites', label: 'FAVORITES', shortLabel: 'F' },
 ];
