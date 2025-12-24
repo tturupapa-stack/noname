@@ -10,6 +10,78 @@ import {
   ApiPriceDataPoint,
 } from './api';
 
+// 종목명/키워드 기반으로 섹터 추론
+function inferSectorFromName(name: string, whyHot: string[]): string {
+  const text = [name, ...whyHot].join(' ').toLowerCase();
+
+  // Healthcare / Biotech
+  if (
+    text.includes('therapeutics') ||
+    text.includes('pharma') ||
+    text.includes('biotech') ||
+    text.includes('medical') ||
+    text.includes('health') ||
+    text.includes('drug') ||
+    text.includes('fda') ||
+    text.includes('clinical') ||
+    text.includes('vaccine') ||
+    text.includes('oncology') ||
+    text.includes('bioscience') ||
+    text.includes('genomics')
+  ) {
+    return 'Healthcare';
+  }
+
+  // Technology
+  if (
+    text.includes('technology') ||
+    text.includes('software') ||
+    text.includes('semiconductor') ||
+    text.includes('chip') ||
+    text.includes('nvidia') ||
+    text.includes('amd') ||
+    text.includes('intel') ||
+    text.includes('ai ') ||
+    text.includes('artificial intelligence') ||
+    text.includes('cloud') ||
+    text.includes('computing') ||
+    text.includes('data') ||
+    text.includes('cyber')
+  ) {
+    return 'Technology';
+  }
+
+  // Finance
+  if (
+    text.includes('bank') ||
+    text.includes('financial') ||
+    text.includes('capital') ||
+    text.includes('investment') ||
+    text.includes('insurance') ||
+    text.includes('credit') ||
+    text.includes('mortgage')
+  ) {
+    return 'Finance';
+  }
+
+  // Energy
+  if (
+    text.includes('energy') ||
+    text.includes('oil') ||
+    text.includes('gas') ||
+    text.includes('petroleum') ||
+    text.includes('solar') ||
+    text.includes('renewable') ||
+    text.includes('battery') ||
+    text.includes('electric vehicle') ||
+    text.includes('ev ')
+  ) {
+    return 'Energy';
+  }
+
+  return '';  // 기본값 - 동적 패턴 없음
+}
+
 // API 종목을 프론트엔드 Stock 타입으로 변환
 export function adaptStock(
   apiStock: ApiTrendingResponse['stock'],
@@ -60,11 +132,18 @@ export function adaptBriefing(apiBriefing: ApiBriefing): Briefing {
     .map(n => n.title)
     .join(', ');
 
+  // 종목명과 why_hot 메시지를 기반으로 섹터 추론
+  const inferredSector = inferSectorFromName(apiBriefing.stock.name, whyHotText);
+
   return {
     briefingId: `brief_${apiBriefing.date.replace(/-/g, '')}_${apiBriefing.stock.symbol}_001`,
     symbol: apiBriefing.stock.symbol,
     shortName: apiBriefing.stock.name,
     date: apiBriefing.date,
+    price: apiBriefing.stock.price,
+    priceChange: apiBriefing.stock.change_percent,
+    score: apiBriefing.score.total,
+    sector: inferredSector || undefined,  // 빈 문자열이면 undefined
     status: 'completed',
     textSummary: {
       title: `${apiBriefing.stock.name}(${apiBriefing.stock.symbol}), 복합 점수 ${apiBriefing.score.total}점으로 화제`,

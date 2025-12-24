@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     title: "WYWS",
   },
   icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
     apple: "/icon-180.png",
   },
   keywords: ["stocks", "market", "briefing", "analysis", "trading", "finance"],

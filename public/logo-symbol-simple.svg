@@ -1,0 +1,24 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Musinsa-style Simple Symbol - No background, transparent -->
+
+  <!-- Crescent Moon - Bold geometric, solid color -->
+  <circle cx="200" cy="200" r="150" fill="#f59e0b"/>
+  <circle cx="290" cy="145" r="120" fill="transparent"/>
+
+  <!-- Mask approach for clean crescent -->
+  <defs>
+    <mask id="crescentMask">
+      <circle cx="200" cy="200" r="150" fill="white"/>
+      <circle cx="290" cy="145" r="120" fill="black"/>
+    </mask>
+  </defs>
+
+  <circle cx="200" cy="200" r="150" fill="#f59e0b" mask="url(#crescentMask)"/>
+
+  <!-- Ascending Arrow - Bold, minimal, solid white -->
+  <path
+    d="M 360 440 L 360 240 L 300 310 L 360 170 L 420 310 L 360 240"
+    fill="#ffffff"
+  />
+  <rect x="330" y="240" width="60" height="200" fill="#ffffff"/>
+</svg>

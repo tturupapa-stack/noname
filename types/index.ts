@@ -20,6 +20,10 @@ export interface Briefing {
   symbol: string;
   shortName: string;
   date: string;
+  price: number;
+  priceChange: number;
+  score: number;
+  sector?: string;  // 종목 섹터 (Healthcare, Technology 등)
   status: 'completed' | 'processing' | 'failed';
   textSummary: {
     title: string;

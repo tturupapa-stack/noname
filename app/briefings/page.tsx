@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import BriefingCard from '@/components/BriefingCard';
 import ThemeToggle from '@/components/ThemeToggle';
+import Logo from '@/components/Logo';
 import { Briefing } from '@/types';
 import { fetchBriefings } from '@/services/api';
 import { adaptBriefings } from '@/services/apiAdapters';
@@ -44,19 +45,8 @@ export default function BriefingsPage() {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex items-center justify-between h-16 sm:h-20">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--foreground)] flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
-                <img
-                  src="/logo-main.png"
-                  alt="Logo"
-                  className="w-full h-full object-cover invert dark:invert-0"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    if (target.parentElement) {
-                      target.parentElement.innerHTML = '<span class="text-[var(--background)] font-black text-xl">W</span>';
-                    }
-                  }}
-                />
+              <div className="transition-transform group-hover:scale-105">
+                <Logo variant="icon" size="md" />
               </div>
               <div className="hidden sm:block">
                 <h1 className="font-bebas text-2xl sm:text-3xl tracking-wide text-[var(--foreground)] leading-none">

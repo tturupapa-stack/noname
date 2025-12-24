@@ -1,21 +1,21 @@
 [
   {
-    "id": "2025-12-20",
-    "date": "2025-12-20",
-    "created_at": "2025-12-20 11:49:06.317046",
+    "id": "2025-12-24",
+    "date": "2025-12-24",
+    "created_at": "2025-12-24 20:25:08.867070",
     "stock": {
-      "symbol": "FOLD",
-      "name": "Amicus Therapeutics, Inc.",
-      "price": 14.18,
-      "change": 3.29,
-      "change_percent": 30.2112,
-      "volume": 185744933,
-      "avg_volume": 5282146,
-      "volume_ratio": 35.16,
-      "market_cap": 4375005696.0,
+      "symbol": "HYMC",
+      "name": "Hycroft Mining Holding Corporat",
+      "price": 27.14,
+      "change": 2.62,
+      "change_percent": 10.6852,
+      "volume": 15666770,
+      "avg_volume": 2014193,
+      "volume_ratio": 7.78,
+      "market_cap": 2206036736.0,
       "pe_ratio": null,
-      "fifty_two_week_high": 14.36,
-      "fifty_two_week_low": 5.51,
+      "fifty_two_week_high": null,
+      "fifty_two_week_low": null,
       "currency": "USD"
     },
     "score": {
@@ -28,7 +28,84 @@
     "why_hot": [
       {
         "icon": "✅",
-        "message": "거래량 급증 (평소 대비 35.16배)"
+        "message": "거래량 급증 (평소 대비 7.78배)"
+      },
+      {
+        "icon": "✅",
+        "message": "당일 10.7% 상승"
+      },
+      {
+        "icon": "✅",
+        "message": "5일·10일 수익률 모두 양수 (상승 추세)"
+      },
+      {
+        "icon": "✅",
+        "message": "적정 시가총액 구간 ($2B~$100B)"
+      }
+    ],
+    "news": [
+      {
+        "title": "Hycroft Mining Holding Corp (HYMC) News, Articles, ...",
+        "url": "https://stocktwits.com/symbol/HYMC/news",
+        "published_date": "2025-12-23 14:25:08.208000+00:00",
+        "source": "stocktwits.com"
+      },
+      {
+        "title": "Samsung, SK Hynix reportedly hike HBM3E prices nearly 20% ahead of 2026 shift",
+        "url": "https://www.digitimes.com/news/a20251224PD225/hbm3e-samsung-2026-sk-hynix-hbm4.html",
+        "published_date": "2025-12-24 00:00:00+00:00",
+        "source": "digitimes.com"
+      },
+      {
+        "title": "ServiceNow agrees to buy cyber firm Armis for $7.75B",
+        "url": "https://cyberscoop.com/servicenow-armis-acquisition-ai-cybersecurity/",
+        "published_date": "2025-12-23 00:00:00+00:00",
+        "source": "cyberscoop.com"
+      },
+      {
+        "title": "Insmed Reports Fourth-Quarter and Full-Year 2024 Financial Results and Provides Business Update - Feb 20, 2025",
+        "url": "https://investor.insmed.com/2025-02-20-Insmed-Reports-Fourth-Quarter-and-Full-Year-2024-Financial-Results-and-Provides-Business-Update?asPDF=1",
+        "published_date": "2025-12-23 00:00:00+00:00",
+        "source": "investor.insmed.com"
+      },
+      {
+        "title": "FirstFT: Panama Canal ports deal hits impasse after China’s Cosco demands majority stake",
+        "url": "https://www.ft.com/content/711a5928-1633-4b33-b4dd-dc7a0d246e43",
+        "published_date": "2025-12-23 00:00:00+00:00",
+        "source": "ft.com"
+      }
+    ]
+  },
+  {
+    "id": "2025-12-20",
+    "date": "2025-12-20",
+    "created_at": "2025-12-20 22:29:40.743950",
+    "stock": {
+      "symbol": "FOLD",
+      "name": "Amicus Therapeutics, Inc.",
+      "price": 14.18,
+      "change": 3.29,
+      "change_percent": 30.2112,
+      "volume": 185744933,
+      "avg_volume": 8140751,
+      "volume_ratio": 22.82,
+      "market_cap": 4375005696.0,
+      "pe_ratio": null,
+      "fifty_two_week_high": null,
+      "fifty_two_week_low": null,
+      "currency": "USD"
+    },
+    "score": {
+      "volume_score": 10,
+      "price_change_score": 10,
+      "momentum_score": 10,
+      "market_cap_score": 10,
+      "total": 40
+    },
+    "why_hot": [
+      {
+        "icon": "✅",
+        "message": "거래량 급증 (평소 대비 22.82배)"
       },
       {
         "icon": "✅",
@@ -45,34 +122,34 @@
     ],
     "news": [
       {
-        "title": "Amicus Therapeutics, Inc. (FOLD) Stock Price, News, ...",
-        "url": "https://finance.yahoo.com/quote/FOLD/",
-        "published_date": "2025-12-20 01:49:05.682000+00:00",
-        "source": "finance.yahoo.com"
+        "title": "FOLD Stock Alert: Halper Sadeh LLC is Investigating ...",
+        "url": "https://www.morningstar.com/news/business-wire/20251219512883/fold-stock-alert-halper-sadeh-llc-is-investigating-whether-the-sale-of-amicus-therapeutics-inc-is-fair-to-shareholders",
+        "published_date": "2025-12-19 14:29:40.191000+00:00",
+        "source": "morningstar.com"
+      },
+      {
+        "title": "Amicus Therapeutics (NASDAQ:FOLD) Shares Gap Up",
+        "url": "https://www.marketbeat.com/instant-alerts/amicus-therapeutics-nasdaqfold-shares-gap-up-time-to-buy-2025-12-19/",
+        "published_date": "2025-12-19 16:29:40.191000+00:00",
+        "source": "marketbeat.com"
       },
       {
         "title": "BioMarin Soars 18% After Folding In The $4.8 Billion ...",
         "url": "https://www.investors.com/news/technology/biomarin-amicus-acquisition/",
-        "published_date": "2025-12-19 20:49:05.682000+00:00",
+        "published_date": "2025-12-19 21:29:40.191000+00:00",
         "source": "investors.com"
-      },
-      {
-        "title": "Biggest stock movers Friday: FOLD, CRWV, KBH, NKE and ...",
-        "url": "https://seekingalpha.com/news/4533338-biggest-stock-movers-friday-nne-corz-nke-and-more",
-        "published_date": "2025-12-19 09:49:05.682000+00:00",
-        "source": "seekingalpha.com"
-      },
-      {
-        "title": "BioMarin to Acquire Amicus Therapeutics for $4.8 Billion ...",
-        "url": "https://ir.amicusrx.com/news-releases/news-release-details/biomarin-acquire-amicus-therapeutics-48-billion-expanding",
-        "published_date": "2025-12-19 12:49:05.682000+00:00",
-        "source": "ir.amicusrx.com"
       },
       {
         "title": "$FOLD stock is up 30% today. Here's what we see in our ...",
         "url": "https://www.quiverquant.com/news/%24FOLD+stock+is+up+30%25+today.+Here%27s+what+we+see+in+our+data.",
-        "published_date": "2025-12-19 14:49:05.682000+00:00",
+        "published_date": "2025-12-19 14:29:40.191000+00:00",
         "source": "quiverquant.com"
+      },
+      {
+        "title": "BioMarin to acquire Amicus for $4.8B (BMRN:NASDAQ)",
+        "url": "https://seekingalpha.com/news/4533414-biomarin-acquire-amicus-48b",
+        "published_date": "2025-12-19 13:29:40.191000+00:00",
+        "source": "seekingalpha.com"
       }
     ]
   },

@@ -8,7 +8,9 @@ import FavoriteIcon from '@/components/FavoriteIcon';
 import AnimatedNumber from '@/components/AnimatedNumber';
 import ThemeToggle from '@/components/ThemeToggle';
 import Navigation from '@/components/Navigation';
-import { fetchStockDetail, fetchStockChart } from '@/services/api';
+import Logo from '@/components/Logo';
+import AIBriefingModal, { AIBriefingData, parseAIBriefing } from '@/components/AIBriefingModal';
+import { fetchStockDetail, fetchStockChart, generateAIBriefing } from '@/services/api';
 import { adaptStockDetail, adaptChartData } from '@/services/apiAdapters';
 
 interface StockDetailPageProps {
@@ -21,6 +23,48 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
   const [chartData, setChartData] = useState<PriceData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // AI 브리핑 상태
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [aiBriefingData, setAiBriefingData] = useState<AIBriefingData | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
+
+  // AI 브리핑 생성 핸들러
+  const handleGenerateAIBriefing = async () => {
+    if (!stock) return;
+
+    setIsGeneratingAI(true);
+    setAiError(null);
+    setAiBriefingData(null);
+    setAiModalOpen(true);
+
+    try {
+      const response = await generateAIBriefing({
+        symbol: stock.symbol,
+        name: stock.shortName,
+        price: stock.currentPrice,
+        change: stock.change,
+        change_percent: stock.changePercent,
+        news_count: 3,
+      });
+
+      if (response.success && response.markdown) {
+        const parsed = parseAIBriefing(response.markdown);
+        if (parsed) {
+          setAiBriefingData(parsed);
+        } else {
+          setAiError('브리핑 데이터 파싱에 실패했습니다.');
+        }
+      } else {
+        setAiError(response.error || 'AI 브리핑 생성에 실패했습니다.');
+      }
+    } catch (err) {
+      setAiError(err instanceof Error ? err.message : 'AI 브리핑 생성 중 오류가 발생했습니다.');
+    } finally {
+      setIsGeneratingAI(false);
+    }
+  };
 
   useEffect(() => {
     async function loadStockData() {
@@ -111,19 +155,8 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex items-center justify-between h-16 sm:h-20">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--foreground)] flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
-                <img
-                  src="/logo-main.png"
-                  alt="Logo"
-                  className="w-full h-full object-cover invert dark:invert-0"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    if (target.parentElement) {
-                      target.parentElement.innerHTML = '<span class="text-[var(--background)] font-black text-xl">W</span>';
-                    }
-                  }}
-                />
+              <div className="transition-transform group-hover:scale-105">
+                <Logo variant="icon" size="md" />
               </div>
               <div className="hidden sm:block">
                 <h1 className="font-bebas text-2xl sm:text-3xl tracking-wide text-[var(--foreground)] leading-none">
@@ -175,9 +208,32 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
                 )}
                 <FavoriteIcon stock={stock} size="md" />
               </div>
-              <p className="text-body text-[var(--foreground-secondary)] uppercase tracking-wide">
+              <p className="text-body text-[var(--foreground-secondary)] uppercase tracking-wide mb-4">
                 {stock.symbol}
               </p>
+              {/* AI 브리핑 버튼 */}
+              <button
+                onClick={handleGenerateAIBriefing}
+                disabled={isGeneratingAI}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--accent)] text-white font-bold text-xs uppercase tracking-wider hover:bg-[var(--accent-hover)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isGeneratingAI ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Generating...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <span>AI Briefing</span>
+                  </>
+                )}
+              </button>
             </div>
 
             {/* Price Display - Big */}
@@ -330,6 +386,18 @@ export default function StockDetailPage({ params }: StockDetailPageProps) {
           </div>
         </div>
       </footer>
+
+      {/* AI 브리핑 모달 */}
+      <AIBriefingModal
+        isOpen={aiModalOpen}
+        onClose={() => setAiModalOpen(false)}
+        onRegenerate={handleGenerateAIBriefing}
+        isLoading={isGeneratingAI}
+        error={aiError}
+        briefingData={aiBriefingData}
+        stockName={stock.shortName}
+        showSaveButton={true}
+      />
     </div>
   );
 }

@@ -1,0 +1,55 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dawn Breaking Theme Logo -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e3a5f"/>
+    </linearGradient>
+    <radialGradient id="moonGlow" cx="35%" cy="35%" r="50%">
+      <stop offset="0%" stop-color="#feb47b" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#ff7e5f" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="starGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="url(#bgGradient)"/>
+
+  <!-- Moon glow effect -->
+  <circle cx="180" cy="180" r="140" fill="url(#moonGlow)"/>
+
+  <!-- Crescent Moon -->
+  <circle cx="170" cy="170" r="110" fill="#feb47b"/>
+  <circle cx="230" cy="140" r="90" fill="url(#bgGradient)"/>
+
+  <!-- Stars with glow -->
+  <g filter="url(#starGlow)">
+    <circle cx="380" cy="120" r="14" fill="#fbbf24"/>
+    <circle cx="420" cy="200" r="10" fill="#fbbf24"/>
+    <circle cx="350" cy="280" r="8" fill="#fbbf24"/>
+    <circle cx="300" cy="100" r="8" fill="#ffffff" opacity="0.8"/>
+    <circle cx="450" cy="320" r="10" fill="#ffffff" opacity="0.6"/>
+    <circle cx="480" cy="150" r="6" fill="#ffffff" opacity="0.5"/>
+  </g>
+
+  <!-- City silhouette -->
+  <g fill="#0f172a" opacity="0.7">
+    <rect x="40" y="400" width="50" height="80"/>
+    <rect x="100" y="370" width="70" height="110"/>
+    <rect x="180" y="420" width="40" height="60"/>
+    <rect x="230" y="380" width="60" height="100"/>
+    <rect x="300" y="430" width="35" height="50"/>
+    <rect x="345" y="400" width="55" height="80"/>
+    <rect x="410" y="390" width="45" height="90"/>
+    <rect x="465" y="410" width="40" height="70"/>
+  </g>
+
+  <!-- Horizon glow -->
+  <rect x="0" y="450" width="512" height="62" rx="0" fill="url(#moonGlow)" opacity="0.3"/>
+</svg>

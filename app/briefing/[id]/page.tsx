@@ -5,6 +5,7 @@ import { Briefing } from '@/types';
 import Link from 'next/link';
 import BriefingPreviewModal from '@/components/BriefingPreviewModal';
 import ShareButton from '@/components/ShareButton';
+import BriefingCardGenerator from '@/components/BriefingCardGenerator';
 import { fetchBriefingByDate } from '@/services/api';
 import { adaptBriefing } from '@/services/apiAdapters';
 
@@ -207,27 +208,23 @@ export default function BriefingDetailPage({ params }: BriefingDetailPageProps) 
           </div>
         </header>
 
-        {/* 브리핑 이미지 미리보기 */}
+        {/* 브리핑 이미지 생성 */}
         <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s', opacity: 0 }}>
           <div className="section-header">
-            <h2 className="section-title text-lg">브리핑 이미지</h2>
+            <h2 className="section-title text-lg">브리핑 카드</h2>
           </div>
-          <div className="card p-6">
-            <div className="aspect-[3/4] w-full max-w-md mx-auto bg-[var(--background-secondary)] border-2 border-[var(--border)] flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-[var(--foreground)] flex items-center justify-center">
-                  <svg className="w-8 h-8 text-[var(--background)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <p className="text-sm text-[var(--foreground-muted)]">
-                  {briefing.imageBriefing.dimensions.width} × {briefing.imageBriefing.dimensions.height}
-                </p>
-                <p className="text-xs text-[var(--foreground-muted)] mt-1">
-                  {(briefing.imageBriefing.fileSize / 1024).toFixed(1)} KB
-                </p>
-              </div>
-            </div>
+          <div className="card-glass p-6">
+            <BriefingCardGenerator
+              date={briefing.date}
+              stockName={briefing.shortName}
+              symbol={briefing.symbol}
+              changePercent={briefing.priceChange}
+              criteria={`복합점수 ${briefing.score}점`}
+              headline={briefing.textSummary.keyPoints[0] || '관련 뉴스 없음'}
+              sector={briefing.sector}
+              keywords={briefing.textSummary.keyPoints}
+              autoSave={true}
+            />
           </div>
         </section>
 

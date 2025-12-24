@@ -224,3 +224,39 @@ export function invalidateCache(pattern?: string): void {
     apiCache.clear();
   }
 }
+
+// AI 브리핑 생성 요청/응답 타입
+export interface AIBriefingRequest {
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;
+  change_percent: number;
+  news_count?: number;
+}
+
+export interface AIBriefingResponse {
+  symbol: string;
+  name: string;
+  markdown: string;
+  generated_at: string;
+  success: boolean;
+  error?: string;
+}
+
+// AI 브리핑 생성 API (캐시 없음 - 매번 새로 생성)
+export async function generateAIBriefing(request: AIBriefingRequest): Promise<AIBriefingResponse> {
+  const response = await fetch(`${API_BASE_URL}/api/briefing/ai-generate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!response.ok) {
+    throw new Error(`AI 브리핑 생성 실패: ${response.status}`);
+  }
+
+  return response.json();
+}

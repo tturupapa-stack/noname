@@ -13,6 +13,7 @@ import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 import PWAUpdatePrompt from '@/components/PWAUpdatePrompt';
 import StockSearchBar from '@/components/StockSearchBar';
 import FavoriteIcon from '@/components/FavoriteIcon';
+import Logo from '@/components/Logo';
 import { Stock, SelectionCriteria, Briefing, PriceData } from '@/types';
 import { getFavorites } from '@/utils/favoriteStorage';
 import { mockAllStocks } from '@/data/mockData';
@@ -112,19 +113,8 @@ export default function Home() {
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo & Title - Bold Typography */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--foreground)] flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
-                <img
-                  src="/logo-main.png"
-                  alt="Logo"
-                  className="w-full h-full object-cover invert dark:invert-0"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    if (target.parentElement) {
-                      target.parentElement.innerHTML = '<span class="text-[var(--background)] font-black text-xl">W</span>';
-                    }
-                  }}
-                />
+              <div className="transition-transform group-hover:scale-105">
+                <Logo variant="icon" size="md" />
               </div>
               <div className="hidden sm:block">
                 <h1 className="font-bebas text-2xl sm:text-3xl tracking-wide text-[var(--foreground)] leading-none">

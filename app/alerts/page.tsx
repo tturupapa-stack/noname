@@ -8,6 +8,7 @@ import AlertHistory from '@/components/AlertHistory';
 import AlertSettingsModal from '@/components/AlertSettingsModal';
 import AddAlertButton from '@/components/AddAlertButton';
 import ThemeToggle from '@/components/ThemeToggle';
+import Logo from '@/components/Logo';
 import { useToast } from '@/components/Toast';
 import { AlertSettings } from '@/types';
 import { saveAlert } from '@/utils/alertStorage';
@@ -50,21 +51,8 @@ export default function AlertsPage() {
         <header className="mb-8 sm:mb-10 animate-fade-in-up">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 sm:gap-4 group">
-              <div className="relative">
-                <div className="w-10 h-10 sm:w-11 sm:h-11 bg-[var(--foreground)] flex items-center justify-center overflow-hidden">
-                  <img
-                    src="/logo-main.png"
-                    alt="로고"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      if (target.parentElement) {
-                        target.parentElement.innerHTML = '<svg class="w-5 h-5 text-[var(--background)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>';
-                      }
-                    }}
-                  />
-                </div>
+              <div className="transition-transform group-hover:scale-105">
+                <Logo variant="icon" size="md" />
               </div>
               <div>
                 <h1 className="text-lg sm:text-xl font-bold text-[var(--foreground)] tracking-tight group-hover:text-[var(--primary-500)] transition-colors">

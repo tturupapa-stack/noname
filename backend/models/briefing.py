@@ -41,3 +41,23 @@ class GenerateBriefingResponse(BaseModel):
     ticker: str
     markdown: str
     generated_at: datetime
+
+
+class AIBriefingRequest(BaseModel):
+    """AI 브리핑 생성 요청"""
+    symbol: str
+    name: str
+    price: float
+    change: float
+    change_percent: float
+    news_count: int = 3
+
+
+class AIBriefingResponse(BaseModel):
+    """AI 브리핑 생성 응답"""
+    symbol: str
+    name: str
+    markdown: str
+    generated_at: datetime
+    success: bool
+    error: Optional[str] = None

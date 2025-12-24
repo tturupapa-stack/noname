@@ -1,0 +1,62 @@
+<svg width="400" height="80" viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dawn Breaking Theme Combined Logo -->
+  <defs>
+    <linearGradient id="comboBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e3a5f"/>
+    </linearGradient>
+    <linearGradient id="comboTextGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff7e5f"/>
+      <stop offset="100%" stop-color="#feb47b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Symbol Container -->
+  <g>
+    <!-- Background -->
+    <rect x="0" y="8" width="64" height="64" rx="10" fill="url(#comboBgGrad)"/>
+
+    <!-- Moon glow -->
+    <circle cx="24" cy="28" r="16" fill="#feb47b" opacity="0.3"/>
+
+    <!-- Crescent Moon -->
+    <circle cx="22" cy="26" r="14" fill="#feb47b"/>
+    <circle cx="30" cy="22" r="11" fill="url(#comboBgGrad)"/>
+
+    <!-- Stars -->
+    <circle cx="48" cy="20" r="2" fill="#fbbf24"/>
+    <circle cx="52" cy="32" r="1.5" fill="#fbbf24"/>
+    <circle cx="42" cy="16" r="1" fill="#ffffff" opacity="0.7"/>
+
+    <!-- City silhouette -->
+    <g fill="#0f172a" opacity="0.5">
+      <rect x="8" y="52" width="8" height="12"/>
+      <rect x="18" y="48" width="10" height="16"/>
+      <rect x="30" y="54" width="6" height="10"/>
+      <rect x="38" y="50" width="8" height="14"/>
+      <rect x="48" y="53" width="6" height="11"/>
+      <rect x="56" y="51" width="6" height="13"/>
+    </g>
+  </g>
+
+  <!-- Main Text -->
+  <text
+    x="80"
+    y="48"
+    font-family="'SF Pro Display', 'Pretendard', system-ui, sans-serif"
+    font-size="28"
+    font-weight="700"
+    fill="url(#comboTextGrad)"
+  >당신이 잠든 사이</text>
+
+  <!-- Subtitle -->
+  <text
+    x="82"
+    y="66"
+    font-family="'SF Pro Display', 'Pretendard', system-ui, sans-serif"
+    font-size="11"
+    font-weight="500"
+    fill="currentColor"
+    opacity="0.5"
+  >Market Briefing</text>
+</svg>

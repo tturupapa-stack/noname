@@ -1,12 +1,23 @@
 from datetime import datetime
+import sys
+from pathlib import Path
 from fastapi import APIRouter, HTTPException
 from yahooquery import Ticker
 
-from models.briefing import GenerateBriefingRequest, GenerateBriefingResponse
+from models.briefing import (
+    GenerateBriefingRequest,
+    GenerateBriefingResponse,
+    AIBriefingRequest,
+    AIBriefingResponse
+)
 from models.stock import StockDetail, ScoreBreakdown, WhyHotItem
 from services.briefing_generator import briefing_generator
 from services.screener_service import hot_stock_screener, ScreenerServiceError
 from services.news_service import get_news_service, NewsServiceError
+
+# MCP 서버 서비스 경로 추가
+mcp_services_path = Path(__file__).parent.parent.parent / "mcp-server" / "services"
+sys.path.insert(0, str(mcp_services_path))
 
 router = APIRouter(prefix="/api/briefing", tags=["briefing-generate"])
 
@@ -173,3 +184,140 @@ def _generate_why_hot(stock: StockDetail, score: ScoreBreakdown) -> list[WhyHotI
         items.append(WhyHotItem(icon="ℹ️", message="일반적인 거래 패턴"))
 
     return items
+
+
+@router.post("/ai-generate", response_model=AIBriefingResponse)
+async def generate_ai_briefing(request: AIBriefingRequest):
+    """
+    AI 기반 브리핑 생성 (Claude LLM 사용)
+
+    화제 종목 정보를 받아서 최신 뉴스를 수집하고,
+    Claude LLM이 뉴스를 요약하며 종목 그래프를 참고해서 해석한 브리핑을 생성합니다.
+
+    **Request Body:**
+    - symbol: 종목 심볼 (예: TSLA, AAPL)
+    - name: 종목명 (예: Tesla, Inc.)
+    - price: 현재 주가
+    - change: 전일 대비 변동액
+    - change_percent: 전일 대비 변동률 (%)
+    - news_count: 수집할 뉴스 개수 (기본값: 3)
+
+    **Response:**
+    - symbol: 종목 심볼
+    - name: 종목명
+    - markdown: 생성된 AI 브리핑 마크다운
+    - generated_at: 생성 시각
+    - success: 성공 여부
+    - error: 에러 메시지 (실패 시)
+    """
+    try:
+        # MCP 서버의 서비스 임포트
+        from chart_service import chart_service
+        from llm_service import get_llm_service, LLMServiceError
+
+        symbol = request.symbol.upper().strip()
+        name = request.name
+        price = request.price
+        change = request.change
+        change_percent = request.change_percent
+        news_count = request.news_count
+
+        # 1. 뉴스 수집
+        news_items = []
+        try:
+            news_service = get_news_service()
+            news_result = news_service.search_stock_news(
+                ticker=symbol,
+                num_results=news_count,
+                hours=24
+            )
+            news_items = [
+                {
+                    "title": item.title,
+                    "url": item.url,
+                    "source": item.source or "N/A"
+                }
+                for item in news_result.news
+            ]
+        except Exception as e:
+            print(f"뉴스 수집 실패: {e}")
+
+        # 2. 차트 데이터 수집
+        chart_data = chart_service.get_chart_data(symbol, period="5d")
+        chart_text = chart_service.format_chart_for_llm(chart_data)
+
+        # 3. LLM 서비스 초기화
+        try:
+            llm_service = get_llm_service()
+        except LLMServiceError as e:
+            return AIBriefingResponse(
+                symbol=symbol,
+                name=name,
+                markdown="",
+                generated_at=datetime.now(),
+                success=False,
+                error=f"LLM 서비스 초기화 실패: {str(e)}"
+            )
+
+        # 4. 뉴스 요약
+        news_summary = ""
+        if news_items:
+            try:
+                news_summary = llm_service.summarize_news(news_items, symbol)
+            except LLMServiceError as e:
+                news_summary = f"뉴스 요약 실패: {str(e)}"
+        else:
+            news_summary = "관련 뉴스가 없습니다."
+
+        # 5. 차트 분석
+        chart_analysis = ""
+        if "error" not in chart_data:
+            try:
+                chart_analysis = llm_service.analyze_chart(chart_text, symbol)
+            except LLMServiceError as e:
+                chart_analysis = f"차트 분석 실패: {str(e)}"
+        else:
+            chart_analysis = "차트 데이터를 가져올 수 없습니다."
+
+        # 6. 브리핑 생성
+        stock_info = {
+            "symbol": symbol,
+            "name": name,
+            "price": price,
+            "change": change,
+            "change_percent": change_percent
+        }
+
+        try:
+            briefing_markdown = llm_service.generate_briefing(
+                stock_info=stock_info,
+                news_summary=news_summary,
+                chart_analysis=chart_analysis
+            )
+        except LLMServiceError as e:
+            return AIBriefingResponse(
+                symbol=symbol,
+                name=name,
+                markdown="",
+                generated_at=datetime.now(),
+                success=False,
+                error=f"브리핑 생성 실패: {str(e)}"
+            )
+
+        return AIBriefingResponse(
+            symbol=symbol,
+            name=name,
+            markdown=briefing_markdown,
+            generated_at=datetime.now(),
+            success=True
+        )
+
+    except Exception as e:
+        return AIBriefingResponse(
+            symbol=request.symbol,
+            name=request.name,
+            markdown="",
+            generated_at=datetime.now(),
+            success=False,
+            error=f"브리핑 생성 중 오류 발생: {str(e)}"
+        )

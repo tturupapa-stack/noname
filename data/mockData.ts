@@ -76,7 +76,12 @@ export const mockBriefings: Briefing[] = [
   {
     briefingId: 'brief_20251210_TSLA_001',
     symbol: 'TSLA',
+    shortName: 'Tesla Inc',
     date: '2025-12-10',
+    price: 245.67,
+    priceChange: 5.29,
+    score: 92,
+    sector: 'Technology',
     status: 'completed',
     textSummary: {
       title: '테슬라(TSLA), 신제품 출시 루머로 거래량 급증',
@@ -108,7 +113,12 @@ export const mockBriefings: Briefing[] = [
   {
     briefingId: 'brief_20251209_AAPL_001',
     symbol: 'AAPL',
+    shortName: 'Apple Inc',
     date: '2025-12-09',
+    price: 175.43,
+    priceChange: 1.24,
+    score: 78,
+    sector: 'Technology',
     status: 'completed',
     textSummary: {
       title: '애플(AAPL), 신제품 출시 기대감으로 상승',
@@ -139,7 +149,12 @@ export const mockBriefings: Briefing[] = [
   {
     briefingId: 'brief_20251208_MSFT_001',
     symbol: 'MSFT',
+    shortName: 'Microsoft Corporation',
     date: '2025-12-08',
+    price: 378.85,
+    priceChange: -0.61,
+    score: 75,
+    sector: 'Technology',
     status: 'completed',
     textSummary: {
       title: '마이크로소프트(MSFT), AI 투자 확대로 상승',

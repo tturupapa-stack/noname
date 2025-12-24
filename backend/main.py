@@ -1,5 +1,6 @@
 import asyncio
 from contextlib import asynccontextmanager
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
@@ -13,8 +14,16 @@ from services.rate_limit_service import rate_limit_service
 from middleware.rate_limit import RateLimitMiddleware
 from config import cache_settings, rate_limit_settings
 
-# .env 파일 로드
-load_dotenv()
+# .env 파일 로드 (프로젝트 루트와 backend 디렉토리 모두 확인)
+project_root = Path(__file__).parent.parent
+env_paths = [
+    project_root / ".env",
+    Path(__file__).parent / ".env"
+]
+for env_path in env_paths:
+    if env_path.exists():
+        load_dotenv(env_path)
+        break
 
 
 async def preload_cache():

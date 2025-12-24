@@ -7,6 +7,16 @@
     "upstash-context7-mcp": {
       "transport": "http",
       "url": "https://server.smithery.ai/@upstash/context7-mcp/mcp"
+    },
+    "briefing-generator": {
+      "command": "python",
+      "args": [
+        "/Users/larkkim/while-you-were-sleeping-dashboard/mcp-server/server.py"
+      ],
+      "env": {
+        "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
+        "EXA_API_KEY": "${EXA_API_KEY}"
+      }
     }
   }
 }

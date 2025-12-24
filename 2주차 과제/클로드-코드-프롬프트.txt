@@ -1,0 +1,28 @@
+"당신이 잠든 사이" 프로젝트에 MCP (Model Context Protocol) 스킬을 추가했습니다. 이 스킬은 화제 종목의 최신 뉴스를 수집하고, Claude LLM이 뉴스를 요약하며 종목 그래프를 참고해서 해석한 브리핑을 생성합니다.
+
+프로젝트 구조:
+- mcp-server/server.py: MCP 서버 메인 파일 (stdio transport 사용)
+- mcp-server/services/llm_service.py: Anthropic Claude API 통합
+- mcp-server/services/chart_service.py: Yahoo Finance 차트 데이터 수집
+- mcp-server/requirements.txt: 필요한 Python 패키지 목록
+
+현재 프로젝트 루트(/Users/larkkim/while-you-were-sleeping-dashboard)에 .env 파일이 있고 다음 환경 변수가 설정되어 있습니다:
+- ANTHROPIC_API_KEY
+- EXA_API_KEY
+
+MCP 서버 정보:
+- 실행 파일: /Users/larkkim/while-you-were-sleeping-dashboard/mcp-server/server.py
+- Transport: stdio
+- 언어: Python 3
+- 사용 가능한 툴: generate_briefing (종목 심볼, 뉴스 개수 파라미터 지원)
+
+클로드 코드에서 이 MCP 스킬을 사용할 수 있도록 설정해주세요. 
+
+필요한 작업:
+1. 클로드 코드의 MCP 설정 파일 위치 확인 (일반적으로 ~/Library/Application Support/Claude/ 또는 ~/.config/claude/)
+2. mcp-server/server.py를 MCP 서버로 등록하는 설정 추가
+3. 환경 변수가 올바르게 전달되는지 확인 (프로젝트 루트의 .env 파일 사용)
+4. 설정 후 테스트를 위한 간단한 사용 예시 제공
+
+클로드 코드에서 MCP 서버를 설정하는 방법과 설정 파일 예시를 알려주세요.
+

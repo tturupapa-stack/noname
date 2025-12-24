@@ -3,6 +3,7 @@
 import { Briefing } from '@/types';
 import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import BriefingCardGenerator from './BriefingCardGenerator';
 
 interface BriefingPreviewModalProps {
   briefing: Briefing;
@@ -141,34 +142,21 @@ ${briefing.textSummary.investmentInsight}
 
         {/* 내용 */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {/* 브리핑 이미지 프리뷰 */}
+          {/* 브리핑 이미지 프리뷰 - 실제 생성된 카드 */}
           <div>
             <h3 className="text-lg font-bold mb-3 text-[var(--foreground)]">브리핑 이미지</h3>
-            <div className="border border-[var(--border)] bg-[var(--background-secondary)] p-4">
-              <div className="aspect-[3/4] w-full max-w-xs mx-auto bg-[var(--background-tertiary)] border border-[var(--border)] flex items-center justify-center">
-                <div className="text-center">
-                  <svg
-                    className="w-16 h-16 mx-auto mb-4 text-[var(--foreground-muted)]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <p className="text-[var(--foreground-muted)] text-sm">
-                    {briefing.imageBriefing.dimensions.width} ×{' '}
-                    {briefing.imageBriefing.dimensions.height}
-                  </p>
-                  <p className="text-[var(--foreground-muted)] text-xs mt-1">
-                    {(briefing.imageBriefing.fileSize / 1024).toFixed(1)} KB
-                  </p>
-                </div>
-              </div>
+            <div className="border border-[var(--border)] bg-[var(--background-secondary)] p-4 rounded-lg">
+              <BriefingCardGenerator
+                date={briefing.date}
+                stockName={briefing.shortName}
+                symbol={briefing.symbol}
+                changePercent={briefing.priceChange}
+                criteria={`복합점수 ${briefing.score}점`}
+                headline={briefing.textSummary.keyPoints[0] || '관련 뉴스 없음'}
+                sector={briefing.sector}
+                keywords={briefing.textSummary.keyPoints}
+                autoGenerate={true}
+              />
             </div>
           </div>
 
