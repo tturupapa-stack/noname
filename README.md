@@ -428,8 +428,23 @@ while-you-were-sleeping-dashboard/
 │   └── icon-*.png                # PWA 아이콘
 │
 ├── __tests__/                    # Frontend 테스트
+│
+├── docs/                         # 프로젝트 문서
+│   ├── API-명세서.md
+│   ├── 서비스-기획서.md
+│   ├── PWA-설정-가이드.md
+│   └── 발표-자료.md
+│
 ├── 개발일지/                      # 개발 로그
-└── docs/                         # 문서
+│   └── YYYY-MM-DD-기능명.md
+│
+├── 과제/                         # 과제 관련 자료
+│   ├── 1주차/
+│   └── 2주차/
+│
+└── output/                       # 생성된 출력물
+    ├── canvas/                   # 캔버스 이미지
+    └── images/                   # 기타 이미지
 ```
 
 ---
@@ -501,5 +516,6 @@ npm run generate-icons
 ## 📚 추가 자료
 
 - [개발일지](./개발일지/) - 상세한 개발 과정
-- [PWA 가이드](./README-PWA.md) - PWA 설정 상세
+- [PWA 가이드](./docs/PWA-설정-가이드.md) - PWA 설정 상세
+- [발표 자료](./docs/발표-자료.md) - 프로젝트 발표 자료
 - [API 문서 (Swagger)](http://localhost:8000/docs) - 백엔드 실행 후 접근

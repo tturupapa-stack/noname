@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;700&family=Work+Sans:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1200px;
+      height: 800px;
+      background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+      font-family: 'Work Sans', sans-serif;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Grid pattern */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .container {
+      padding: 40px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-tag {
+      color: #4cc9f0;
+      font-family: 'Geist Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .title {
+      font-size: 44px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #a0a0b0;
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+
+    .accent-line {
+      width: 440px;
+      height: 2px;
+      background: linear-gradient(90deg, #4cc9f0 0%, transparent 100%);
+      margin-bottom: 30px;
+    }
+
+    .cards {
+      display: flex;
+      gap: 40px;
+    }
+
+    .card {
+      width: 340px;
+      height: 500px;
+      background: linear-gradient(180deg, #16213e 0%, #0a0a15 100%);
+      border: 1px solid #0f3460;
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+    }
+
+    .badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 20px;
+    }
+
+    .badge.gold { background: #ffd700; }
+    .badge.silver { background: #c0c0c0; }
+    .badge.bronze { background: #cd7f32; }
+
+    .symbol {
+      font-family: 'Geist Mono', monospace;
+      font-size: 38px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .company-name {
+      color: #a0a0b0;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .highlight-tag {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      margin-bottom: 24px;
+    }
+
+    .highlight-tag.positive {
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+    }
+
+    .highlight-tag.negative {
+      background: rgba(255, 77, 109, 0.15);
+      color: #ff4d6d;
+    }
+
+    .label {
+      color: #707080;
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-family: 'Geist Mono', monospace;
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .change-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .change-badge.positive {
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+    }
+
+    .change-badge.negative {
+      background: rgba(255, 77, 109, 0.15);
+      color: #ff4d6d;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .volume-value {
+      font-family: 'Geist Mono', monospace;
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .volume-bar {
+      height: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .volume-bar-fill {
+      height: 100%;
+      border-radius: 5px;
+    }
+
+    .volume-bar-fill.positive {
+      background: linear-gradient(90deg, #4cc9f0 0%, #00ff88 100%);
+    }
+
+    .volume-bar-fill.negative {
+      background: linear-gradient(90deg, #4cc9f0 0%, #ff4d6d 100%);
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .status-dot.positive { background: #00ff88; }
+    .status-dot.negative { background: #ff4d6d; }
+
+    .status-text {
+      color: #a0a0b0;
+      font-size: 13px;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 30px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      color: #707080;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-tag">DAILY HOT STOCKS</div>
+    <div class="title">Hot Stocks Comparison</div>
+    <div class="subtitle">2025.12.25 | While You Were Sleeping</div>
+    <div class="accent-line"></div>
+
+    <div class="cards">
+      <!-- Card 1: HYMC -->
+      <div class="card">
+        <div class="badge gold">1ST</div>
+        <div class="symbol">HYMC</div>
+        <div class="company-name">Hycroft Mining</div>
+        <div class="highlight-tag negative">Volume 2.9x</div>
+        <div class="label">CURRENT PRICE</div>
+        <div class="price">$24.96</div>
+        <div class="change-badge negative">
+          <span>▼</span>
+          <span>-8.03%</span>
+        </div>
+        <div class="divider"></div>
+        <div class="label">VOLUME RATIO</div>
+        <div class="volume-value">2.90x</div>
+        <div class="volume-bar">
+          <div class="volume-bar-fill negative" style="width: 11.6%"></div>
+        </div>
+        <div class="status">
+          <div class="status-dot negative"></div>
+          <div class="status-text">Bearish Trend</div>
+        </div>
+      </div>
+
+      <!-- Card 2: DJT -->
+      <div class="card">
+        <div class="badge silver">2ND</div>
+        <div class="symbol">DJT</div>
+        <div class="company-name">Trump Media</div>
+        <div class="highlight-tag positive">Uptrend</div>
+        <div class="label">CURRENT PRICE</div>
+        <div class="price">$14.95</div>
+        <div class="change-badge positive">
+          <span>▲</span>
+          <span>+5.65%</span>
+        </div>
+        <div class="divider"></div>
+        <div class="label">VOLUME RATIO</div>
+        <div class="volume-value">0.42x</div>
+        <div class="volume-bar">
+          <div class="volume-bar-fill positive" style="width: 2%"></div>
+        </div>
+        <div class="status">
+          <div class="status-dot positive"></div>
+          <div class="status-text">Bullish Trend</div>
+        </div>
+      </div>
+
+      <!-- Card 3: FOLD -->
+      <div class="card">
+        <div class="badge bronze">3RD</div>
+        <div class="symbol">FOLD</div>
+        <div class="company-name">Amicus Therapeutics</div>
+        <div class="highlight-tag positive">Volume 22.8x</div>
+        <div class="label">CURRENT PRICE</div>
+        <div class="price">$14.18</div>
+        <div class="change-badge positive">
+          <span>▲</span>
+          <span>+30.21%</span>
+        </div>
+        <div class="divider"></div>
+        <div class="label">VOLUME RATIO</div>
+        <div class="volume-value">22.82x</div>
+        <div class="volume-bar">
+          <div class="volume-bar-fill positive" style="width: 91%"></div>
+        </div>
+        <div class="status">
+          <div class="status-dot positive"></div>
+          <div class="status-text">Bullish Trend</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>QUANTITATIVE ELEGANCE | CANVAS-DESIGN</span>
+    <span>While You Were Sleeping Dashboard</span>
+  </div>
+</body>
+</html>

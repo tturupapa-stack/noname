@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Musinsa-Inspired Design System */
+    :root {
+      --color-black: #0A0A0A;
+      --color-white: #FAFAFA;
+      --color-gray-900: #1A1A1A;
+      --color-gray-800: #2D2D2D;
+      --color-gray-600: #525252;
+      --color-gray-500: #6B6B6B;
+      --color-gray-400: #8A8A8A;
+      --color-gray-200: #D4D4D4;
+      --color-gray-100: #EBEBEB;
+      --accent-coral: #FF6B5B;
+      --color-success: #22C55E;
+      --color-error: #EF4444;
+    }
+
+    body {
+      width: 1200px;
+      height: 800px;
+      background: var(--color-black);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--color-white);
+      overflow: hidden;
+    }
+
+    .container {
+      padding: 48px 64px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header - Editorial Style */
+    .header {
+      margin-bottom: 48px;
+    }
+
+    .header-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+      margin-bottom: 12px;
+    }
+
+    .title {
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--color-gray-400);
+      font-weight: 400;
+    }
+
+    /* Cards Container */
+    .cards {
+      display: flex;
+      gap: 24px;
+      flex: 1;
+    }
+
+    /* Card - Sharp Edge, Bold Typography */
+    .card {
+      flex: 1;
+      background: var(--color-gray-900);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 1px solid var(--color-gray-800);
+    }
+
+    /* Rank Badge - Minimal */
+    .rank {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-gray-800);
+    }
+
+    .rank span {
+      color: var(--accent-coral);
+    }
+
+    /* Symbol - Display Size */
+    .symbol {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .company {
+      font-size: 13px;
+      color: var(--color-gray-400);
+      margin-bottom: 24px;
+    }
+
+    /* Status Tag */
+    .status-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      margin-bottom: 32px;
+    }
+
+    .status-tag.up {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--color-success);
+    }
+
+    .status-tag.down {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--color-error);
+    }
+
+    /* Price Section */
+    .price-section {
+      margin-bottom: 32px;
+    }
+
+    .label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    /* Change */
+    .change {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .change-value {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .change-value.positive { color: var(--color-success); }
+    .change-value.negative { color: var(--color-error); }
+
+    .change-arrow {
+      font-size: 14px;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--color-gray-800);
+      margin: 24px 0;
+    }
+
+    /* Volume Section */
+    .volume-section {
+      flex: 1;
+    }
+
+    .volume-value {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+
+    /* Volume Bar - Sharp */
+    .volume-bar {
+      height: 4px;
+      background: var(--color-gray-800);
+      margin-bottom: 24px;
+    }
+
+    .volume-bar-fill {
+      height: 100%;
+    }
+
+    .volume-bar-fill.positive {
+      background: var(--color-success);
+    }
+
+    .volume-bar-fill.negative {
+      background: var(--color-error);
+    }
+
+    /* Footer Status */
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+    }
+
+    .status-dot.positive { background: var(--color-success); }
+    .status-dot.negative { background: var(--color-error); }
+
+    .status-text {
+      font-size: 12px;
+      color: var(--color-gray-400);
+      font-weight: 500;
+    }
+
+    /* Footer */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 32px;
+      border-top: 1px solid var(--color-gray-800);
+      margin-top: 32px;
+    }
+
+    .footer-text {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-gray-600);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-tag">Daily Hot Stocks</div>
+      <h1 class="title">Hot Stocks</h1>
+      <p class="subtitle">2025.12.25 — While You Were Sleeping</p>
+    </header>
+
+    <div class="cards">
+      <!-- HYMC -->
+      <article class="card">
+        <div class="rank"><span>01</span> / 03</div>
+        <h2 class="symbol">HYMC</h2>
+        <p class="company">Hycroft Mining</p>
+        <div class="status-tag down">Volume 2.9×</div>
+
+        <div class="price-section">
+          <div class="label">Current Price</div>
+          <div class="price">$24.96</div>
+          <div class="change">
+            <span class="change-arrow">↓</span>
+            <span class="change-value negative">-8.03%</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="volume-section">
+          <div class="label">Volume Ratio</div>
+          <div class="volume-value">2.90×</div>
+          <div class="volume-bar">
+            <div class="volume-bar-fill negative" style="width: 11.6%"></div>
+          </div>
+        </div>
+
+        <div class="status-row">
+          <div class="status-dot negative"></div>
+          <span class="status-text">Bearish Trend</span>
+        </div>
+      </article>
+
+      <!-- DJT -->
+      <article class="card">
+        <div class="rank"><span>02</span> / 03</div>
+        <h2 class="symbol">DJT</h2>
+        <p class="company">Trump Media</p>
+        <div class="status-tag up">Uptrend</div>
+
+        <div class="price-section">
+          <div class="label">Current Price</div>
+          <div class="price">$14.95</div>
+          <div class="change">
+            <span class="change-arrow">↑</span>
+            <span class="change-value positive">+5.65%</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="volume-section">
+          <div class="label">Volume Ratio</div>
+          <div class="volume-value">0.42×</div>
+          <div class="volume-bar">
+            <div class="volume-bar-fill positive" style="width: 2%"></div>
+          </div>
+        </div>
+
+        <div class="status-row">
+          <div class="status-dot positive"></div>
+          <span class="status-text">Bullish Trend</span>
+        </div>
+      </article>
+
+      <!-- FOLD -->
+      <article class="card">
+        <div class="rank"><span>03</span> / 03</div>
+        <h2 class="symbol">FOLD</h2>
+        <p class="company">Amicus Therapeutics</p>
+        <div class="status-tag up">Volume 22.8×</div>
+
+        <div class="price-section">
+          <div class="label">Current Price</div>
+          <div class="price">$14.18</div>
+          <div class="change">
+            <span class="change-arrow">↑</span>
+            <span class="change-value positive">+30.21%</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="volume-section">
+          <div class="label">Volume Ratio</div>
+          <div class="volume-value">22.82×</div>
+          <div class="volume-bar">
+            <div class="volume-bar-fill positive" style="width: 91%"></div>
+          </div>
+        </div>
+
+        <div class="status-row">
+          <div class="status-dot positive"></div>
+          <span class="status-text">Bullish Trend</span>
+        </div>
+      </article>
+    </div>
+
+    <footer class="footer">
+      <span class="footer-text">Musinsa-Inspired Design</span>
+      <span class="footer-text">While You Were Sleeping Dashboard</span>
+    </footer>
+  </div>
+</body>
+</html>
