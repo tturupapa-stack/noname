@@ -11,6 +11,7 @@ from api.stock import router as stock_router
 from api.briefing import router as briefing_router
 from api.briefing_generate import router as briefing_generate_router
 from api.cache import router as cache_router
+from api.notifications import router as notifications_router
 from services.cache_service import cache_manager
 from services.rate_limit_service import rate_limit_service
 from middleware.rate_limit import RateLimitMiddleware
@@ -162,3 +163,4 @@ app.include_router(stock_router)
 app.include_router(briefing_router)
 app.include_router(briefing_generate_router)
 app.include_router(cache_router)
+app.include_router(notifications_router)

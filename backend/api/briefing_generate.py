@@ -14,9 +14,11 @@ from models.briefing import (
     AIBriefingResponse
 )
 from models.stock import StockDetail, ScoreBreakdown, WhyHotItem
+from models.notification import SlackReportSummary
 from services.briefing_generator import briefing_generator
 from services.screener_service import hot_stock_screener, ScreenerServiceError
 from services.news_service import get_news_service, NewsServiceError
+from services.slack_service import get_slack_service
 
 # MCP 서버 서비스 경로 추가 (경로 존재 여부 검증)
 mcp_services_path = Path(__file__).parent.parent.parent / "mcp-server" / "services"
@@ -32,6 +34,55 @@ else:
     )
 
 router = APIRouter(prefix="/api/briefing", tags=["briefing-generate"])
+
+
+async def _send_slack_notification_for_briefing(
+    symbol: str,
+    name: str,
+    change_percent: float,
+    report_date: str,
+    report_url: str = None
+) -> None:
+    """
+    브리핑 생성 완료 시 Slack 알림 전송 (비동기, 실패해도 예외 무시)
+
+    Args:
+        symbol: 종목 심볼
+        name: 종목명
+        change_percent: 변동률 (%)
+        report_date: 리포트 날짜
+        report_url: 대시보드 URL
+    """
+    try:
+        slack_service = get_slack_service()
+        if not slack_service.is_configured():
+            logger.debug("Slack notification skipped: webhook not configured")
+            return
+
+        summary = SlackReportSummary(
+            top_stock=symbol,
+            top_stock_name=name,
+            top_stock_change=change_percent,
+            highlights=[
+                f"AI 브리핑이 생성되었습니다: {symbol}",
+                f"변동률: {'+' if change_percent >= 0 else ''}{change_percent:.2f}%"
+            ]
+        )
+
+        success, retry_count, error = await slack_service.send_notification(
+            report_date=report_date,
+            summary=summary,
+            report_url=report_url
+        )
+
+        if success:
+            logger.info(f"Slack notification sent for AI briefing: {symbol}")
+        else:
+            logger.warning(f"Slack notification failed for AI briefing: {symbol}, error: {error}")
+
+    except Exception as e:
+        # Slack 알림 실패가 브리핑 생성에 영향을 주지 않도록 예외 무시
+        logger.warning(f"Slack notification error (ignored): {str(e)}")
 
 
 @router.post("/generate", response_model=GenerateBriefingResponse)
@@ -337,6 +388,15 @@ async def generate_ai_briefing(request: AIBriefingRequest):
                 success=False,
                 error=f"브리핑 생성 실패: {str(e)}"
             )
+
+        # Slack 알림 전송 비활성화 (필요 시 주석 해제)
+        # await _send_slack_notification_for_briefing(
+        #     symbol=symbol,
+        #     name=name,
+        #     change_percent=change_percent,
+        #     report_date=datetime.now().strftime("%Y-%m-%d"),
+        #     report_url=None  # 프론트엔드 URL을 환경변수로 설정 가능
+        # )
 
         return AIBriefingResponse(
             symbol=symbol,
