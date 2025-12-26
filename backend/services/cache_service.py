@@ -457,6 +457,11 @@ class CacheManager:
     - 기존 코드 호환 (동기 인터페이스)
     """
 
+    # 락 정리 설정
+    LOCK_CLEANUP_INTERVAL = 300  # 5분마다 정리
+    LOCK_MAX_AGE = 60  # 60초 이상 된 락 제거
+    MAX_LOCKS = 1000  # 최대 락 개수
+
     def __init__(
         self,
         l1_cache: Optional[MemoryCache] = None,
@@ -467,8 +472,10 @@ class CacheManager:
         self._l2 = l2_cache
         self._enable_stampede_prevention = enable_stampede_prevention
         self._locks: Dict[str, asyncio.Lock] = {}
+        self._lock_timestamps: Dict[str, float] = {}  # 락 생성 시간 추적
         self._start_time = time.time()
         self._last_cleared: Optional[datetime] = None
+        self._last_lock_cleanup: float = time.time()
         self._backend_mode = "memory"
 
     async def initialize(
@@ -609,6 +616,46 @@ class CacheManager:
         self._last_cleared = datetime.now()
         return total
 
+    def _cleanup_stale_locks(self) -> int:
+        """오래된 락 정리 (메모리 누수 방지)"""
+        current_time = time.time()
+
+        # 정리 주기 체크
+        if current_time - self._last_lock_cleanup < self.LOCK_CLEANUP_INTERVAL:
+            return 0
+
+        self._last_lock_cleanup = current_time
+        removed_count = 0
+
+        # 오래된 락 또는 최대 개수 초과 시 정리
+        keys_to_remove = []
+        for key, timestamp in list(self._lock_timestamps.items()):
+            # 오래된 락 제거
+            if current_time - timestamp > self.LOCK_MAX_AGE:
+                keys_to_remove.append(key)
+
+        # 최대 개수 초과 시 가장 오래된 것부터 제거
+        if len(self._locks) > self.MAX_LOCKS:
+            sorted_keys = sorted(
+                self._lock_timestamps.keys(),
+                key=lambda k: self._lock_timestamps.get(k, 0)
+            )
+            excess_count = len(self._locks) - self.MAX_LOCKS
+            keys_to_remove.extend(sorted_keys[:excess_count])
+
+        # 중복 제거 후 삭제
+        for key in set(keys_to_remove):
+            if key in self._locks and not self._locks[key].locked():
+                del self._locks[key]
+                if key in self._lock_timestamps:
+                    del self._lock_timestamps[key]
+                removed_count += 1
+
+        if removed_count > 0:
+            logger.debug(f"Cleaned up {removed_count} stale locks")
+
+        return removed_count
+
     async def get_or_set(
         self,
         key: str,
@@ -624,17 +671,25 @@ class CacheManager:
             return value
 
         if self._enable_stampede_prevention:
+            # 주기적으로 오래된 락 정리
+            self._cleanup_stale_locks()
+
             if key not in self._locks:
                 self._locks[key] = asyncio.Lock()
+                self._lock_timestamps[key] = time.time()
 
             async with self._locks[key]:
                 # Double-check
                 value = await self.aget(key)
                 if value is not None:
+                    # 락 사용 완료 후 타임스탬프 갱신
+                    self._lock_timestamps[key] = time.time()
                     return value
 
                 value = await factory()
                 await self.aset(key, value, ttl_seconds)
+                # 락 사용 완료 후 타임스탬프 갱신
+                self._lock_timestamps[key] = time.time()
                 return value
         else:
             value = await factory()

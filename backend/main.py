@@ -1,4 +1,6 @@
 import asyncio
+import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI
@@ -12,7 +14,17 @@ from api.cache import router as cache_router
 from services.cache_service import cache_manager
 from services.rate_limit_service import rate_limit_service
 from middleware.rate_limit import RateLimitMiddleware
-from config import cache_settings, rate_limit_settings
+from config import cache_settings, rate_limit_settings, app_settings
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Backend server URL from environment or default
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 # .env 파일 로드 (프로젝트 루트와 backend 디렉토리 모두 확인)
 project_root = Path(__file__).parent.parent
@@ -33,14 +45,14 @@ async def preload_cache():
 
     try:
         async with httpx.AsyncClient() as client:
-            print("📦 캐시 프리로딩 시작...")
+            logger.info("Cache preloading started...")
 
             # 1. TOP 3 종목 미리 로드
             response = await client.get(
-                "http://localhost:8000/api/stocks/trending/top?type=most_actives&count=3",
+                f"{BACKEND_URL}/api/stocks/trending/top?type=most_actives&count=3",
                 timeout=120.0
             )
-            print("✅ TOP 3 캐시 로드 완료")
+            logger.info("TOP 3 cache loaded successfully")
 
             # 2. TOP 3 종목의 상세 정보 + 차트 미리 로드
             if response.status_code == 200:
@@ -51,29 +63,29 @@ async def preload_cache():
                     try:
                         # 종목 상세 프리로드
                         await client.get(
-                            f"http://localhost:8000/api/stocks/{symbol}",
+                            f"{BACKEND_URL}/api/stocks/{symbol}",
                             timeout=30.0
                         )
                         # 차트 데이터 프리로드
                         await client.get(
-                            f"http://localhost:8000/api/stocks/{symbol}/chart?period=5d",
+                            f"{BACKEND_URL}/api/stocks/{symbol}/chart?period=5d",
                             timeout=30.0
                         )
-                        print(f"✅ {symbol} 상세/차트 캐시 로드 완료")
+                        logger.info(f"{symbol} detail/chart cache loaded")
                     except Exception:
                         pass
 
-            print("🎉 캐시 프리로딩 완료!")
+            logger.info("Cache preloading completed!")
 
     except Exception as e:
-        print(f"⚠️ 캐시 프리로딩 실패 (서비스는 정상 작동): {e}")
+        logger.warning(f"Cache preloading failed (service still operational): {e}")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """앱 생명주기 관리"""
     # 시작 시: 캐시 매니저 초기화
-    print(f"🚀 캐시 매니저 초기화 (backend={cache_settings.cache_backend})...")
+    logger.info(f"Initializing cache manager (backend={cache_settings.cache_backend})...")
     await cache_manager.initialize(
         backend=cache_settings.cache_backend,
         redis_url=cache_settings.cache_redis_url,
@@ -83,13 +95,15 @@ async def lifespan(app: FastAPI):
 
     # Rate Limit 서비스 초기화
     if rate_limit_settings.rate_limit_enabled:
-        print(f"🛡️ Rate Limit 서비스 초기화...")
+        logger.info("Initializing Rate Limit service...")
         await rate_limit_service.initialize(
             use_redis=rate_limit_settings.rate_limit_use_redis,
             redis_url=cache_settings.cache_redis_url
         )
-        print(f"✅ Rate Limit 활성화 (backend={rate_limit_service.backend}, "
-              f"{rate_limit_settings.rate_limit_requests}req/{rate_limit_settings.rate_limit_window_seconds}s)")
+        logger.info(
+            f"Rate Limit enabled (backend={rate_limit_service.backend}, "
+            f"{rate_limit_settings.rate_limit_requests}req/{rate_limit_settings.rate_limit_window_seconds}s)"
+        )
 
     # 백그라운드에서 캐시 프리로딩
     asyncio.create_task(preload_cache())
@@ -98,11 +112,11 @@ async def lifespan(app: FastAPI):
 
     # 종료 시: Rate Limit 서비스 정리
     if rate_limit_settings.rate_limit_enabled:
-        print("🛑 Rate Limit 서비스 종료...")
+        logger.info("Shutting down Rate Limit service...")
         await rate_limit_service.shutdown()
 
     # 종료 시: 캐시 매니저 정리
-    print("🛑 캐시 매니저 종료...")
+    logger.info("Shutting down cache manager...")
     await cache_manager.shutdown()
 
 
@@ -113,15 +127,11 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS 설정
+# CORS 설정 (환경변수에서 origin 목록 로드)
+cors_origins = [origin.strip() for origin in app_settings.cors_origins.split(",") if origin.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:3001",
-    ],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

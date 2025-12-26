@@ -43,6 +43,10 @@ class HotStockScreener:
         # 2. 복합 점수 계산
         scored_candidates = self._calculate_scores(candidates)
 
+        # 빈 리스트 검사
+        if not scored_candidates:
+            raise ScreenerServiceError("점수 계산된 후보 종목이 없습니다")
+
         # 3. TOP 1 선정 (점수순, 동점시 거래량순)
         winner = sorted(
             scored_candidates,
@@ -311,10 +315,10 @@ class HotStockScreener:
                         momentum_scores[symbol] = 0
                         continue
 
-                    # 5일 수익률
-                    return_5d = (closes[-1] - closes[-5]) / closes[-5] * 100 if closes[-5] else 0
-                    # 10일 수익률
-                    return_10d = (closes[-1] - closes[-10]) / closes[-10] * 100 if closes[-10] else 0
+                    # 5일 수익률 (0으로 나누기 방지)
+                    return_5d = (closes[-1] - closes[-5]) / closes[-5] * 100 if closes[-5] and closes[-5] != 0 else 0
+                    # 10일 수익률 (0으로 나누기 방지)
+                    return_10d = (closes[-1] - closes[-10]) / closes[-10] * 100 if closes[-10] and closes[-10] != 0 else 0
 
                     if return_5d > 0 and return_10d > 0:
                         momentum_scores[symbol] = 10
@@ -368,10 +372,10 @@ class HotStockScreener:
                 self._momentum_cache[symbol] = 0
                 return 0
 
-            # 5일 수익률
-            return_5d = (closes[-1] - closes[-5]) / closes[-5] * 100 if closes[-5] else 0
-            # 10일 수익률
-            return_10d = (closes[-1] - closes[-10]) / closes[-10] * 100 if closes[-10] else 0
+            # 5일 수익률 (0으로 나누기 방지)
+            return_5d = (closes[-1] - closes[-5]) / closes[-5] * 100 if closes[-5] and closes[-5] != 0 else 0
+            # 10일 수익률 (0으로 나누기 방지)
+            return_10d = (closes[-1] - closes[-10]) / closes[-10] * 100 if closes[-10] and closes[-10] != 0 else 0
 
             if return_5d > 0 and return_10d > 0:
                 score = 10

@@ -1,8 +1,11 @@
 from datetime import datetime
+import logging
 import sys
 from pathlib import Path
 from fastapi import APIRouter, HTTPException
 from yahooquery import Ticker
+
+logger = logging.getLogger(__name__)
 
 from models.briefing import (
     GenerateBriefingRequest,
@@ -15,9 +18,18 @@ from services.briefing_generator import briefing_generator
 from services.screener_service import hot_stock_screener, ScreenerServiceError
 from services.news_service import get_news_service, NewsServiceError
 
-# MCP 서버 서비스 경로 추가
+# MCP 서버 서비스 경로 추가 (경로 존재 여부 검증)
 mcp_services_path = Path(__file__).parent.parent.parent / "mcp-server" / "services"
-sys.path.insert(0, str(mcp_services_path))
+MCP_SERVICES_AVAILABLE = False
+
+if mcp_services_path.exists() and mcp_services_path.is_dir():
+    sys.path.insert(0, str(mcp_services_path))
+    MCP_SERVICES_AVAILABLE = True
+else:
+    import logging
+    logging.getLogger(__name__).warning(
+        f"MCP 서비스 경로를 찾을 수 없습니다: {mcp_services_path}"
+    )
 
 router = APIRouter(prefix="/api/briefing", tags=["briefing-generate"])
 
@@ -123,8 +135,8 @@ def _calculate_simple_score(stock: StockDetail) -> ScoreBreakdown:
     momentum_score = 5  # 기본값
     market_cap_score = 0
 
-    # 거래량 점수
-    if stock.avg_volume and stock.volume:
+    # 거래량 점수 (0으로 나누기 방지)
+    if stock.avg_volume and stock.avg_volume > 0 and stock.volume:
         ratio = stock.volume / stock.avg_volume
         if ratio >= 3:
             volume_score = 10
@@ -169,7 +181,7 @@ def _generate_why_hot(stock: StockDetail, score: ScoreBreakdown) -> list[WhyHotI
     """WHY HOT 생성"""
     items = []
 
-    if score.volume_score >= 7 and stock.avg_volume:
+    if score.volume_score >= 7 and stock.avg_volume and stock.avg_volume > 0:
         ratio = stock.volume / stock.avg_volume
         items.append(WhyHotItem(icon="✅", message=f"거래량 급증 (평소 대비 {ratio:.2f}배)"))
 
@@ -210,10 +222,31 @@ async def generate_ai_briefing(request: AIBriefingRequest):
     - success: 성공 여부
     - error: 에러 메시지 (실패 시)
     """
+    # MCP 서비스 사용 가능 여부 먼저 확인
+    if not MCP_SERVICES_AVAILABLE:
+        return AIBriefingResponse(
+            symbol=request.symbol,
+            name=request.name,
+            markdown="",
+            generated_at=datetime.now(),
+            success=False,
+            error="MCP 서비스가 설치되지 않았습니다. mcp-server/services 경로를 확인하세요."
+        )
+
     try:
-        # MCP 서버의 서비스 임포트
-        from chart_service import chart_service
-        from llm_service import get_llm_service, LLMServiceError
+        # MCP 서버의 서비스 임포트 (ImportError 처리)
+        try:
+            from chart_service import chart_service
+            from llm_service import get_llm_service, LLMServiceError
+        except ImportError as ie:
+            return AIBriefingResponse(
+                symbol=request.symbol,
+                name=request.name,
+                markdown="",
+                generated_at=datetime.now(),
+                success=False,
+                error=f"MCP 서비스 모듈을 불러올 수 없습니다: {str(ie)}"
+            )
 
         symbol = request.symbol.upper().strip()
         name = request.name
@@ -240,7 +273,7 @@ async def generate_ai_briefing(request: AIBriefingRequest):
                 for item in news_result.news
             ]
         except Exception as e:
-            print(f"뉴스 수집 실패: {e}")
+            logger.warning(f"News collection failed: {e}")
 
         # 2. 차트 데이터 수집
         chart_data = chart_service.get_chart_data(symbol, period="5d")

@@ -70,6 +70,9 @@ class AppSettings(BaseSettings):
     # 서버 설정
     debug: bool = False
 
+    # CORS 설정 (콤마로 구분된 origin 목록)
+    cors_origins: str = "http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001"
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
