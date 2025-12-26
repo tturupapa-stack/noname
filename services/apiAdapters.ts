@@ -10,84 +10,52 @@ import {
   ApiPriceDataPoint,
 } from './api';
 
-// 종목명/키워드 기반으로 섹터 추론
+// ============================================================
+// 섹터 추론 로직
+// ============================================================
+
+/** 섹터별 키워드 매핑 (룩업 테이블) */
+const SECTOR_KEYWORDS: Record<string, string[]> = {
+  Healthcare: [
+    'therapeutics', 'pharma', 'biotech', 'medical', 'health',
+    'drug', 'fda', 'clinical', 'vaccine', 'oncology', 'bioscience', 'genomics'
+  ],
+  Technology: [
+    'technology', 'software', 'semiconductor', 'chip', 'nvidia', 'amd', 'intel',
+    'ai ', 'artificial intelligence', 'cloud', 'computing', 'data', 'cyber'
+  ],
+  Finance: [
+    'bank', 'financial', 'capital', 'investment', 'insurance', 'credit', 'mortgage'
+  ],
+  Energy: [
+    'energy', 'oil', 'gas', 'petroleum', 'solar', 'renewable', 'battery',
+    'electric vehicle', 'ev '
+  ],
+};
+
+/** 종목명/키워드 기반으로 섹터 추론 */
 function inferSectorFromName(name: string, whyHot: string[]): string {
   const text = [name, ...whyHot].join(' ').toLowerCase();
 
-  // Healthcare / Biotech
-  if (
-    text.includes('therapeutics') ||
-    text.includes('pharma') ||
-    text.includes('biotech') ||
-    text.includes('medical') ||
-    text.includes('health') ||
-    text.includes('drug') ||
-    text.includes('fda') ||
-    text.includes('clinical') ||
-    text.includes('vaccine') ||
-    text.includes('oncology') ||
-    text.includes('bioscience') ||
-    text.includes('genomics')
-  ) {
-    return 'Healthcare';
+  for (const [sector, keywords] of Object.entries(SECTOR_KEYWORDS)) {
+    if (keywords.some(keyword => text.includes(keyword))) {
+      return sector;
+    }
   }
 
-  // Technology
-  if (
-    text.includes('technology') ||
-    text.includes('software') ||
-    text.includes('semiconductor') ||
-    text.includes('chip') ||
-    text.includes('nvidia') ||
-    text.includes('amd') ||
-    text.includes('intel') ||
-    text.includes('ai ') ||
-    text.includes('artificial intelligence') ||
-    text.includes('cloud') ||
-    text.includes('computing') ||
-    text.includes('data') ||
-    text.includes('cyber')
-  ) {
-    return 'Technology';
-  }
-
-  // Finance
-  if (
-    text.includes('bank') ||
-    text.includes('financial') ||
-    text.includes('capital') ||
-    text.includes('investment') ||
-    text.includes('insurance') ||
-    text.includes('credit') ||
-    text.includes('mortgage')
-  ) {
-    return 'Finance';
-  }
-
-  // Energy
-  if (
-    text.includes('energy') ||
-    text.includes('oil') ||
-    text.includes('gas') ||
-    text.includes('petroleum') ||
-    text.includes('solar') ||
-    text.includes('renewable') ||
-    text.includes('battery') ||
-    text.includes('electric vehicle') ||
-    text.includes('ev ')
-  ) {
-    return 'Energy';
-  }
-
-  return '';  // 기본값 - 동적 패턴 없음
+  return '';
 }
 
-// API 종목을 프론트엔드 Stock 타입으로 변환
-export function adaptStock(
+// ============================================================
+// Stock 변환
+// ============================================================
+
+/** API 종목 데이터를 Stock 타입으로 변환하는 기본 함수 */
+function createStock(
   apiStock: ApiTrendingResponse['stock'],
-  score: ApiScoreBreakdown,
-  rank: number = 1
+  options: { score?: number; rank?: number } = {}
 ): Stock {
+  const { score = 0, rank = 0 } = options;
   return {
     symbol: apiStock.symbol,
     shortName: apiStock.name,
@@ -96,17 +64,31 @@ export function adaptStock(
     changePercent: apiStock.change_percent,
     volume: apiStock.volume,
     marketCap: apiStock.market_cap || 0,
-    sector: 'N/A', // API에서 제공하지 않음
-    industry: 'N/A', // API에서 제공하지 않음
-    compositeScore: score.total,
-    rank: rank,
+    sector: 'N/A',
+    industry: 'N/A',
+    compositeScore: score,
+    rank,
     selectedAt: new Date().toISOString(),
   };
 }
 
-// API 랭킹 종목을 프론트엔드 Stock 타입으로 변환
+/** API 종목을 프론트엔드 Stock 타입으로 변환 (점수 포함) */
+export function adaptStock(
+  apiStock: ApiTrendingResponse['stock'],
+  score: ApiScoreBreakdown,
+  rank: number = 1
+): Stock {
+  return createStock(apiStock, { score: score.total, rank });
+}
+
+/** API 랭킹 종목을 프론트엔드 Stock 타입으로 변환 */
 export function adaptRankedStock(rankedStock: ApiRankedStock): Stock {
   return adaptStock(rankedStock.stock, rankedStock.score, rankedStock.rank);
+}
+
+/** API 종목 상세를 프론트엔드 Stock 타입으로 변환 (점수 없이) */
+export function adaptStockDetail(apiStock: ApiTrendingResponse['stock']): Stock {
+  return createStock(apiStock);
 }
 
 // API WHY HOT을 SelectionCriteria로 변환
@@ -182,22 +164,3 @@ export function adaptChartData(apiData: ApiPriceDataPoint[]): PriceData[] {
   }));
 }
 
-// API 종목 상세를 프론트엔드 Stock 타입으로 변환 (점수 없이)
-export function adaptStockDetail(
-  apiStock: ApiTrendingResponse['stock']
-): Stock {
-  return {
-    symbol: apiStock.symbol,
-    shortName: apiStock.name,
-    currentPrice: apiStock.price,
-    change: apiStock.change,
-    changePercent: apiStock.change_percent,
-    volume: apiStock.volume,
-    marketCap: apiStock.market_cap || 0,
-    sector: 'N/A',
-    industry: 'N/A',
-    compositeScore: 0,
-    rank: 0,
-    selectedAt: new Date().toISOString(),
-  };
-}
