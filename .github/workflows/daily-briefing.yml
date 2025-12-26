@@ -1,0 +1,150 @@
+# 매일 아침 7시(KST) 브리핑 생성 워크플로우
+# 화제 종목 조회 -> 브리핑 생성 -> Slack 알림 전송
+
+name: Daily Briefing
+
+on:
+  # 매일 한국시간 아침 7시 (UTC 22:00) 실행
+  schedule:
+    - cron: '0 22 * * *'
+
+  # 수동 실행 가능
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '드라이런 모드 (알림 전송 없이 테스트)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      step:
+        description: '실행할 단계'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - 'all'
+          - 'screener'
+          - 'briefing'
+          - 'notify'
+
+env:
+  PYTHON_VERSION: '3.12'
+
+jobs:
+  daily-briefing:
+    name: Generate Daily Briefing
+    runs-on: ubuntu-latest
+
+    # 스케줄 실행시 주말(토,일) 제외 (미국 주식시장 휴장)
+    # workflow_dispatch는 항상 실행
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'schedule' &&
+       github.event.schedule != '' &&
+       contains(fromJSON('["1","2","3","4","5"]'), format('{0}', github.run_number)))
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: 'backend/requirements.txt'
+
+      - name: Install dependencies
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Daily Briefing
+        working-directory: backend
+        env:
+          # GitHub Secrets에서 환경변수 주입
+          EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          # 캐시 설정 (GitHub Actions에서는 메모리 캐시 사용)
+          CACHE_BACKEND: memory
+        run: |
+          # 입력값 처리
+          DRY_RUN="${{ github.event.inputs.dry_run || 'false' }}"
+          STEP="${{ github.event.inputs.step || 'all' }}"
+
+          # 드라이런 플래그 설정
+          DRY_RUN_FLAG=""
+          if [ "$DRY_RUN" = "true" ]; then
+            DRY_RUN_FLAG="--dry-run"
+          fi
+
+          # 실행
+          echo "=========================================="
+          echo "Daily Briefing 실행"
+          echo "  - Step: $STEP"
+          echo "  - Dry Run: $DRY_RUN"
+          echo "  - 실행 시각: $(TZ='Asia/Seoul' date '+%Y-%m-%d %H:%M:%S KST')"
+          echo "=========================================="
+
+          python -m scripts.daily_briefing --step "$STEP" $DRY_RUN_FLAG -v
+
+      - name: Upload briefing data as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: briefing-data-${{ github.run_id }}
+          path: backend/data/briefings.json
+          retention-days: 30
+          if-no-files-found: ignore
+
+  # 실패 시 알림 (선택적)
+  notify-failure:
+    name: Notify on Failure
+    runs-on: ubuntu-latest
+    needs: daily-briefing
+    if: failure()
+
+    steps:
+      - name: Send failure notification to Slack
+        if: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Daily Briefing Failed",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Status:*\n:x: Failed"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Run ID:*\n${{ github.run_id }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow Run>"
+                  }
+                }
+              ]
+            }' \
+            "$SLACK_WEBHOOK_URL"
