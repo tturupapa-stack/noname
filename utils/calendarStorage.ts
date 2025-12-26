@@ -13,7 +13,11 @@ export function getCalendarSettings(): CalendarSettings {
   try {
     const stored = localStorage.getItem(CALENDAR_SETTINGS_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      // 타입 검증: 필수 필드 존재 여부 확인
+      if (parsed && typeof parsed === 'object' && 'viewMode' in parsed && 'weekStartDay' in parsed) {
+        return parsed as CalendarSettings;
+      }
     }
   } catch (error) {
     console.error('Failed to load calendar settings:', error);

@@ -92,8 +92,8 @@ export default function BriefingDetailPage({ params }: BriefingDetailPageProps) 
     alert('슬랙 발송 기능은 준비 중입니다.');
   };
 
-  const handleSendFromModal = (channels: string[]) => {
-    console.log('발송 채널:', channels);
+  const handleSendFromModal = (_channels: string[]) => {
+    // TODO: Implement actual send functionality when backend is ready
   };
 
   if (isLoading) {

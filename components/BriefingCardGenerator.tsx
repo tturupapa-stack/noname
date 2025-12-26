@@ -732,7 +732,7 @@ export default function BriefingCardGenerator({
         onImageSaved(result.url);
       }
 
-      console.log(`Briefing image saved: ${result.url} (${(result.size / 1024).toFixed(1)} KB)`);
+      // Image saved successfully - result.url contains the saved path
     } catch (error) {
       console.error('Error saving briefing image:', error);
       setSaveError(error instanceof Error ? error.message : 'Failed to save image');

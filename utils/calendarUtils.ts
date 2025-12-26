@@ -51,10 +51,31 @@ export function formatDateKey(date: Date): string {
 
 /**
  * YYYY-MM-DD 형식의 문자열을 Date 객체로 변환
+ * 로컬 타임존 기준으로 해당 날짜의 자정(00:00:00)을 반환
+ *
+ * 주의: new Date('YYYY-MM-DD')는 UTC로 파싱되어 타임존에 따라
+ * 날짜가 하루 전으로 표시될 수 있음. 명시적으로 로컬 날짜 생성.
  */
 export function parseDateKey(dateKey: string): Date {
-  const [year, month, day] = dateKey.split('-').map(Number);
-  return new Date(year, month - 1, day);
+  // 유효성 검사
+  if (!dateKey || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
+    console.warn(`Invalid date format: ${dateKey}, expected YYYY-MM-DD`);
+    return new Date(); // 잘못된 형식일 경우 현재 날짜 반환
+  }
+
+  const parts = dateKey.split('-');
+  const year = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10) - 1; // Date 생성자는 0-indexed month
+  const day = parseInt(parts[2], 10);
+
+  // 유효한 날짜인지 검증
+  const date = new Date(year, month, day);
+  if (isNaN(date.getTime())) {
+    console.warn(`Invalid date values: ${dateKey}`);
+    return new Date();
+  }
+
+  return date;
 }
 
 /**

@@ -30,10 +30,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setMounted(true);
     setSystemTheme(getSystemTheme());
-    
-    const storedTheme = localStorage.getItem('theme') as Theme | null;
-    if (storedTheme && ['light', 'dark', 'system'].includes(storedTheme)) {
-      setThemeState(storedTheme);
+
+    try {
+      const storedTheme = localStorage.getItem('theme') as Theme | null;
+      if (storedTheme && ['light', 'dark', 'system'].includes(storedTheme)) {
+        setThemeState(storedTheme);
+      }
+    } catch (error) {
+      // Safari 프라이빗 모드 등에서 localStorage 접근 실패 시 무시
+      console.warn('Failed to access localStorage for theme:', error);
     }
   }, []);
 
@@ -89,7 +94,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('theme', newTheme);
+      try {
+        localStorage.setItem('theme', newTheme);
+      } catch (error) {
+        // Safari 프라이빗 모드 등에서 localStorage 접근 실패 시 무시
+        console.warn('Failed to save theme to localStorage:', error);
+      }
     }
   };
 

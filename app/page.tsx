@@ -27,6 +27,7 @@ export default function Home() {
   const [trendingStocks, setTrendingStocks] = useState<Stock[]>([]);
   const [briefings, setBriefings] = useState<Briefing[]>([]);
   const [chartData, setChartData] = useState<PriceData[]>([]);
+  const [chartError, setChartError] = useState<string | null>(null);
   const [favoriteSymbols, setFavoriteSymbols] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,13 +65,17 @@ export default function Home() {
 
         // 3단계: 차트 데이터 비동기 로드 (UI 블로킹 없음)
         if (adaptedTopStock) {
+          setChartError(null); // 이전 에러 초기화
           fetchStockChart(adaptedTopStock.symbol, '5d')
             .then((chartRes) => {
               const adaptedChartData = adaptChartData(chartRes.data);
               setChartData(adaptedChartData);
+              setChartError(null);
             })
             .catch((chartErr) => {
               console.error('차트 데이터 로드 실패:', chartErr);
+              setChartError(chartErr instanceof Error ? chartErr.message : '차트 로드 실패');
+              setChartData([]); // 에러 시 빈 배열로 설정
             });
         }
       } catch (err) {
@@ -282,7 +287,14 @@ export default function Home() {
             </div>
           ) : topStock && selectionCriteria ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 grid-isolated">
-              <StockCard stock={topStock} isLarge={true} chartData={chartData} />
+              <div className="relative">
+                <StockCard stock={topStock} isLarge={true} chartData={chartData} />
+                {chartError && (
+                  <div className="absolute bottom-4 left-4 right-4 bg-[var(--danger)]/10 border border-[var(--danger)]/30 px-3 py-2 text-xs text-[var(--danger)]">
+                    <span className="font-medium">차트 로드 실패:</span> {chartError}
+                  </div>
+                )}
+              </div>
               <SelectionCriteriaCard criteria={selectionCriteria} stockSymbol={topStock.symbol} />
             </div>
           ) : (

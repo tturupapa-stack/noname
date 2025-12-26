@@ -3,10 +3,36 @@
 import { apiCache, cacheKeys, cacheTTL } from './apiCache';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const DEFAULT_TIMEOUT_MS = 30000; // 30초 기본 타임아웃
 
 // ============================================================
 // 유틸리티 함수
 // ============================================================
+
+/** 타임아웃이 적용된 fetch 래퍼 */
+async function fetchWithTimeout(
+  url: string,
+  options: RequestInit = {},
+  timeoutMs: number = DEFAULT_TIMEOUT_MS
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    return response;
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error(`요청 시간 초과 (${timeoutMs / 1000}초)`);
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
 
 /** 한국 주식 코드를 Yahoo Finance 형식으로 변환 (6자리 숫자 → .KS 추가) */
 function toYahooSymbol(ticker: string): string {
@@ -34,7 +60,7 @@ async function cachedGet<T>(
   return apiCache.fetchWithCache(
     cacheKey,
     async () => {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}${endpoint}`);
       return handleResponse<T>(response, errorContext);
     },
     ttl
@@ -227,14 +253,21 @@ export interface AIBriefingResponse {
 }
 
 // AI 브리핑 생성 API (캐시 없음 - 매번 새로 생성)
+// AI 생성은 시간이 더 걸릴 수 있으므로 60초 타임아웃 적용
+const AI_BRIEFING_TIMEOUT_MS = 60000;
+
 export async function generateAIBriefing(request: AIBriefingRequest): Promise<AIBriefingResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/briefing/ai-generate`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  const response = await fetchWithTimeout(
+    `${API_BASE_URL}/api/briefing/ai-generate`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
     },
-    body: JSON.stringify(request),
-  });
+    AI_BRIEFING_TIMEOUT_MS
+  );
 
   if (!response.ok) {
     throw new Error(`AI 브리핑 생성 실패: ${response.status}`);

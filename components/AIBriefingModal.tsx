@@ -57,12 +57,29 @@ interface AIBriefingModalProps {
   showRegenerateButton?: boolean;
 }
 
-// JSON 문자열을 파싱하는 유틸리티
+// JSON 문자열을 파싱하는 유틸리티 (필수 필드 검증 포함)
 export function parseAIBriefing(jsonString: string): AIBriefingData | null {
   try {
     const parsed = JSON.parse(jsonString);
+
+    // 필수 필드 존재 여부 검증
+    if (
+      !parsed ||
+      typeof parsed !== 'object' ||
+      !parsed.headline ||
+      !parsed.sentiment ||
+      !parsed.newsSummary ||
+      !parsed.technicalAnalysis ||
+      !parsed.investmentInsight ||
+      !parsed.meta
+    ) {
+      console.warn('AI Briefing: Missing required fields in parsed data');
+      return null;
+    }
+
     return parsed as AIBriefingData;
-  } catch {
+  } catch (error) {
+    console.error('AI Briefing: Failed to parse JSON', error);
     return null;
   }
 }

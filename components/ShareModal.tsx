@@ -35,7 +35,8 @@ export default function ShareModal({
     if (isOpen && !previewImage && !isGenerating) {
       generatePreview();
     }
-  }, [isOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]); // Intentionally only trigger on isOpen change, not on every previewImage/isGenerating update
 
   // ESC 키로 닫기
   useEffect(() => {
