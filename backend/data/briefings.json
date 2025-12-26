@@ -1,38 +1,38 @@
 [
   {
-    "id": "2025-12-24",
-    "date": "2025-12-24",
-    "created_at": "2025-12-24 23:14:42.957334",
+    "id": "2025-12-25",
+    "date": "2025-12-25",
+    "created_at": "2025-12-25 08:10:56.851947",
     "stock": {
       "symbol": "HYMC",
       "name": "Hycroft Mining Holding Corporat",
-      "price": 27.14,
-      "change": 2.62,
-      "change_percent": 10.6852,
-      "volume": 15666770,
+      "price": 24.96,
+      "change": -2.1800003,
+      "change_percent": -8.032426,
+      "volume": 6470663,
       "avg_volume": 2233249,
-      "volume_ratio": 7.02,
-      "market_cap": 2206036736.0,
+      "volume_ratio": 2.9,
+      "market_cap": 2028838528.0,
       "pe_ratio": null,
       "fifty_two_week_high": null,
       "fifty_two_week_low": null,
       "currency": "USD"
     },
     "score": {
-      "volume_score": 10,
+      "volume_score": 7,
       "price_change_score": 10,
       "momentum_score": 10,
       "market_cap_score": 10,
-      "total": 40
+      "total": 37
     },
     "why_hot": [
       {
         "icon": "✅",
-        "message": "거래량 급증 (평소 대비 7.02배)"
+        "message": "거래량 급증 (평소 대비 2.9배)"
       },
       {
         "icon": "✅",
-        "message": "당일 10.7% 상승"
+        "message": "당일 8.0% 하락"
       },
       {
         "icon": "✅",
@@ -45,34 +45,107 @@
     ],
     "news": [
       {
-        "title": "Hycroft Mining Holding Corp (HYMC) News, Articles, ...",
-        "url": "https://stocktwits.com/symbol/HYMC/news",
-        "published_date": "2025-12-23 14:14:42.646000+00:00",
-        "source": "stocktwits.com"
+        "title": "Hycroft Mining Holding Corporation (HYMC)",
+        "url": "https://finance.yahoo.com/quote/HYMC/",
+        "published_date": "2025-12-22 23:10:56.507000+00:00",
+        "source": "finance.yahoo.com"
       },
       {
-        "title": "Samsung, SK Hynix reportedly hike HBM3E prices nearly 20% ahead of 2026 shift",
-        "url": "https://www.digitimes.com/news/a20251224PD225/hbm3e-samsung-2026-sk-hynix-hbm4.html",
+        "title": "Hycroft Mining Holding Corp. Stock Quote (U.S. - HYMC",
+        "url": "https://www.marketwatch.com/investing/stock/hymc",
+        "published_date": "2025-12-23 23:10:56.507000+00:00",
+        "source": "marketwatch.com"
+      },
+      {
+        "title": "Why Ramaco Resources Trounced the Market Today",
+        "url": "https://www.fool.com/investing/2025/12/23/why-ramaco-resources-trounced-the-market-today/",
         "published_date": "2025-12-24 00:00:00+00:00",
-        "source": "digitimes.com"
+        "source": "fool.com"
       },
       {
-        "title": "ServiceNow agrees to buy cyber firm Armis for $7.75B",
-        "url": "https://cyberscoop.com/servicenow-armis-acquisition-ai-cybersecurity/",
-        "published_date": "2025-12-23 00:00:00+00:00",
-        "source": "cyberscoop.com"
+        "title": "BP agrees deal to sell £7.4bn stake in Castrol to US investment firm",
+        "url": "https://www.theguardian.com/business/2025/dec/24/bp-agrees-deal-to-sell-74bn-stake-in-castrol-to-us-investment-firm",
+        "published_date": "2025-12-24 00:00:00+00:00",
+        "source": "theguardian.com"
       },
       {
-        "title": "Insmed Reports Fourth-Quarter and Full-Year 2024 Financial Results and Provides Business Update - Feb 20, 2025",
-        "url": "https://investor.insmed.com/2025-02-20-Insmed-Reports-Fourth-Quarter-and-Full-Year-2024-Financial-Results-and-Provides-Business-Update?asPDF=1",
-        "published_date": "2025-12-23 00:00:00+00:00",
-        "source": "investor.insmed.com"
+        "title": "ServiceNow to acquire Armis for $7.75 billion",
+        "url": "https://www.helpnetsecurity.com/2025/12/24/servicenow-armis-acquisition/",
+        "published_date": "2025-12-24 00:00:00+00:00",
+        "source": "helpnetsecurity.com"
+      }
+    ]
+  },
+  {
+    "id": "2025-12-24",
+    "date": "2025-12-24",
+    "created_at": "2025-12-24 23:51:22.091391",
+    "stock": {
+      "symbol": "DJT",
+      "name": "Trump Media & Technology Group ",
+      "price": 14.95,
+      "change": 0.8000002,
+      "change_percent": 5.6537113,
+      "volume": 3651562,
+      "avg_volume": 8624660,
+      "volume_ratio": 0.42,
+      "market_cap": 4185964544.0,
+      "pe_ratio": null,
+      "fifty_two_week_high": null,
+      "fifty_two_week_low": null,
+      "currency": "USD"
+    },
+    "score": {
+      "volume_score": 0,
+      "price_change_score": 10,
+      "momentum_score": 10,
+      "market_cap_score": 10,
+      "total": 30
+    },
+    "why_hot": [
+      {
+        "icon": "✅",
+        "message": "당일 5.7% 상승"
       },
       {
-        "title": "FirstFT: Panama Canal ports deal hits impasse after China’s Cosco demands majority stake",
-        "url": "https://www.ft.com/content/711a5928-1633-4b33-b4dd-dc7a0d246e43",
+        "icon": "✅",
+        "message": "5일·10일 수익률 모두 양수 (상승 추세)"
+      },
+      {
+        "icon": "✅",
+        "message": "적정 시가총액 구간 ($2B~$100B)"
+      }
+    ],
+    "news": [
+      {
+        "title": "Trump Media & Technology Group Corp. (DJT)",
+        "url": "https://finance.yahoo.com/quote/DJT/",
+        "published_date": "2025-12-23 15:51:21.609000+00:00",
+        "source": "finance.yahoo.com"
+      },
+      {
+        "title": "Trump Media & Technology Group: DJT Stock Price Quote ...",
+        "url": "https://robinhood.com/us/en/stocks/DJT/",
+        "published_date": "2025-12-24 06:51:21.609000+00:00",
+        "source": "robinhood.com"
+      },
+      {
+        "title": "Trump Media Is Getting into Nuclear Power. Does That ...",
+        "url": "https://www.barchart.com/story/news/36761393/trump-media-is-getting-into-nuclear-power-does-that-make-djt-stock-a-buy-for-the-long-term",
+        "published_date": "2025-12-23 14:51:21.609000+00:00",
+        "source": "barchart.com"
+      },
+      {
+        "title": "DJT Stock Quote Today & Investment Insights - Public.com",
+        "url": "https://public.com/stocks/djt",
+        "published_date": "2025-12-24 03:51:21.609000+00:00",
+        "source": "public.com"
+      },
+      {
+        "title": "In major loss for Trump, Supreme Court blocks National Guard deployment to Chicago",
+        "url": "https://www.cnn.com/2025/12/23/politics/supreme-court-blocks-trump-national-guard-chicago",
         "published_date": "2025-12-23 00:00:00+00:00",
-        "source": "ft.com"
+        "source": "cnn.com"
       }
     ]
   },
