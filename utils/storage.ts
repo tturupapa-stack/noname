@@ -2,6 +2,8 @@
  * 안전한 로컬스토리지 접근 유틸리티
  */
 
+import { logger } from './logger';
+
 export interface StorageResult<T> {
   success: boolean;
   data?: T;
@@ -23,9 +25,9 @@ export function safeGetStorage<T>(key: string, defaultValue: T): StorageResult<T
     }
     const parsed = JSON.parse(stored) as T;
     return { success: true, data: parsed };
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`Failed to get storage for key "${key}":`, message);
+    logger.error(`Failed to get storage for key "${key}":`, message);
     return { success: false, error: message, data: defaultValue };
   }
 }
@@ -41,23 +43,23 @@ export function safeSetStorage<T>(key: string, value: T): StorageResult<void> {
   try {
     localStorage.setItem(key, JSON.stringify(value));
     return { success: true };
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    
+
     // QuotaExceededError 처리
     if (error instanceof DOMException && error.name === 'QuotaExceededError') {
-      console.warn(`Storage quota exceeded for key "${key}". Trying sessionStorage...`);
+      logger.warn(`Storage quota exceeded for key "${key}". Trying sessionStorage...`);
       try {
         sessionStorage.setItem(key, JSON.stringify(value));
         return { success: true };
-      } catch (sessionError) {
+      } catch (sessionError: unknown) {
         const sessionMessage = sessionError instanceof Error ? sessionError.message : 'Unknown error';
-        console.error(`Failed to save to sessionStorage:`, sessionMessage);
+        logger.error(`Failed to save to sessionStorage:`, sessionMessage);
         return { success: false, error: `Storage quota exceeded: ${sessionMessage}` };
       }
     }
-    
-    console.error(`Failed to set storage for key "${key}":`, message);
+
+    logger.error(`Failed to set storage for key "${key}":`, message);
     return { success: false, error: message };
   }
 }
@@ -73,9 +75,9 @@ export function safeRemoveStorage(key: string): StorageResult<void> {
   try {
     localStorage.removeItem(key);
     return { success: true };
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`Failed to remove storage for key "${key}":`, message);
+    logger.error(`Failed to remove storage for key "${key}":`, message);
     return { success: false, error: message };
   }
 }

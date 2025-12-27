@@ -1,3 +1,8 @@
+---
+name: musinsa-inspired-design
+description: 무신사 스타일에서 영감을 받은 모던 디자인 시스템. Bold Minimalism, Editorial Layout, 강렬한 대비의 타이포그래피, 모노톤 베이스 컬러 적용. UI 컴포넌트, 카드, 버튼, 네비게이션 디자인에 사용.
+---
+
 # Musinsa-Inspired Design System
 
 무신사 스타일에서 영감을 받은 모던 디자인 시스템입니다.
@@ -234,7 +239,7 @@
     <h2 className="text-h2 font-bold">인기 급상승</h2>
   </div>
   <button className="text-body-sm font-medium hover:underline">
-    전체보기 →
+    전체보기
   </button>
 </div>
 ```
@@ -291,7 +296,7 @@
   hover:underline underline-offset-4
   transition-all duration-150
 ">
-  Button →
+  Button
 </button>
 ```
 

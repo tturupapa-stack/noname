@@ -1,6 +1,7 @@
 // 저장된 AI 브리핑 관리 서비스 (localStorage 기반)
 
 import { AIBriefingData } from '@/components/AIBriefingModal';
+import { logger } from '@/utils/logger';
 
 const STORAGE_KEY = 'wyws_saved_briefings';
 const MAX_BRIEFINGS = 50;
@@ -32,8 +33,8 @@ function writeToStorage(briefings: SavedBriefing[]): boolean {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(briefings));
     return true;
-  } catch {
-    console.error('Failed to save briefings to localStorage');
+  } catch (error: unknown) {
+    logger.error('Failed to save briefings to localStorage:', error);
     return false;
   }
 }

@@ -66,7 +66,7 @@ export function useToast() {
     message: string,
     type: 'success' | 'error' | 'info' = 'success'
   ) => {
-    const id = Math.random().toString(36).substr(2, 9);
+    const id = Math.random().toString(36).slice(2, 11);
     setToasts((prev) => [...prev, { id, message, type }]);
   };
 

@@ -19,6 +19,7 @@ import { getFavorites } from '@/utils/favoriteStorage';
 import { mockAllStocks } from '@/data/mockData';
 import { fetchTrendingStock, fetchTopNStocks, fetchBriefings, fetchStockChart } from '@/services/api';
 import { adaptStock, adaptRankedStock, adaptSelectionCriteria, adaptBriefings, adaptChartData } from '@/services/apiAdapters';
+import { logger } from '@/utils/logger';
 
 export default function Home() {
   // API 데이터 상태
@@ -73,13 +74,13 @@ export default function Home() {
               setChartError(null);
             })
             .catch((chartErr) => {
-              console.error('차트 데이터 로드 실패:', chartErr);
+              logger.error('차트 데이터 로드 실패:', chartErr);
               setChartError(chartErr instanceof Error ? chartErr.message : '차트 로드 실패');
               setChartData([]); // 에러 시 빈 배열로 설정
             });
         }
       } catch (err) {
-        console.error('API 호출 실패:', err);
+        logger.error('API 호출 실패:', err);
         setError(err instanceof Error ? err.message : 'API 호출 실패');
         setIsLoading(false);
       }

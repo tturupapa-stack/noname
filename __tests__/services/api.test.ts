@@ -11,6 +11,7 @@ import {
   fetchBriefingByDate,
   fetchStockDetail,
   fetchStockChart,
+  invalidateCache,
 } from '../../services/api';
 
 // Sample test data
@@ -109,6 +110,7 @@ function mockFetchResponse(data: unknown, status = 200) {
 describe('API Service', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    invalidateCache(); // 캐시 클리어
   });
 
   describe('fetchTrendingStock', () => {
@@ -129,7 +131,8 @@ describe('API Service', () => {
       await fetchTrendingStock('day_gainers');
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/stocks/trending?type=day_gainers')
+        expect.stringContaining('/api/stocks/trending?type=day_gainers'),
+        expect.anything()
       );
     });
 
@@ -156,7 +159,8 @@ describe('API Service', () => {
       await fetchTopNStocks('most_actives', 3);
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('count=3')
+        expect.stringContaining('count=3'),
+        expect.anything()
       );
     });
 
@@ -189,10 +193,12 @@ describe('API Service', () => {
       await fetchBriefings(2, 5);
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('page=2')
+        expect.stringContaining('page=2'),
+        expect.anything()
       );
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('limit=5')
+        expect.stringContaining('limit=5'),
+        expect.anything()
       );
     });
   });
@@ -236,7 +242,8 @@ describe('API Service', () => {
       await fetchStockDetail('AAPL');
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/stocks/AAPL')
+        expect.stringContaining('/api/stocks/AAPL'),
+        expect.anything()
       );
     });
 
@@ -269,7 +276,8 @@ describe('API Service', () => {
 
       expect(result.period).toBe('1mo');
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('period=1mo')
+        expect.stringContaining('period=1mo'),
+        expect.anything()
       );
     });
 
@@ -295,6 +303,7 @@ describe('API Service', () => {
 describe('API Error Handling', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    invalidateCache(); // 캐시 클리어
   });
 
   describe('HTTP Errors', () => {
@@ -338,6 +347,7 @@ describe('API Error Handling', () => {
 describe('API Response Validation', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    invalidateCache(); // 캐시 클리어
   });
 
   describe('Stock Response Structure', () => {

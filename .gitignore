@@ -52,3 +52,6 @@ public/fallback-*.js.map
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Agent results (supervisor-report skill)
+.agent-results/

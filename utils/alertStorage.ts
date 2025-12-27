@@ -1,5 +1,6 @@
 import { AlertSettings, AlertHistory } from '@/types';
 import { safeGetStorage, safeSetStorage } from './storage';
+import { logger } from './logger';
 
 const ALERT_STORAGE_KEY = 'stock_alerts';
 const ALERT_HISTORY_KEY = 'alert_history';
@@ -27,9 +28,9 @@ export function saveAlert(alert: AlertSettings): StorageOperationResult {
     }
     const result = safeSetStorage(ALERT_STORAGE_KEY, alerts);
     return { success: result.success, error: result.error };
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Failed to save alert:', message);
+    logger.error('Failed to save alert:', message);
     return { success: false, error: message };
   }
 }
@@ -39,9 +40,9 @@ export function deleteAlert(alertId: string): StorageOperationResult {
     const alerts = getAlerts().filter((a) => a.id !== alertId);
     const result = safeSetStorage(ALERT_STORAGE_KEY, alerts);
     return { success: result.success, error: result.error };
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Failed to delete alert:', message);
+    logger.error('Failed to delete alert:', message);
     return { success: false, error: message };
   }
 }
@@ -56,9 +57,9 @@ export function toggleAlert(alertId: string): StorageOperationResult {
       return { success: result.success, error: result.error };
     }
     return { success: false, error: 'Alert not found' };
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Failed to toggle alert:', message);
+    logger.error('Failed to toggle alert:', message);
     return { success: false, error: message };
   }
 }
@@ -78,9 +79,9 @@ export function addAlertHistory(history: AlertHistory): StorageOperationResult {
     const limited = existing.slice(-10);
     const result = safeSetStorage(ALERT_HISTORY_KEY, limited);
     return { success: result.success, error: result.error };
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Failed to save alert history:', message);
+    logger.error('Failed to save alert history:', message);
     return { success: false, error: message };
   }
 }
@@ -101,9 +102,9 @@ export function toggleFavoriteStock(symbol: string): StorageOperationResult {
     }
     const result = safeSetStorage(FAVORITE_STOCKS_KEY, favorites);
     return { success: result.success, error: result.error };
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Failed to toggle favorite stock:', message);
+    logger.error('Failed to toggle favorite stock:', message);
     return { success: false, error: message };
   }
 }
@@ -125,9 +126,9 @@ export function addRecentSearch(symbol: string): StorageOperationResult {
     const limited = recent.slice(0, 5);
     const result = safeSetStorage(RECENT_SEARCHES_KEY, limited);
     return { success: result.success, error: result.error };
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Failed to save recent search:', message);
+    logger.error('Failed to save recent search:', message);
     return { success: false, error: message };
   }
 }

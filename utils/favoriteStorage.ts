@@ -1,5 +1,6 @@
 import { FavoriteStock, FavoriteData, FavoriteSortBy, FavoriteSettings } from '@/types';
 import { safeGetStorage, safeSetStorage } from './storage';
+import { logger } from './logger';
 
 const FAVORITE_STORAGE_KEY = 'favorite_stocks_data';
 const DEFAULT_MAX_ITEMS = 50;
@@ -38,18 +39,19 @@ export function saveFavoriteData(data: FavoriteData): boolean {
     // 용량 초과 시 경고
     const err = error instanceof Error ? error : new Error('Unknown error');
     if (err.name === 'QuotaExceededError') {
-      console.warn('LocalStorage quota exceeded. Trying sessionStorage...');
+      logger.warn('LocalStorage quota exceeded. Trying sessionStorage...');
       try {
         sessionStorage.setItem(FAVORITE_STORAGE_KEY, JSON.stringify(data));
         alert('로컬스토리지 용량이 부족합니다. 세션스토리지에 저장되었습니다.');
         return true;
-      } catch (e) {
-        console.error('Failed to save to sessionStorage:', e);
+      } catch (sessionError: unknown) {
+        const sessionMessage = sessionError instanceof Error ? sessionError.message : 'Unknown error';
+        logger.error('Failed to save to sessionStorage:', sessionMessage);
         alert('저장에 실패했습니다. 데이터를 정리해주세요.');
         return false;
       }
     }
-    console.error('Failed to save favorite data:', error);
+    logger.error('Failed to save favorite data:', error);
     return false;
   }
 }
@@ -213,8 +215,8 @@ export function importFavorites(json: string): boolean {
       data.settings = DEFAULT_SETTINGS;
     }
     return saveFavoriteData(data);
-  } catch (error) {
-    console.error('Failed to import favorites:', error);
+  } catch (error: unknown) {
+    logger.error('Failed to import favorites:', error);
     return false;
   }
 }
@@ -225,12 +227,12 @@ export function importFavorites(json: string): boolean {
 export async function copySymbolsToClipboard(): Promise<boolean> {
   const favorites = getFavorites();
   const symbols = favorites.map((f) => f.id).join(', ');
-  
+
   try {
     await navigator.clipboard.writeText(symbols);
     return true;
-  } catch (error) {
-    console.error('Failed to copy to clipboard:', error);
+  } catch (error: unknown) {
+    logger.error('Failed to copy to clipboard:', error);
     return false;
   }
 }

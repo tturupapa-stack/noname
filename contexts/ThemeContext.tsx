@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, useMemo } from 'react';
+import { logger } from '@/utils/logger';
 
 type Theme = 'light' | 'dark' | 'system';
 type ResolvedTheme = 'light' | 'dark';
@@ -36,9 +37,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if (storedTheme && ['light', 'dark', 'system'].includes(storedTheme)) {
         setThemeState(storedTheme);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       // Safari 프라이빗 모드 등에서 localStorage 접근 실패 시 무시
-      console.warn('Failed to access localStorage for theme:', error);
+      if (error instanceof Error) {
+        logger.warn('Failed to access localStorage for theme:', error.message);
+      }
     }
   }, []);
 
@@ -96,9 +99,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem('theme', newTheme);
-      } catch (error) {
+      } catch (error: unknown) {
         // Safari 프라이빗 모드 등에서 localStorage 접근 실패 시 무시
-        console.warn('Failed to save theme to localStorage:', error);
+        if (error instanceof Error) {
+          logger.warn('Failed to save theme to localStorage:', error.message);
+        }
       }
     }
   };
