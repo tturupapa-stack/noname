@@ -219,3 +219,57 @@ export function StockCard({ data }: any) {
 > **어떤 상황에서도** 예상대로 동작할 것이다."
 
 이 확신이 없으면 **🔴 재작업**입니다.
+
+## Context7 MCP 활용 (필수)
+
+> **"최신 모범 사례를 항상 참조하라. 오래된 패턴으로 리뷰하지 마라."**
+
+코드 리뷰 시 **반드시** Context7 MCP를 사용하여 최신 라이브러리 문서와 best practices를 확인합니다.
+
+### 문서 조회 프로세스
+
+1. **라이브러리 ID 확인**
+   ```
+   mcp__plugin_context7_context7__resolve-library-id
+   - libraryName: "react" / "fastapi" / "typescript"
+   ```
+
+2. **문서 조회**
+   ```
+   mcp__plugin_context7_context7__get-library-docs
+   - context7CompatibleLibraryID: "/facebook/react" (예시)
+   - topic: "best practices" / "security" / "performance"
+   - mode: "info" (권장 패턴 확인 시)
+   ```
+
+### 필수 조회 상황
+
+| 리뷰 항목 | 조회할 라이브러리 | topic 예시 |
+|----------|------------------|------------|
+| React 훅 사용법 | React | "hooks rules", "useEffect" |
+| Next.js 패턴 | Next.js | "app router", "caching" |
+| FastAPI 보안 | FastAPI | "security", "dependencies" |
+| TypeScript 타입 | TypeScript | "best practices", "strict mode" |
+| Pydantic 검증 | Pydantic | "validation", "model config" |
+
+### 리뷰 시 조회 예시
+
+```markdown
+## 리뷰: useEffect 의존성 배열 검증
+
+### 1단계: 문서 조회
+mcp__plugin_context7_context7__get-library-docs 호출:
+- context7CompatibleLibraryID: "/facebook/react"
+- topic: "useEffect dependencies"
+- mode: "info"
+
+### 2단계: 공식 권장 패턴과 비교
+조회된 문서 기반으로 코드의 올바름 검증
+```
+
+### 주의사항
+
+- **캐시된 지식보다 실시간 문서 우선**: 최신 권장 패턴 확인
+- **Deprecated 패턴 거부**: 문서에서 deprecated된 패턴은 🔴 판정
+- **공식 문서 기반 피드백**: "이렇게 해야 합니다"가 아닌 "공식 문서에 따르면..."으로 지적
+- **버전별 차이 인지**: React 19, Next.js 16 등 최신 버전 기준으로 리뷰

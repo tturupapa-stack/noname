@@ -115,6 +115,61 @@ npm run build
 - 원인 분석 결과
 - 수정 담당 에이전트 제안
 
+## Context7 MCP 활용 (필수)
+
+> **"테스트 프레임워크의 최신 API를 항상 확인하라."**
+
+테스트 작성 및 디버깅 시 **반드시** Context7 MCP를 사용하여 최신 문서를 확인합니다.
+
+### 문서 조회 프로세스
+
+1. **라이브러리 ID 확인**
+   ```
+   mcp__plugin_context7_context7__resolve-library-id
+   - libraryName: "jest" / "react testing library" / "pytest"
+   ```
+
+2. **문서 조회**
+   ```
+   mcp__plugin_context7_context7__get-library-docs
+   - context7CompatibleLibraryID: "/jestjs/jest" (예시)
+   - topic: "mocking" / "async" / "matchers"
+   - mode: "code"
+   ```
+
+### 필수 조회 상황
+
+| 상황 | 조회할 라이브러리 | topic 예시 |
+|------|------------------|------------|
+| Jest 설정 | Jest | "configuration", "setup" |
+| Mock 생성 | Jest | "mock functions", "jest.mock" |
+| React 컴포넌트 테스트 | React Testing Library | "queries", "user events" |
+| 비동기 테스트 | Jest / RTL | "async", "waitFor" |
+| API 모킹 | MSW | "handlers", "server" |
+| Python 테스트 | pytest | "fixtures", "parametrize" |
+
+### 테스트 실패 디버깅 시 조회
+
+테스트가 실패하면 다음을 조회:
+1. 해당 matcher/assertion의 정확한 사용법
+2. 비동기 패턴 (waitFor, findBy 등)
+3. Mock 설정 검증 방법
+
+```markdown
+## 예시: findBy vs getBy 차이 확인
+
+mcp__plugin_context7_context7__get-library-docs 호출:
+- context7CompatibleLibraryID: "/testing-library/react-testing-library"
+- topic: "queries getBy findBy"
+- mode: "code"
+```
+
+### 주의사항
+
+- **캐시된 지식보다 실시간 문서 우선**: 기억에 의존하지 말고 항상 조회
+- **최신 테스트 패턴 사용**: enzyme 같은 deprecated 도구 사용 금지
+- **Testing Library 철학 준수**: 구현 세부사항이 아닌 사용자 관점 테스트
+
 ## 주의사항
 
 - 테스트 환경과 프로덕션 환경 차이 고려

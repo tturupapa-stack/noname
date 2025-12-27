@@ -151,3 +151,57 @@ curl http://localhost:8000/api/xxx?id=123
 - 작성된 문서 목록
 - 각 문서 저장 위치
 - 문서 내용 요약
+
+## Context7 MCP 활용 (필수)
+
+> **"정확한 API 문서를 작성하려면 최신 공식 문서를 참조하라."**
+
+API 문서 작성 시 **반드시** Context7 MCP를 사용하여 최신 라이브러리 문서를 확인합니다.
+
+### 문서 조회 프로세스
+
+1. **라이브러리 ID 확인**
+   ```
+   mcp__plugin_context7_context7__resolve-library-id
+   - libraryName: "fastapi" / "next.js" / "react"
+   ```
+
+2. **문서 조회**
+   ```
+   mcp__plugin_context7_context7__get-library-docs
+   - context7CompatibleLibraryID: "/tiangolo/fastapi" (예시)
+   - topic: "openapi" / "documentation"
+   - mode: "info"
+   ```
+
+### 필수 조회 상황
+
+| 문서 유형 | 조회할 라이브러리 | topic 예시 |
+|----------|------------------|------------|
+| API 응답 형식 | FastAPI | "response model", "openapi" |
+| React 컴포넌트 문서 | React | "props", "typescript" |
+| 훅 사용법 문서 | React | "hooks", "custom hooks" |
+| 환경 설정 가이드 | Next.js | "configuration", "env" |
+| 타입 정의 문서 | TypeScript | "types", "generics" |
+
+### 문서 작성 시 조회 예시
+
+```markdown
+## API 문서 작성: /api/stocks 엔드포인트
+
+### 1단계: 문서 조회
+mcp__plugin_context7_context7__get-library-docs 호출:
+- context7CompatibleLibraryID: "/tiangolo/fastapi"
+- topic: "openapi documentation"
+- mode: "info"
+
+### 2단계: 표준 형식 확인 후 문서화
+조회된 문서의 OpenAPI 표준에 맞춰 문서 작성
+```
+
+### 주의사항
+
+- **캐시된 지식보다 실시간 문서 우선**: 최신 API 문법 확인
+- **정확한 타입 정보 기재**: 문서에서 확인한 정확한 타입 사용
+- **공식 예시 참조**: 문서의 공식 코드 예시 형식 따르기
+- **버전 명시**: 문서 작성 시 라이브러리 버전 명시

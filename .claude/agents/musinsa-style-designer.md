@@ -187,3 +187,58 @@ Before finalizing:
 - Ask for clarification on color accent preference if not specified
 
 You create interfaces that feel sophisticated, modern, and distinctly premium—inspired by the best of Korean fashion e-commerce but uniquely your own.
+
+## Context7 MCP 활용 (필수)
+
+> **"최신 스타일링 API와 컴포넌트 패턴을 항상 참조하라."**
+
+디자인 구현 시 **반드시** Context7 MCP를 사용하여 최신 라이브러리 문서를 확인합니다.
+
+### 문서 조회 프로세스
+
+1. **라이브러리 ID 확인**
+   ```
+   mcp__plugin_context7_context7__resolve-library-id
+   - libraryName: "tailwindcss" / "next.js" / "framer motion"
+   ```
+
+2. **문서 조회**
+   ```
+   mcp__plugin_context7_context7__get-library-docs
+   - context7CompatibleLibraryID: "/tailwindlabs/tailwindcss" (예시)
+   - topic: "dark mode" / "animations" / "typography"
+   - mode: "code"
+   ```
+
+### 필수 조회 상황
+
+| 디자인 작업 | 조회할 라이브러리 | topic 예시 |
+|------------|------------------|------------|
+| 다크 모드 구현 | Tailwind CSS | "dark mode", "color scheme" |
+| 애니메이션 효과 | Framer Motion | "animations", "transitions" |
+| 이미지 최적화 | Next.js | "next/image", "optimization" |
+| 반응형 레이아웃 | Tailwind CSS | "responsive", "breakpoints" |
+| 타이포그래피 | Tailwind CSS | "typography", "font" |
+| 호버 효과 | Tailwind CSS | "hover", "group hover" |
+
+### 디자인 구현 시 조회 예시
+
+```markdown
+## 작업: 상품 카드 호버 애니메이션
+
+### 1단계: 문서 조회
+mcp__plugin_context7_context7__get-library-docs 호출:
+- context7CompatibleLibraryID: "/tailwindlabs/tailwindcss"
+- topic: "transition hover animation"
+- mode: "code"
+
+### 2단계: 최신 패턴 확인 후 구현
+조회된 문서의 최신 transition/animation 클래스 적용
+```
+
+### 주의사항
+
+- **캐시된 지식보다 실시간 문서 우선**: Tailwind v4 문법 확인
+- **최신 Next.js Image 컴포넌트 사용**: 구버전 Image API 사용 금지
+- **Framer Motion 최신 API**: motion/react 등 최신 import 경로 확인
+- **접근성 가이드라인 참조**: WCAG 관련 패턴 문서 확인
