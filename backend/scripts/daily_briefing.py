@@ -21,8 +21,12 @@ GitHub Actions 또는 로컬에서 standalone으로 실행 가능합니다.
 import argparse
 import asyncio
 import logging
+import os
+import smtplib
 import sys
 from datetime import datetime
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from pathlib import Path
 
 # backend 디렉토리를 sys.path에 추가
@@ -254,6 +258,149 @@ class DailyBriefingRunner:
             logger.exception(f"알림 전송 중 오류: {e}")
             return False
 
+    def run_email(self) -> bool:
+        """
+        Step 4: 이메일 전송
+
+        환경 변수:
+            GMAIL_ADDRESS: 발신자 Gmail 주소
+            GMAIL_APP_PASSWORD: Gmail 앱 비밀번호
+            EMAIL_RECIPIENTS: 수신자 이메일 (쉼표로 구분)
+
+        Returns:
+            bool: 성공 여부
+        """
+        logger.info("=" * 50)
+        logger.info("Step 4: 이메일 전송")
+        logger.info("=" * 50)
+
+        if not self._hot_stock_data:
+            logger.error("화제 종목 데이터가 없습니다. screener를 먼저 실행하세요.")
+            return False
+
+        # 환경 변수 확인
+        gmail_address = os.environ.get("GMAIL_ADDRESS")
+        gmail_password = os.environ.get("GMAIL_APP_PASSWORD")
+        recipients = os.environ.get("EMAIL_RECIPIENTS", "")
+
+        if not gmail_address or not gmail_password:
+            logger.warning("GMAIL_ADDRESS 또는 GMAIL_APP_PASSWORD가 설정되지 않아 이메일을 건너뜁니다.")
+            return True
+
+        if not recipients:
+            logger.warning("EMAIL_RECIPIENTS가 설정되지 않아 이메일을 건너뜁니다.")
+            return True
+
+        recipient_list = [r.strip() for r in recipients.split(",") if r.strip()]
+
+        try:
+            stock = self._hot_stock_data.stock
+            score = self._hot_stock_data.score
+            why_hot = self._hot_stock_data.why_hot
+
+            # 마크다운 콘텐츠 생성
+            markdown = briefing_generator.generate_markdown(
+                stock=stock,
+                score=score,
+                why_hot=why_hot,
+                news=self._news_items
+            )
+
+            # HTML 변환
+            html_content = self._markdown_to_html(markdown)
+
+            # 이메일 제목
+            report_date = datetime.now().strftime("%Y-%m-%d")
+            change_emoji = "📈" if stock.change_percent >= 0 else "📉"
+            subject = f"[당신이 잠든 사이] {report_date} {change_emoji} {stock.symbol} ({stock.change_percent:+.2f}%)"
+
+            if self.dry_run:
+                logger.info("[DRY RUN] 이메일 전송 스킵")
+                logger.info(f"  - 수신자: {', '.join(recipient_list)}")
+                logger.info(f"  - 제목: {subject}")
+                return True
+
+            # 이메일 전송
+            for recipient in recipient_list:
+                msg = MIMEMultipart("alternative")
+                msg["Subject"] = subject
+                msg["From"] = gmail_address
+                msg["To"] = recipient
+
+                msg.attach(MIMEText(markdown, "plain", "utf-8"))
+                msg.attach(MIMEText(html_content, "html", "utf-8"))
+
+                with smtplib.SMTP("smtp.gmail.com", 587) as server:
+                    server.starttls()
+                    server.login(gmail_address, gmail_password)
+                    server.sendmail(gmail_address, recipient, msg.as_string())
+
+                logger.info(f"이메일 전송 완료: {recipient}")
+
+            logger.info(f"총 {len(recipient_list)}명에게 이메일 전송 성공")
+            return True
+
+        except smtplib.SMTPAuthenticationError:
+            logger.error("Gmail 인증 실패: GMAIL_ADDRESS 또는 GMAIL_APP_PASSWORD를 확인하세요.")
+            return False
+        except Exception as e:
+            logger.exception(f"이메일 전송 중 오류: {e}")
+            return False
+
+    def _markdown_to_html(self, content: str) -> str:
+        """마크다운을 HTML로 변환"""
+        import re
+
+        html = content
+
+        # 코드 블록
+        html = re.sub(
+            r'```(\w*)\n(.*?)```',
+            r'<pre style="background-color: #f4f4f4; padding: 10px; border-radius: 5px;"><code>\2</code></pre>',
+            html,
+            flags=re.DOTALL
+        )
+
+        # 인라인 코드
+        html = re.sub(r'`([^`]+)`', r'<code style="background-color: #f4f4f4; padding: 2px 5px;">\1</code>', html)
+
+        # 헤더
+        html = re.sub(r'^### (.+)$', r'<h3>\1</h3>', html, flags=re.MULTILINE)
+        html = re.sub(r'^## (.+)$', r'<h2>\1</h2>', html, flags=re.MULTILINE)
+        html = re.sub(r'^# (.+)$', r'<h1>\1</h1>', html, flags=re.MULTILINE)
+
+        # 굵은 글씨
+        html = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', html)
+
+        # 리스트
+        html = re.sub(r'^- (.+)$', r'<li>\1</li>', html, flags=re.MULTILINE)
+
+        # 줄바꿈
+        html = html.replace('\n\n', '</p><p>')
+        html = html.replace('\n', '<br>')
+
+        # HTML 래핑
+        html = f'''
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <style>
+                body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; color: #333; }}
+                h1 {{ color: #1a1a2e; border-bottom: 2px solid #4A90D9; padding-bottom: 10px; }}
+                h2 {{ color: #16213e; margin-top: 25px; }}
+                h3 {{ color: #0f3460; }}
+                li {{ margin: 5px 0; }}
+                pre {{ overflow-x: auto; }}
+            </style>
+        </head>
+        <body>
+            <p>{html}</p>
+        </body>
+        </html>
+        '''
+
+        return html
+
     async def run_all(self) -> bool:
         """
         전체 단계 실행
@@ -280,10 +427,12 @@ class DailyBriefingRunner:
             logger.error("브리핑 생성 실패로 중단")
             return False
 
-        # Step 3: 알림 전송
+        # Step 3: Slack 알림 전송
         if not await self.run_notify():
-            logger.error("알림 전송 실패")
+            logger.error("Slack 알림 전송 실패")
             return False
+
+        # Note: 이메일 전송은 --step email로 별도 실행 (GitHub Actions 전용)
 
         logger.info("=" * 60)
         logger.info(" Daily Briefing 완료!")
@@ -301,14 +450,15 @@ def parse_args():
   python -m scripts.daily_briefing              # 전체 실행
   python -m scripts.daily_briefing --step screener  # 화제 종목만 조회
   python -m scripts.daily_briefing --step briefing  # 브리핑만 생성
-  python -m scripts.daily_briefing --step notify    # 알림만 전송
+  python -m scripts.daily_briefing --step notify    # Slack 알림만 전송
+  python -m scripts.daily_briefing --step email     # 이메일만 전송
   python -m scripts.daily_briefing --dry-run        # 드라이런 모드
         """
     )
 
     parser.add_argument(
         "--step",
-        choices=["screener", "briefing", "notify", "all"],
+        choices=["screener", "briefing", "notify", "email", "all"],
         default="all",
         help="실행할 단계 (기본값: all)"
     )
@@ -354,6 +504,12 @@ async def main():
             if not runner.run_screener():
                 sys.exit(1)
             success = await runner.run_notify()
+        elif args.step == "email":
+            # email은 screener가 먼저 필요
+            if not runner.run_screener():
+                sys.exit(1)
+            runner.run_news_collection()
+            success = runner.run_email()
         else:
             logger.error(f"알 수 없는 단계: {args.step}")
             sys.exit(1)

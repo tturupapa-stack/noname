@@ -119,11 +119,11 @@ python3 -m scripts.daily_briefing --step screener --dry-run
 
 2. **Artifact 보관**: 생성된 브리핑 데이터는 30일간 Artifact로 보관됩니다.
 
-3. **이메일 서비스**: 현재 이메일 서비스가 구현되어 있지 않아 Slack 알림만 지원합니다. 이메일 서비스가 필요하면 별도 구현이 필요합니다.
+3. **이메일 서비스**: 이메일 발송 기능이 추가되었습니다 (2025-12-27). GitHub Secrets에 `GMAIL_ADDRESS`, `GMAIL_APP_PASSWORD`, `EMAIL_RECIPIENTS` 설정이 필요합니다.
 
 ## 향후 개선 사항
 
 - [ ] 미국 공휴일 휴장일 체크 로직 추가
-- [ ] 이메일 알림 서비스 구현
+- [x] 이메일 알림 서비스 구현 (2025-12-27 완료)
 - [ ] 대시보드 URL 자동 생성 및 포함
 - [ ] 실패 시 자동 재시도 로직 강화

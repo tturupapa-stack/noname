@@ -29,6 +29,7 @@ on:
           - 'screener'
           - 'briefing'
           - 'notify'
+          - 'email'
 
 env:
   PYTHON_VERSION: '3.12'
@@ -69,6 +70,10 @@ jobs:
           # GitHub Secrets에서 환경변수 주입
           EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          # 이메일 발송 설정
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
           # 캐시 설정 (GitHub Actions에서는 메모리 캐시 사용)
           CACHE_BACKEND: memory
         run: |
@@ -91,6 +96,14 @@ jobs:
           echo "=========================================="
 
           python -m scripts.daily_briefing --step "$STEP" $DRY_RUN_FLAG -v
+
+          # all 실행 후 이메일 별도 전송
+          if [ "$STEP" = "all" ]; then
+            echo "=========================================="
+            echo "이메일 발송 실행"
+            echo "=========================================="
+            python -m scripts.daily_briefing --step email $DRY_RUN_FLAG -v
+          fi
 
       - name: Upload briefing data as artifact
         if: always()

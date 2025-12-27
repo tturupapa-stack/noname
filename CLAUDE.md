@@ -118,6 +118,12 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 # Backend (backend/.env)
 EXA_API_KEY=xxx          # For news collection
 ANTHROPIC_API_KEY=xxx    # For AI briefing generation (MCP server)
+SLACK_WEBHOOK_URL=xxx    # For Slack notifications
+
+# GitHub Actions Only (GitHub Secrets)
+GMAIL_ADDRESS=xxx        # Gmail sender address
+GMAIL_APP_PASSWORD=xxx   # Gmail app password
+EMAIL_RECIPIENTS=xxx     # Comma-separated recipient emails
 ```
 
 ## Testing
