@@ -335,3 +335,187 @@ Task tool 2:
 - 사용자에게는 **한국어**로 진행 상황 보고
 - **문제 발견 시 즉시 사용자에게 보고**
 - 모든 리포트는 **한국어**로 작성
+
+---
+
+## 브리핑 이미지 생성 (nanobanana MCP)
+
+### 개요
+
+브리핑 이미지는 **nanobanana MCP**의 `generate_image` 도구를 사용하여 생성합니다.
+AI 기반 이미지 생성으로 매번 독창적이고 세련된 브리핑 카드를 만들 수 있습니다.
+
+### nanobanana MCP 도구
+
+| 도구 | 용도 |
+|------|------|
+| `mcp__nanobanana__generate_image` | 텍스트 프롬프트 기반 이미지 생성 |
+| `mcp__nanobanana__edit_image` | 기존 이미지 편집/수정 |
+
+### 이미지 생성 워크플로우
+
+#### 1. 브리핑 카드 생성
+
+**직접 도구 호출** (에이전트 위임 없이 메인 Claude가 직접 실행):
+
+```
+mcp__nanobanana__generate_image:
+- prompt: "주식 브리핑 카드 디자인. 다크 모드, 밤하늘 배경에 달과 별, 도시 스카이라인 실루엣.
+  제목: '당신이 잠든 사이', 날짜: 2025-12-27,
+  종목: NVIDIA (NVDA), 등락률: +5.2% (녹색 강조),
+  선정 기준: 거래량 1위, 핵심 뉴스: 'AI 칩 수요 급증'.
+  모던하고 세련된 금융 인포그래픽 스타일. 한국어 텍스트 포함."
+- aspect_ratio: "9:16"  # 세로형 SNS 공유용
+- output_path: "/Users/larkkim/프로젝트 [리치]/while-you-were-sleeping-dashboard/public/images/briefings/briefing-2025-12-27-NVDA.png"
+```
+
+#### 2. 프롬프트 작성 가이드라인
+
+**필수 요소:**
+- **배경**: 다크 모드, 밤하늘, 달과 별, 도시 실루엣
+- **브랜드**: "당신이 잠든 사이" 제목
+- **데이터**: 날짜, 종목명, 심볼, 등락률, 선정 기준, 핵심 뉴스
+- **스타일**: 모던 금융 인포그래픽, 한국어 텍스트
+
+**등락률에 따른 색상:**
+| 등락률 | 강조 색상 |
+|--------|-----------|
+| 상승 (+) | 녹색, 연두색 |
+| 하락 (-) | 빨간색, 주홍색 |
+| 급등 (+10% 이상) | 밝은 금색, 황금색 |
+| 급락 (-10% 이상) | 진한 빨간색, 보라색 |
+
+**섹터별 테마:**
+| 섹터 | 추가 시각 요소 |
+|------|----------------|
+| Tech | 회로 패턴, 네온 블루 |
+| Healthcare | DNA 나선, 청록색 |
+| Finance | 차트 그래프, 금색 |
+| Energy | 파동 패턴, 주황색 |
+
+#### 3. 비율(Aspect Ratio) 가이드
+
+| 용도 | 비율 | 설명 |
+|------|------|------|
+| 인스타그램 스토리 | `9:16` | 세로형 전체화면 |
+| 인스타그램 피드 | `4:5` | 세로형 피드 최적화 |
+| 트위터/X | `16:9` | 가로형 카드 |
+| 정사각형 | `1:1` | 범용 |
+| OG 이미지 | `16:9` | 링크 미리보기 |
+
+#### 4. 이미지 생성 예제
+
+> **권장 스타일**: 미니멀 스타일 (프로젝트 테마와 일관성 유지)
+
+**미니멀 스타일 - 상승 종목 (권장):**
+```
+mcp__nanobanana__generate_image:
+- prompt: "Minimalist stock market briefing card. Clean and subtle design.
+
+  Background:
+  - Deep dark navy/slate gradient (#0f172a to #1e293b)
+  - Simple night sky with few small white dots as stars (not too many)
+  - One soft glowing moon in upper right corner (subtle, not too bright)
+  - Simple city silhouette at bottom (dark gray, minimal detail)
+  - Few small amber window lights on buildings
+
+  Content layout (clean typography, left-aligned):
+  - Title: '당신이 잠든 사이' in warm amber/gold (#f59e0b), simple without heavy glow
+  - Date: '2025.12.27' in muted gray (#94a3b8)
+  - Thin horizontal divider line in amber
+  - Small label: '오늘의 화제 종목' in gray
+  - Stock name: 'NVIDIA' in white, bold
+  - Symbol: 'NVDA' in amber
+  - Change badge: '+5.8%' in green (#22c55e) with subtle rounded background
+  - Criteria badge: '거래량 1위' in amber with subtle background
+  - Headline: 'AI 데이터센터 수요 폭발적 증가' in light gray (#e2e8f0)
+
+  Style: Minimal, elegant, professional. NO neon effects, NO circuit patterns, NO heavy glows.
+  Clean flat design with subtle depth. Korean text should be clear and readable.
+  Apple-style minimalism meets financial dashboard."
+- aspect_ratio: "9:16"
+- output_path: "/absolute/path/to/briefing-up.png"
+```
+
+**미니멀 스타일 - 하락 종목:**
+```
+mcp__nanobanana__generate_image:
+- prompt: "Minimalist stock market briefing card for a DECLINING stock. Clean and subtle design.
+
+  Background:
+  - Deep dark navy/slate gradient (#0f172a to #1e293b)
+  - Simple night sky with few small white dots as stars (not too many)
+  - One soft glowing moon in upper right corner (subtle, slightly cooler/bluer tone)
+  - Simple city silhouette at bottom (dark gray, minimal detail)
+  - Few small amber window lights on buildings
+
+  Content layout (clean typography, left-aligned):
+  - Title: '당신이 잠든 사이' in warm amber/gold (#f59e0b), simple without heavy glow
+  - Date: '2025.12.27' in muted gray (#94a3b8)
+  - Thin horizontal divider line in amber
+  - Small label: '오늘의 화제 종목' in gray
+  - Stock name: 'TESLA' in white, bold
+  - Symbol: 'TSLA' in amber
+  - Change badge: '-4.2%' in RED (#ef4444) with subtle rounded dark red background
+  - Criteria badge: '급락 종목' in amber with subtle background
+  - Headline: '중국 시장 판매 부진 지속' in light gray (#e2e8f0)
+
+  Style: Minimal, elegant, professional. NO neon effects, NO circuit patterns, NO heavy glows.
+  Clean flat design with subtle depth. The red color for decline should be clear but not aggressive.
+  Korean text should be clear and readable. Apple-style minimalism meets financial dashboard."
+- aspect_ratio: "9:16"
+- output_path: "/absolute/path/to/briefing-down.png"
+```
+
+**미니멀 스타일 핵심 원칙:**
+| 요소 | 권장 | 피해야 할 것 |
+|------|------|--------------|
+| 배경 | 다크 네이비/슬레이트 그라데이션 | 복잡한 패턴, 화려한 색상 |
+| 달 | 은은한 글로우, 한 개만 | 과도한 발광 효과 |
+| 별 | 적은 수, 작은 크기 | 별자리, 너무 많은 별 |
+| 도시 | 미니멀 실루엣, amber 창문 | 복잡한 디테일 |
+| 텍스트 | 깔끔한 타이포그래피 | 네온 효과, 글로우 |
+| 배지 | 미묘한 배경색 | 과도한 그림자/발광 |
+| 전체 | Apple 스타일 미니멀리즘 | 사이버펑크, 화려한 이펙트 |
+
+**참조 이미지 활용 (스타일 일관성):**
+```
+mcp__nanobanana__generate_image:
+- prompt: "Stock briefing card following the reference style exactly.
+  Keep the minimal dark theme, subtle moon, few stars, and simple city skyline.
+  Update content: Stock: Apple (AAPL), Change: -2.1% in red,
+  Criteria: '실적 부진', Headline: 'iPhone 판매 둔화 우려'.
+  Maintain the clean, professional aesthetic."
+- reference_images_path: ["/absolute/path/to/reference-card.png"]
+- aspect_ratio: "9:16"
+- output_path: "/absolute/path/to/new-card.png"
+```
+
+#### 5. 이미지 편집 (수정)
+
+기존 이미지의 일부를 수정할 때:
+
+```
+mcp__nanobanana__edit_image:
+- path: "/absolute/path/to/existing-briefing.png"
+- prompt: "Update the stock price change from +5.2% to +7.8%.
+  Change the headline to 'Record high reached'.
+  Keep everything else the same."
+- output_path: "/absolute/path/to/updated-briefing.png"
+```
+
+### 저장 경로
+
+| 유형 | 경로 |
+|------|------|
+| 브리핑 이미지 | `public/images/briefings/briefing-{날짜}-{심볼}.png` |
+| 임시 이미지 | `output/images/temp-{timestamp}.png` |
+| 리포트 첨부 | `output/reports/{날짜-작업명}/images/` |
+
+### 주의사항
+
+1. **경로는 반드시 절대 경로** 사용 (상대 경로 불가)
+2. **한국어 프롬프트**도 지원되지만, 영어 프롬프트가 더 정확한 결과 생성
+3. **이미지 생성은 메인 Claude가 직접 실행** (에이전트 위임 불필요)
+4. **참조 이미지** 사용 시 스타일 일관성 유지 가능
+5. **aspect_ratio** 기본값은 `16:9`, SNS 공유용은 `9:16` 권장
