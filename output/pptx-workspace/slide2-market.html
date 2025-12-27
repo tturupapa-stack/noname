@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html { background: #F8F9FA; }
+body {
+  width: 720pt; height: 405pt; margin: 0; padding: 0;
+  background: #F8F9FA; font-family: Arial, sans-serif;
+  display: flex; flex-direction: column;
+}
+.header {
+  background: #1C2833; padding: 15pt 30pt;
+}
+.header h1 { color: #FFFFFF; font-size: 24pt; margin: 0; }
+.content {
+  display: flex; flex: 1; padding: 15pt 30pt 20pt 30pt;
+}
+.left-col { flex: 1; padding-right: 15pt; }
+.right-col { flex: 1; padding-left: 15pt; }
+.section-title {
+  display: flex; align-items: center; margin-bottom: 10pt;
+}
+.title-bar {
+  width: 4pt; height: 16pt; background: #F4D03F; margin-right: 8pt;
+}
+.title-text { color: #1C2833; font-size: 14pt; font-weight: bold; margin: 0; }
+.stat-box {
+  background: #FFFFFF; border-radius: 6pt; padding: 10pt;
+  margin-bottom: 10pt; border: 1pt solid #E5E7EB;
+}
+.stat-label { color: #6B7280; font-size: 10pt; margin: 0; }
+.stat-value { color: #1C2833; font-size: 16pt; font-weight: bold; margin: 3pt 0 0 0; }
+.stat-change { color: #10B981; font-size: 10pt; margin: 2pt 0 0 0; }
+ul { margin: 0; padding-left: 15pt; }
+li { color: #374151; font-size: 10pt; margin-bottom: 6pt; line-height: 1.3; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Market Overview</h1>
+</div>
+<div class="content">
+  <div class="left-col">
+    <div class="section-title">
+      <div class="title-bar"></div>
+      <p class="title-text">주요 지수 현황</p>
+    </div>
+    <div class="stat-box">
+      <p class="stat-label">S&P 500</p>
+      <p class="stat-value">6,040.04</p>
+      <p class="stat-change">+0.73% (4일 연속 상승)</p>
+    </div>
+    <div class="stat-box">
+      <p class="stat-label">NASDAQ</p>
+      <p class="stat-value">19,854.94</p>
+      <p class="stat-change">+0.4% (주간)</p>
+    </div>
+    <div class="stat-box">
+      <p class="stat-label">GDP 성장률 (Q3)</p>
+      <p class="stat-value">4.3%</p>
+      <p class="stat-change">예상치 3.2% 상회</p>
+    </div>
+  </div>
+  <div class="right-col">
+    <div class="section-title">
+      <div class="title-bar"></div>
+      <p class="title-text">금주 주요 이슈</p>
+    </div>
+    <ul>
+      <li>Santa Claus Rally: 연말 랠리 진행 중, 주요 지수 사상 최고치 근접</li>
+      <li>AI 트레이드 강세: NVIDIA, Oracle 등 AI 관련주 강세</li>
+      <li>고용 지표 호조: 신규 실업수당 청구 214,000건 (예상치 하회)</li>
+      <li>소비자 신뢰지수: 12월 89.1로 하락 (전월 92.9)</li>
+      <li>금 가격 신고가: 온스당 $4,555.1 돌파</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

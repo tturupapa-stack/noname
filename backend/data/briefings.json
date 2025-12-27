@@ -1,5 +1,82 @@
 [
   {
+    "id": "2025-12-26",
+    "date": "2025-12-26",
+    "created_at": "2025-12-26 21:56:55.803708",
+    "stock": {
+      "symbol": "HYMC",
+      "name": "Hycroft Mining Holding Corporat",
+      "price": 24.96,
+      "change": -2.18,
+      "change_percent": -8.03243,
+      "volume": 6470663,
+      "avg_volume": 2337380,
+      "volume_ratio": 2.77,
+      "market_cap": 2028838528.0,
+      "pe_ratio": null,
+      "fifty_two_week_high": null,
+      "fifty_two_week_low": null,
+      "currency": "USD"
+    },
+    "score": {
+      "volume_score": 7,
+      "price_change_score": 10,
+      "momentum_score": 10,
+      "market_cap_score": 10,
+      "total": 37
+    },
+    "why_hot": [
+      {
+        "icon": "✅",
+        "message": "거래량 급증 (평소 대비 2.77배)"
+      },
+      {
+        "icon": "✅",
+        "message": "당일 8.0% 하락"
+      },
+      {
+        "icon": "✅",
+        "message": "5일·10일 수익률 모두 양수 (상승 추세)"
+      },
+      {
+        "icon": "✅",
+        "message": "적정 시가총액 구간 ($2B~$100B)"
+      }
+    ],
+    "news": [
+      {
+        "title": "Hycroft Mining: Huge Silver Potential With Near-Term ...",
+        "url": "https://seekingalpha.com/article/4855766-hycroft-mining-huge-silver-potential-with-near-term-catalysts",
+        "published_date": "2025-12-25 13:56:55.587000+00:00",
+        "source": "seekingalpha.com"
+      },
+      {
+        "title": "Hycroft Mining Holding Corporation (HYMC)",
+        "url": "https://finance.yahoo.com/quote/HYMC/",
+        "published_date": "2025-12-25 12:56:55.587000+00:00",
+        "source": "finance.yahoo.com"
+      },
+      {
+        "title": "Hycroft Mining (HYMC) Competitors and Alternatives 2025",
+        "url": "https://www.marketbeat.com/stocks/NASDAQ/HYMC/competitors-and-alternatives/",
+        "published_date": "2025-12-25 23:56:55.587000+00:00",
+        "source": "marketbeat.com"
+      },
+      {
+        "title": "2 Warren Buffett Stocks To Buy Hand Over Fist and 1 To ...",
+        "url": "https://www.fool.com/investing/2025/12/25/2-warren-buffett-stocks-to-buy-hand-over-fist-and/",
+        "published_date": "2025-12-25 14:56:55.587000+00:00",
+        "source": "fool.com"
+      },
+      {
+        "title": "SK Hynix targets February HBM4 ramp-up with TSMC, ships final samples to Nvidia",
+        "url": "https://www.digitimes.com/news/a20251226PD215/sk-hynix-nvidia-hbm4-tsmc-production.html",
+        "published_date": "2025-12-26 00:00:00+00:00",
+        "source": "digitimes.com"
+      }
+    ]
+  },
+  {
     "id": "2025-12-25",
     "date": "2025-12-25",
     "created_at": "2025-12-25 08:10:56.851947",

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html { background: #F8F9FA; }
+body {
+  width: 720pt; height: 405pt; margin: 0; padding: 0;
+  background: #F8F9FA; font-family: Arial, sans-serif;
+  display: flex; flex-direction: column;
+}
+.header {
+  background: #111111; padding: 15pt 30pt;
+}
+.header h1 { color: #FFFFFF; font-size: 24pt; margin: 0; }
+.header-sub { color: #FF6B35; font-size: 12pt; margin: 4pt 0 0 0; }
+.content {
+  display: flex; flex: 1; padding: 15pt 30pt 20pt 30pt;
+}
+.left-col { flex: 1; padding-right: 15pt; }
+.right-col { flex: 1; padding-left: 15pt; }
+.section-title {
+  display: flex; align-items: center; margin-bottom: 10pt;
+}
+.title-bar {
+  width: 4pt; height: 14pt; background: #FF6B35; margin-right: 8pt;
+}
+.title-text { color: #1C2833; font-size: 13pt; font-weight: bold; margin: 0; }
+.price-box {
+  background: #FFFFFF; border-radius: 6pt; padding: 12pt;
+  margin-bottom: 10pt; border: 1pt solid #E5E7EB;
+  text-align: center;
+}
+.price { color: #1C2833; font-size: 26pt; font-weight: bold; margin: 0; }
+.change { color: #10B981; font-size: 16pt; margin: 5pt 0 0 0; }
+.market-cap { color: #6B7280; font-size: 10pt; margin: 5pt 0 0 0; }
+.stat-row {
+  display: flex; justify-content: space-between;
+  background: #FFFFFF; border-radius: 5pt; padding: 8pt 10pt;
+  margin-bottom: 6pt; border: 1pt solid #E5E7EB;
+}
+.stat-label { color: #6B7280; font-size: 10pt; margin: 0; }
+.stat-value { color: #1C2833; font-size: 12pt; font-weight: bold; margin: 0; }
+.analysis-box {
+  background: #FFFFFF; border-radius: 6pt; padding: 10pt;
+  border: 1pt solid #E5E7EB; margin-bottom: 8pt;
+}
+.analysis-title { color: #1C2833; font-size: 11pt; font-weight: bold; margin: 0 0 6pt 0; }
+ul { margin: 0; padding-left: 12pt; }
+li { color: #374151; font-size: 9pt; margin-bottom: 4pt; line-height: 1.3; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Nike, Inc. (NKE)</h1>
+  <p class="header-sub">금주 최고 상승 종목</p>
+</div>
+<div class="content">
+  <div class="left-col">
+    <div class="section-title">
+      <div class="title-bar"></div>
+      <p class="title-text">주가 현황</p>
+    </div>
+    <div class="price-box">
+      <p class="price">$60.00</p>
+      <p class="change">+4.64%</p>
+      <p class="market-cap">시가총액: $88.7B</p>
+    </div>
+    <div class="stat-row">
+      <p class="stat-label">거래량</p>
+      <p class="stat-value">35.0M</p>
+    </div>
+    <div class="stat-row">
+      <p class="stat-label">평균 거래량</p>
+      <p class="stat-value">18.0M</p>
+    </div>
+    <div class="stat-row">
+      <p class="stat-label">거래량 비율</p>
+      <p class="stat-value">1.94x</p>
+    </div>
+  </div>
+  <div class="right-col">
+    <div class="section-title">
+      <div class="title-bar"></div>
+      <p class="title-text">투자 포인트</p>
+    </div>
+    <div class="analysis-box">
+      <p class="analysis-title">상승 요인</p>
+      <ul>
+        <li>거래량 급증: 평균 대비 약 2배</li>
+        <li>연말 소비 시즌 기대감</li>
+        <li>신제품 라인업 호평</li>
+        <li>중국 시장 회복 기대</li>
+      </ul>
+    </div>
+    <div class="analysis-box">
+      <p class="analysis-title">스코어</p>
+      <ul>
+        <li>가격 변동: 7/10</li>
+        <li>거래량: 5/10</li>
+        <li>시가총액: 10/10</li>
+        <li>종합: 22점</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

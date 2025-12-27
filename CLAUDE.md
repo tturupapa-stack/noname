@@ -68,8 +68,46 @@ npm run generate-icons  # Regenerate PWA icons from public/icon.svg
 - Types: `types/`
 - Mock data: `data/mockData.ts`
 
-### Development Logs
-Development logs are written to `개발일지/` folder in format `YYYY-MM-DD-기능명.md` for major features, bug fixes, and refactoring work.
+### Development Logs (개발일지) - REQUIRED
+
+**중요**: 모든 개발 작업 완료 후 반드시 개발일지를 작성해야 한다.
+
+#### 작성 시점
+- 새 기능 개발 완료
+- 버그 수정 완료
+- 리팩토링 완료
+- 설정 변경 완료
+
+#### 파일 형식
+```
+개발일지/YYYY-MM-DD-기능명.md
+```
+
+#### 필수 섹션
+```markdown
+# 개발일지 - {기능명}
+
+**작성 시각**: YYYY-MM-DD
+**작업자**: {에이전트 역할}
+
+## 해결하고자 한 문제
+{요구사항 및 배경}
+
+## 해결된 것
+✅ **카테고리** (`파일경로`)
+- 세부 내용
+
+## 해결되지 않은 것
+⚠️ 이슈 또는 "없음"
+
+## 향후 개발을 위한 컨텍스트 정리
+### 사용법
+### 파일 구조
+### 다음 개선 사항
+```
+
+#### 상세 템플릿
+전체 템플릿은 `skills/dev-log/references/template.md` 참조.
 
 ## Environment Variables
 
